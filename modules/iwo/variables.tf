@@ -17,12 +17,12 @@ variable "tfc_organization" {
 
 variable "ws_global_vars" {
   default     = ""
-  description = "Global Variables Workspace Name.  The default value will be set to {cluster_name}_global_vars by the tfe variable module."
+  description = "Global Variables Workspace Name.  The default value will be set to {prefix_value}_global_vars by the tfe variable module."
   type        = string
 }
 
 variable "ws_kube" {
   default     = ""
-  description = "Intersight Kubernetes Service (IKS) kube_config Workspace Name.  The default value will be set to {cluster_name}_kube by the tfe variable module."
+  description = "Intersight Kubernetes Service (IKS) kube_config Workspace Name.  The default value will be set to {prefix_value}_{cluster_name}_kube by the tfe variable module."
   type        = string
 }

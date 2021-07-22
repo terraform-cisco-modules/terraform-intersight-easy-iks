@@ -25,7 +25,7 @@ data "terraform_remote_state" "kube" {
 
 locals {
   # IKS Cluster Name
-  cluster_name = yamldecode(data.terraform_remote_state.global.outputs.cluster_name)
+  cluster_name = data.terraform_remote_state.kube.outputs.cluster_name
 }
 
 #______________________________________________________________________
@@ -33,7 +33,7 @@ locals {
 # Deploy the Intersight Workload Optimizer Pod using the Helm Provider
 #______________________________________________________________________
 
-resource "helm_release" "iwok8scollector" {
+resource "helm_release" "iwo_k8s_collector" {
   name      = "iwok8scollector"
   namespace = "default"
   #  namespace = "iwo-collector"

@@ -1,4 +1,3 @@
-
 #__________________________________________________________
 #
 # Terraform Cloud Organization
@@ -17,7 +16,7 @@ variable "tfc_organization" {
 
 variable "ws_global_vars" {
   default     = ""
-  description = "Global Variables Workspace Name.  The default value will be set to {cluster_name}_global_vars by the tfe variable module."
+  description = "Global Variables Workspace Name.  The default value will be set to {prefix_value}_global_vars by the tfe variable module."
   type        = string
 }
 
@@ -36,5 +35,16 @@ variable "apikey" {
 variable "secretkey" {
   description = "Intersight Secret Key."
   sensitive   = true
+  type        = string
+}
+
+#__________________________________________________________
+#
+# Cluster Variables
+#__________________________________________________________
+
+variable "cluster_name" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster Name.    The default value will be set to {prefix_value}_{cluster_name} by the tfe variable module."
   type        = string
 }

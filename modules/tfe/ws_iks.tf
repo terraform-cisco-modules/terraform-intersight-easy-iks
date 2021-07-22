@@ -1,12 +1,107 @@
-#__________________________________________________________
-#
-# Required Variables
-#__________________________________________________________
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
+locals {
+  cluster_variables = {
+    for k, v in var.cluster_variables : k => {
+      addons_list           = (v.addons_list != null ? v.addons_list : [])
+      cluster_name          = coalesce(v.cluster_name, "iks")
+      ip_pool_gateway       = coalesce(v.ip_pool_gateway, "198.18.")
+      ip_pool_from          = coalesce(v.ip_pool_from, "iks")
+      vsphere_target        = optional(string)
+      vsphere_cluster       = optional(string)
+      vsphere_datastore     = optional(string)
+      vsphere_portgroup     = optional(list(string))
+      vsphere_resource_pool = optional(string)
+      annotation = (v.annotation != null ? v.annotation : "")
+      name       = coalesce(v.name, "l3out")
+      name_alias = (v.name_alias != null ? v.name_alias : "")
+      vlan_pool  = coalesce(v.vlan_pool, "")
+    }
+  }
+}
+
+variable "k8s_cluster_variables" {
+  default = {
+    default = {
+      addons_list           = []
+      cluster_name          = "**REQUIRED**"
+      ip_pool_create        = true
+      ip_pool_name          = "{prefix_value}_{cluster_name}_ip_pool"
+      ip_pool_gateway       = "198.18.0.1/24"
+      ip_pool_from          = 20
+      ip_pool_size          = 30
+      k8s_addon_create      = true
+      k8s_addon_policy      = "{prefix_value}_{cluster_name}_addons"
+      k8s_runtime_create    = true
+      k8s_runtime_policy    = "{prefix_value}_{cluster_name}_ip_pool"
+      k8s_trusted_create    = true
+      k8s_trusted_registry  = "{prefix_value}_{cluster_name}_ip_pool"
+      k8s_version_create    = true
+      k8s_version_policy    = "{prefix_value}_{cluster_name}_ip_pool"
+      k8s_vm_infra_create   = true
+      k8s_vm_infra_policy   = "{prefix_value}_{cluster_name}_ip_pool"
+      k8s_vm_network_create = true
+      k8s_vm_network_policy = "{prefix_value}_{cluster_name}_ip_pool"
+      vsphere_target        = "**OPTIONAL - If shared between Clusters.**"
+      vsphere_cluster       = "**OPTIONAL - If shared between Clusters.**"
+      vsphere_datastore     = "**OPTIONAL - If shared between Clusters.**"
+      vsphere_portgroup     = "**OPTIONAL - If shared between Clusters.**"
+      vsphere_resource_pool = "**OPTIONAL - If shared between Clusters.**"
+    }
+  }
+  type = map(object(
+    {
+      addons_list           = optional(list(string))
+      cluster_name          = string
+      ip_pool_create        = bool
+      ip_pool_name          = string
+      ip_pool_gateway       = optional(string)
+      ip_pool_from          = optional(number)
+      ip_pool_size          = optional(number)
+      k8s_addon_create      = bool
+      k8s_addon_policy      = optional(string)
+      k8s_runtime_create    = bool
+      k8s_runtime_policy    = optional(string)
+      k8s_trusted_create    = bool
+      k8s_trusted_registry  = optional(string)
+      k8s_version_create    = bool
+      k8s_version_policy    = optional(string)
+      k8s_vm_infra_create   = bool
+      k8s_vm_infra_policy   = optional(string)
+      k8s_vm_network_create = bool
+      k8s_vm_network_policy = optional(string)
+      vsphere_target        = optional(string)
+      vsphere_cluster       = optional(string)
+      vsphere_datastore     = optional(string)
+      vsphere_portgroup     = optional(list(string))
+      vsphere_resource_pool = optional(string)
+    }
+  ))
+}
 
 
 #______________________________________________
 #
-# Kubernetes Network CIDR/System Policies
+# IP Pool Variables - When Shared
+#______________________________________________
+
+variable "ip_pool_gateway" {
+  default     = "198.18.0.1/24"
+  description = "IP Pool Gateway last Octet.  The var.network_prefix will be combined with ip_pool_gateway for the Gateway Address."
+  type        = string
+}
+
+variable "ip_pool_from" {
+  default     = "20"
+  description = "IP Pool Starting IP last Octet.  The var.network_prefix will be combined with ip_pool_from for the Gateway Address."
+  type        = string
+}
+
+#______________________________________________
+#
+# K8S Network CIDR/System - When Shared
 #______________________________________________
 
 variable "k8s_pod_cidr" {
@@ -105,7 +200,13 @@ variable "proxy_https_username" {
 #
 # K8S VM Infrastructure Policy Variables
 #______________________________________________
-#
+
+variable "vsphere_target" {
+  default     = "210"
+  description = "vSphere Server registered as a Target in Intersight.  The default, 210, only works if this is for the DevNet Sandbox."
+  type        = string
+}
+
 variable "vsphere_password" {
   description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
   sensitive   = true
@@ -196,24 +297,24 @@ variable "ssh_key" {
 
 #______________________________________________
 #
-# Master Node Profile Variables
+# Control Plane Node Profile Variables
 #______________________________________________
 
-variable "master_instance_type" {
+variable "control_plane_instance_type" {
   default     = "small"
-  description = "K8S Master Virtual Machine Instance Type.  Options are {small|medium|large}."
+  description = "K8S Control Plane Virtual Machine Instance Type.  Options are {small|medium|large}."
   type        = string
 }
 
-variable "master_desired_size" {
+variable "control_plane_desired_size" {
   default     = 1
-  description = "K8S Master Desired Cluster Size."
+  description = "K8S Control Plane Desired Cluster Size."
   type        = string
 }
 
-variable "master_max_size" {
+variable "control_plane_max_size" {
   default     = 1
-  description = "K8S Master Maximum Cluster Size."
+  description = "K8S Control Plane Maximum Cluster Size."
   type        = string
 }
 
@@ -241,49 +342,78 @@ variable "worker_max_size" {
 }
 
 
+#______________________________________________
+#
+# Kubernetes Add-ons List
+#______________________________________________
+
+variable "addons_list" {
+  default     = "[]"
+  description = "List of Add-ons to be added to Cluster."
+  type        = string
+}
+
+#__________________________________________________________
+#
+# Terraform Cloud Workspaces
+#__________________________________________________________
+
+module "iks_workspaces" {
+  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  for_each            = var.k8s_cluster_variables
+  auto_apply          = true
+  description         = "Intersight Kubernetes Service Workspace."
+  name                = "${var.name_prefix}_${each.value.cluster_name}_iks"
+  terraform_version   = var.terraform_version
+  tfc_oath_token      = var.tfc_oath_token
+  tfc_org_name        = var.tfc_organization
+  vcs_repo            = var.vcs_repo
+  working_directory   = "iks"
+}
+
+output "iks_workspaces" {
+  description = "Terraform Cloud IKS Workspace ID(s)."
+  value       = { for v in sort(keys(module.iks_workspaces)) : v => module.iks_workspaces[v] }
+}
+
 #__________________________________________________________
 #
 # Terraform Cloud Workspace Variables: iks
 #__________________________________________________________
 
-module "tfc_variables_iks" {
+module "iks_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
-    module.tfc_workspaces
+    module.iks_workspaces
   ]
+  for_each = var.k8s_cluster_variables
   category     = "terraform"
-  workspace_id = module.tfc_workspaces.tfe_workspace_id.iks
+  workspace_id = module.iks_workspaces["${each.value.cluster_name}"].workspace.id
   variable_list = [
     #---------------------------
     # Terraform Cloud Variables
     #---------------------------
     {
       description = "Terraform Cloud Organization."
-      hcl         = false
       key         = "tfc_organization"
-      sensitive   = false
       value       = var.tfc_organization
     },
     {
       description = "global_vars Workspace."
-      hcl         = false
       key         = "ws_global_vars"
-      sensitive   = false
-      value       = "${var.cluster_name}_global_vars"
+      value       = "${var.prefix_value}_global_vars"
     },
     #---------------------------
     # Intersight Variables
     #---------------------------
     {
       description = "Intersight API Key."
-      hcl         = false
       key         = "apikey"
       sensitive   = true
       value       = var.apikey
     },
     {
       description = "Intersight Secret Key."
-      hcl         = false
       key         = "secretkey"
       sensitive   = true
       value       = var.secretkey
@@ -293,202 +423,215 @@ module "tfc_variables_iks" {
     #-----------------------------
     {
       description = "Kubernetes Network Pod CIDR."
-      hcl         = false
       key         = "k8s_pod_cidr"
-      sensitive   = false
-      value       = var.k8s_pod_cidr
+      value       = each.value.k8s_pod_cidr != null ? each.value.k8s_pod_cidr : var.k8s_pod_cidr
     },
     {
       description = "Kubernetes Network Service CIDR."
-      hcl         = false
       key         = "k8s_service_cidr"
-      sensitive   = false
-      value       = var.k8s_service_cidr
+      value       = each.value.k8s_service_cidr != null ? each.value.k8s_service_cidr : var.k8s_service_cidr
     },
     {
       description = "Kubernetes Version."
-      hcl         = false
       key         = "k8s_version"
-      sensitive   = false
-      value       = var.k8s_version
+      value       = each.value.k8s_version != null ? each.value.k8s_version : var.k8s_version
     },
     {
       description = "Docker no proxy list, when using internet proxy.  Default is no list."
       hcl         = true
       key         = "docker_no_proxy"
-      sensitive   = false
       value       = var.docker_no_proxy
     },
     {
       description = "Password for the HTTP Proxy Server, If required."
-      hcl         = false
       key         = "proxy_http_password"
       sensitive   = true
       value       = var.proxy_http_password
     },
     {
       description = "Proxy HTTP Port."
-      hcl         = false
       key         = "proxy_http_port"
-      sensitive   = false
       value       = var.proxy_http_port
     },
     {
       description = "Proxy HTTP Protocol."
-      hcl         = false
       key         = "proxy_http_protocol"
-      sensitive   = false
       value       = var.proxy_http_protocol
     },
     {
       description = "Password for the HTTPS Proxy Server, If required."
-      hcl         = false
       key         = "proxy_https_password"
       sensitive   = true
       value       = var.proxy_https_password
     },
     {
       description = "Proxy HTTPS Port."
-      hcl         = false
       key         = "proxy_https_port"
-      sensitive   = false
       value       = var.proxy_https_port
     },
     {
       description = "Proxy HTTPS Protocol."
-      hcl         = false
       key         = "proxy_https_protocol"
-      sensitive   = false
       value       = var.proxy_https_protocol
     },
     {
       description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
-      hcl         = false
       key         = "vsphere_password"
       sensitive   = true
       value       = var.vsphere_password
     },
     {
       description = "vSphere Cluster to assign the K8S Cluster Deployment."
-      hcl         = false
       key         = "vsphere_cluster"
-      sensitive   = false
-      value       = var.vsphere_cluster
+      value       = each.value.vsphere_cluster != null ? each.value.vsphere_cluster : var.vsphere_cluster
     },
     {
       description = "vSphere Datastore to assign the K8S Cluster Deployment."
-      hcl         = false
       key         = "vsphere_datastore"
-      sensitive   = false
-      value       = var.vsphere_datastore
+      value       = each.value.vsphere_datastore != null ? each.value.vsphere_datastore : var.vsphere_datastore
     },
     {
       description = "vSphere Port Group to assign the K8S Cluster Deployment."
       hcl         = true
       key         = "vsphere_portgroup"
-      sensitive   = false
-      value       = var.vsphere_portgroup
+      value       = each.value.vsphere_portgroup != null ? each.value.vsphere_portgroup : var.vsphere_portgroup
     },
     {
       description = "vSphere Resource Pool to assign the K8S Cluster Deployment."
-      hcl         = false
       key         = "vsphere_resource_pool"
-      sensitive   = false
-      value       = var.vsphere_resource_pool
+      value       = each.value.vsphere_resource_pool != null ? each.value.vsphere_resource_pool : var.vsphere_resource_pool
     },
     {
       description = "List of root CA Signed Registries."
       hcl         = true
       key         = "root_ca_registries"
-      sensitive   = false
-      value       = var.root_ca_registries
+      value       = each.value.root_ca_registries != null ? each.value.root_ca_registries : var.root_ca_registries
     },
     {
       description = "List of unsigned registries to be supported."
       hcl         = true
       key         = "unsigned_registries"
-      sensitive   = false
-      value       = var.unsigned_registries
+      value       = each.value.unsigned_registries != null ? each.value.unsigned_registries : var.unsigned_registries
     },
     {
       description = "Tags to be Associated with Objects Created in Intersight."
       hcl         = true
       key         = "tags"
-      sensitive   = false
-      value       = var.tags
+      value       = each.value.tags != null ? each.value.tags : var.tags
     },
     #---------------------------
     # IKS Cluster Variables
     #---------------------------
     {
+      description = "IKS Cluster Name."
+      key         = "cluster_name"
+      value       = var.cluster_name
+    },
+    {
+      description = "Kubernetes Add-ons Policy List."
+      hcl         = true
+      key         = "addons_list"
+      value       = var.addons_list
+    },
+    {
+      description = "Network Prefix for IP Pool Policy."
+      key         = "network_prefix"
+      value       = var.network_prefix
+    },
+    {
+      description = "IP Pool Gateway last Octet."
+      key         = "ip_pool_gateway"
+      value       = var.ip_pool_gateway
+    },
+    {
+      description = "IP Pool Starting Address."
+      key         = "ip_pool_from"
+      value       = var.ip_pool_from
+    },
+    {
+      description = "HTTP Proxy Server Name or IP Address."
+      key         = "proxy_http_hostname"
+      value       = var.proxy_http_hostname
+    },
+    {
+      description = "HTTP Proxy Username."
+      key         = "proxy_http_username"
+      value       = var.proxy_http_username
+    },
+    {
+      description = "HTTPS Proxy Server Name or IP Address."
+      key         = "proxy_https_hostname"
+      value       = var.proxy_https_hostname
+    },
+    {
+      description = "HTTPS Proxy Username."
+      key         = "proxy_https_username"
+      value       = var.proxy_https_username
+    },
+    {
+      description = "vSphere Server registered as a Target in Intersight."
+      key         = "vsphere_target"
+      value       = var.vsphere_target
+    },
+    {
       description = "Action to perform on the Intersight Kubernetes Cluster.  Options are {Delete|Deploy|Ready|Unassign}."
       hcl         = false
       key         = "action"
       sensitive   = false
-      value       = var.action
+      value       = each.value.action
     },
     {
       description = "Intersight Kubernetes Load Balancer count."
       hcl         = false
       key         = "load_balancers"
       sensitive   = false
-      value       = var.load_balancers
+      value       = each.value.load_balancers
     },
     {
       description = "Intersight Kubernetes Service Cluster Default User."
       hcl         = false
       key         = "ssh_user"
       sensitive   = false
-      value       = var.ssh_user
+      value       = each.value.ssh_user
     },
     {
       description = "Intersight Kubernetes Service Cluster Default User."
       hcl         = false
       key         = "ssh_key"
       sensitive   = true
-      value       = var.ssh_key
+      value       = each.value.ssh_key != null ? each.value.ssh_key : var.ssh_key
     },
     {
-      description = "K8S Master Virtual Machine Instance Type.  Options are {small|medium|large}."
-      hcl         = false
-      key         = "master_instance_type"
-      sensitive   = false
-      value       = var.master_instance_type
+      description = "K8S Control Plane Virtual Machine Instance Type.  Options are {small|medium|large}."
+      key         = "control_plane_instance_type"
+      value       = each.value.control_plane_instance_type != null ? each.value.control_plane_instance_type : var.control_plane_instance_type
     },
     {
-      description = "K8S Master Desired Cluster Size."
-      hcl         = false
-      key         = "master_desired_size"
-      sensitive   = false
-      value       = var.master_desired_size
+      description = "K8S Control Plane Desired Cluster Size."
+      key         = "control_plane_desired_size"
+      value       = each.value.control_plane_desired_size != null ? each.value.control_plane_desired_size : var.control_plane_desired_size
     },
     {
-      description = "K8S Master Maximum Cluster Size."
-      hcl         = false
-      key         = "master_max_size"
-      sensitive   = false
-      value       = var.master_max_size
+      description = "K8S Control Plane Maximum Cluster Size."
+      key         = "control_plane_max_size"
+      value       = each.value.control_plane_max_size != null ? each.value.control_plane_max_size : var.control_plane_max_size
     },
     {
       description = "K8S Worker Virtual Machine Instance Type.  Options are {small|medium|large}."
-      hcl         = false
       key         = "worker_instance_type"
-      sensitive   = false
-      value       = var.worker_instance_type
+      value       = each.value.worker_instance_type != null ? each.value.worker_instance_type : var.worker_instance_type
     },
     {
       description = "K8S Worker Desired Cluster Size."
-      hcl         = false
       key         = "worker_desired_size"
-      sensitive   = false
-      value       = var.worker_desired_size
+      value       = each.value.worker_desired_size != null ? each.value.worker_desired_size : var.worker_desired_size
     },
     {
       description = "K8S Worker Maximum Cluster Size."
       hcl         = false
       key         = "worker_max_size"
       sensitive   = false
-      value       = var.worker_max_size
+      value       = each.value.worker_max_size != null ? each.value.worker_max_size : var.worker_max_size
     },
   ]
 }

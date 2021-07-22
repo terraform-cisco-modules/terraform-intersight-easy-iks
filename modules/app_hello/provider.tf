@@ -14,5 +14,5 @@ provider "helm" {
 }
 
 locals {
-  kube_config = yamldecode(data.terraform_remote_state.kube.outputs.kube_config)
+  kube_config = data.terraform_remote_state.kube.outputs.kube_config
 }

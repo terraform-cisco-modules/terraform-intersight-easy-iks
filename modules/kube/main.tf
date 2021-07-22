@@ -21,9 +21,7 @@ data "terraform_remote_state" "global" {
 
 locals {
   # Intersight Provider Variables
-  endpoint = yamldecode(data.terraform_remote_state.global.outputs.endpoint)
-  # IKS Cluster Variable
-  cluster_name = yamldecode(data.terraform_remote_state.global.outputs.cluster_name)
+  endpoint = data.terraform_remote_state.global.outputs.endpoint
 }
 
 
@@ -33,5 +31,5 @@ locals {
 #______________________________________________
 
 data "intersight_kubernetes_cluster" "kube_config" {
-  name = local.cluster_name
+  name = var.cluster_name
 }

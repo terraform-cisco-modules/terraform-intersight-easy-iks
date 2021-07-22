@@ -53,3 +53,11 @@ variable "secretkey" {
   sensitive   = true
   type        = string
 }
+
+variable "organization" {
+  default     = "default"
+  description = "Intersight Organization Name."
+  type        = string
+}
+
+

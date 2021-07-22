@@ -225,24 +225,24 @@ variable "ssh_key" {
 
 #______________________________________________
 #
-# Kubernetes Master Variables
+# Kubernetes Control Plane Variables
 #______________________________________________
 
-variable "master_instance_type" {
+variable "control_plane_instance_type" {
   default     = "small"
-  description = "K8S Master Virtual Machine Instance Type.  Options are {small|medium|large}."
+  description = "K8S Control Plane Virtual Machine Instance Type.  Options are {small|medium|large}."
   type        = string
 }
 
-variable "master_desired_size" {
+variable "control_plane_desired_size" {
   default     = 1
-  description = "K8S Master Desired Cluster Size."
+  description = "K8S Control Plane Desired Cluster Size."
   type        = string
 }
 
-variable "master_max_size" {
+variable "control_plane_max_size" {
   default     = 1
-  description = "K8S Master Maximum Cluster Size."
+  description = "K8S Control Plane Maximum Cluster Size."
   type        = string
 }
 

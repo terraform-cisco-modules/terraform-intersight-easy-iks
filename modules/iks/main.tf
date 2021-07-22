@@ -30,38 +30,6 @@ locals {
   # Time Variables
   ntp_servers = data.terraform_remote_state.global.outputs.ntp_servers
   timezone    = yamldecode(data.terraform_remote_state.global.outputs.timezone)
-  # IKS Cluster Variable
-  cluster_name = yamldecode(data.terraform_remote_state.global.outputs.cluster_name)
-  # IP Pool Variables
-  ip_pool         = yamldecode(data.terraform_remote_state.global.outputs.ip_pool)
-  ip_pool_netmask = yamldecode(data.terraform_remote_state.global.outputs.ip_pool_netmask)
-  ip_pool_gateway = yamldecode(data.terraform_remote_state.global.outputs.ip_pool_gateway)
-  ip_pool_from    = yamldecode(data.terraform_remote_state.global.outputs.ip_pool_from)
-  ip_pool_size    = yamldecode(data.terraform_remote_state.global.outputs.ip_pool_size)
-  # Kubernetes Add-ons List
-  addons_list = data.terraform_remote_state.global.outputs.addons_list
-  # Kubernetes Runtime Variables
-  proxy_http_hostname = data.terraform_remote_state.global.outputs.proxy_http_hostname != "" ? yamldecode(
-    data.terraform_remote_state.global.outputs.proxy_http_hostname
-  ) : ""
-  proxy_http_username = data.terraform_remote_state.global.outputs.proxy_http_username != "" ? yamldecode(
-    data.terraform_remote_state.global.outputs.proxy_http_username
-  ) : ""
-  proxy_https_hostname = data.terraform_remote_state.global.outputs.proxy_https_hostname != "" ? yamldecode(
-    data.terraform_remote_state.global.outputs.proxy_https_hostname
-  ) : ""
-  proxy_https_username = data.terraform_remote_state.global.outputs.proxy_https_username != "" ? yamldecode(
-    data.terraform_remote_state.global.outputs.proxy_https_username
-  ) : ""
-  # Kubernetes Policy Names Variables
-  k8s_addon_policy      = yamldecode(data.terraform_remote_state.global.outputs.k8s_addon_policy)
-  k8s_runtime_policy    = yamldecode(data.terraform_remote_state.global.outputs.k8s_runtime_policy)
-  k8s_trusted_registry  = yamldecode(data.terraform_remote_state.global.outputs.k8s_trusted_registry)
-  k8s_version_policy    = yamldecode(data.terraform_remote_state.global.outputs.k8s_version_policy)
-  k8s_vm_network_policy = yamldecode(data.terraform_remote_state.global.outputs.k8s_vm_network_policy)
-  k8s_vm_infra_policy   = yamldecode(data.terraform_remote_state.global.outputs.k8s_vm_infra_policy)
-  # vSphere Target Variable
-  vsphere_target = yamldecode(data.terraform_remote_state.global.outputs.vsphere_target)
 }
 
 
@@ -86,7 +54,7 @@ data "intersight_organization_organization" "organization_moid" {
 #______________________________________________
 
 module "ip_pool" {
-  source           = "terraform-cisco-modules/iks/intersight//modules/ip_pool"
+  source           = var.ip_pool_create == true ? "terraform-cisco-modules/iks/intersight//modules/ip_pool" : "data_ip_pool"
   org_name         = local.organization
   name             = local.ip_pool
   gateway          = local.ip_pool_gateway
@@ -300,17 +268,17 @@ module "iks_addon_profile" {
 
 #______________________________________________
 #
-# Create the Master Profile
+# Create the Control Plane Profile
 #______________________________________________
 
-module "master_profile" {
+module "control_plane_profile" {
   depends_on = [
     module.iks_cluster,
   ]
   source       = "terraform-cisco-modules/iks/intersight//modules/node_profile"
-  desired_size = var.master_desired_size
-  max_size     = var.master_max_size
-  name         = "${local.cluster_name}-master_profile"
+  desired_size = var.control_plane_desired_size
+  max_size     = var.control_plane_max_size
+  name         = "${local.cluster_name}-control_plane_profile"
   profile_type = trimspace(<<-EOT
   %{if var.worker_desired_size == "0"~}ControlPlaneWorker
   %{else~}ControlPlane
@@ -323,19 +291,19 @@ module "master_profile" {
   version_moid = module.k8s_version_policy.version_policy_moid
 }
 
-module "master_instance_type" {
+module "control_plane_instance_type" {
   depends_on = [
-    module.master_profile
+    module.control_plane_profile
   ]
   source = "terraform-cisco-modules/iks/intersight//modules/infra_provider"
-  name   = "${local.cluster_name}-master"
+  name   = "${local.cluster_name}-control_plane"
   instance_type_moid = trimspace(<<-EOT
-  %{if var.master_instance_type == "small"~}${module.k8s_instance_small.worker_profile_moid}%{endif~}
-  %{if var.master_instance_type == "medium"~}${module.k8s_instance_medium.worker_profile_moid}%{endif~}
-  %{if var.master_instance_type == "large"~}${module.k8s_instance_large.worker_profile_moid}%{endif~}
+  %{if var.control_plane_instance_type == "small"~}${module.k8s_instance_small.worker_profile_moid}%{endif~}
+  %{if var.control_plane_instance_type == "medium"~}${module.k8s_instance_medium.worker_profile_moid}%{endif~}
+  %{if var.control_plane_instance_type == "large"~}${module.k8s_instance_large.worker_profile_moid}%{endif~}
   EOT
   )
-  node_group_moid          = module.master_profile.node_group_profile_moid
+  node_group_moid          = module.control_plane_profile.node_group_profile_moid
   infra_config_policy_moid = module.k8s_vm_infra_policy.infra_config_moid
   tags                     = var.tags
 }

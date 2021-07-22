@@ -30,22 +30,6 @@ output "organization" {
 
 #______________________________________________
 #
-# Prefix Variable
-#______________________________________________
-
-variable "network_prefix" {
-  default     = "10.200.0"
-  description = "Network Prefix to Assign to DNS/NTP Servers & vCenter Target default values."
-  type        = string
-  validation {
-    condition     = (can(regex("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", var.network_prefix)))
-    error_message = "The network_prefix must be in the format X.X.X."
-  }
-}
-
-
-#______________________________________________
-#
 # DNS Variables
 #______________________________________________
 
@@ -81,9 +65,265 @@ output "dns_servers" {
 #______________________________________________
 
 variable "timezone" {
-  default     = "America/New_York"
+  default     = "Etc/GMT"
   description = "Timezone for Kubernetes Sysconfig Policy."
   type        = string
+  validation {
+    condition = (
+      var.timezone == "Africa/Abidjan" ||
+      var.timezone == "Africa/Accra" ||
+      var.timezone == "Africa/Algiers" ||
+      var.timezone == "Africa/Bissau" ||
+      var.timezone == "Africa/Cairo" ||
+      var.timezone == "Africa/Casablanca" ||
+      var.timezone == "Africa/Ceuta" ||
+      var.timezone == "Africa/El_Aaiun" ||
+      var.timezone == "Africa/Johannesburg" ||
+      var.timezone == "Africa/Khartoum" ||
+      var.timezone == "Africa/Lagos" ||
+      var.timezone == "Africa/Maputo" ||
+      var.timezone == "Africa/Monrovia" ||
+      var.timezone == "Africa/Nairobi" ||
+      var.timezone == "Africa/Ndjamena" ||
+      var.timezone == "Africa/Tripoli" ||
+      var.timezone == "Africa/Tunis" ||
+      var.timezone == "Africa/Windhoek" ||
+      var.timezone == "America/Anchorage" ||
+      var.timezone == "America/Araguaina" ||
+      var.timezone == "America/Argentina/Buenos_Aires" ||
+      var.timezone == "America/Asuncion" ||
+      var.timezone == "America/Bahia" ||
+      var.timezone == "America/Barbados" ||
+      var.timezone == "America/Belem" ||
+      var.timezone == "America/Belize" ||
+      var.timezone == "America/Boa_Vista" ||
+      var.timezone == "America/Bogota" ||
+      var.timezone == "America/Campo_Grande" ||
+      var.timezone == "America/Cancun" ||
+      var.timezone == "America/Caracas" ||
+      var.timezone == "America/Cayenne" ||
+      var.timezone == "America/Cayman" ||
+      var.timezone == "America/Chicago" ||
+      var.timezone == "America/Costa_Rica" ||
+      var.timezone == "America/Cuiaba" ||
+      var.timezone == "America/Curacao" ||
+      var.timezone == "America/Danmarkshavn" ||
+      var.timezone == "America/Dawson_Creek" ||
+      var.timezone == "America/Denver" ||
+      var.timezone == "America/Edmonton" ||
+      var.timezone == "America/El_Salvador" ||
+      var.timezone == "America/Fortaleza" ||
+      var.timezone == "America/Godthab" ||
+      var.timezone == "America/Grand_Turk" ||
+      var.timezone == "America/Guatemala" ||
+      var.timezone == "America/Guayaquil" ||
+      var.timezone == "America/Guyana" ||
+      var.timezone == "America/Halifax" ||
+      var.timezone == "America/Havana" ||
+      var.timezone == "America/Hermosillo" ||
+      var.timezone == "America/Iqaluit" ||
+      var.timezone == "America/Jamaica" ||
+      var.timezone == "America/La_Paz" ||
+      var.timezone == "America/Lima" ||
+      var.timezone == "America/Los_Angeles" ||
+      var.timezone == "America/Maceio" ||
+      var.timezone == "America/Managua" ||
+      var.timezone == "America/Manaus" ||
+      var.timezone == "America/Martinique" ||
+      var.timezone == "America/Mazatlan" ||
+      var.timezone == "America/Mexico_City" ||
+      var.timezone == "America/Miquelon" ||
+      var.timezone == "America/Montevideo" ||
+      var.timezone == "America/Nassau" ||
+      var.timezone == "America/New_York" ||
+      var.timezone == "America/Noronha" ||
+      var.timezone == "America/Panama" ||
+      var.timezone == "America/Paramaribo" ||
+      var.timezone == "America/Phoenix" ||
+      var.timezone == "America/Port_of_Spain" ||
+      var.timezone == "America/Port-au-Prince" ||
+      var.timezone == "America/Porto_Velho" ||
+      var.timezone == "America/Puerto_Rico" ||
+      var.timezone == "America/Recife" ||
+      var.timezone == "America/Regina" ||
+      var.timezone == "America/Rio_Branco" ||
+      var.timezone == "America/Santiago" ||
+      var.timezone == "America/Santo_Domingo" ||
+      var.timezone == "America/Sao_Paulo" ||
+      var.timezone == "America/Scoresbysund" ||
+      var.timezone == "America/St_Johns" ||
+      var.timezone == "America/Tegucigalpa" ||
+      var.timezone == "America/Thule" ||
+      var.timezone == "America/Tijuana" ||
+      var.timezone == "America/Toronto" ||
+      var.timezone == "America/Vancouver" ||
+      var.timezone == "America/Whitehorse" ||
+      var.timezone == "America/Winnipeg" ||
+      var.timezone == "America/Yellowknife" ||
+      var.timezone == "Antarctica/Casey" ||
+      var.timezone == "Antarctica/Davis" ||
+      var.timezone == "Antarctica/DumontDUrville" ||
+      var.timezone == "Antarctica/Mawson" ||
+      var.timezone == "Antarctica/Palmer" ||
+      var.timezone == "Antarctica/Rothera" ||
+      var.timezone == "Antarctica/Syowa" ||
+      var.timezone == "Antarctica/Vostok" ||
+      var.timezone == "Asia/Almaty" ||
+      var.timezone == "Asia/Amman" ||
+      var.timezone == "Asia/Aqtau" ||
+      var.timezone == "Asia/Aqtobe" ||
+      var.timezone == "Asia/Ashgabat" ||
+      var.timezone == "Asia/Baghdad" ||
+      var.timezone == "Asia/Baku" ||
+      var.timezone == "Asia/Bangkok" ||
+      var.timezone == "Asia/Beirut" ||
+      var.timezone == "Asia/Bishkek" ||
+      var.timezone == "Asia/Brunei" ||
+      var.timezone == "Asia/Calcutta" ||
+      var.timezone == "Asia/Choibalsan" ||
+      var.timezone == "Asia/Colombo" ||
+      var.timezone == "Asia/Damascus" ||
+      var.timezone == "Asia/Dhaka" ||
+      var.timezone == "Asia/Dili" ||
+      var.timezone == "Asia/Dubai" ||
+      var.timezone == "Asia/Dushanbe" ||
+      var.timezone == "Asia/Gaza" ||
+      var.timezone == "Asia/Hong_Kong" ||
+      var.timezone == "Asia/Hovd" ||
+      var.timezone == "Asia/Irkutsk" ||
+      var.timezone == "Asia/Jakarta" ||
+      var.timezone == "Asia/Jayapura" ||
+      var.timezone == "Asia/Jerusalem" ||
+      var.timezone == "Asia/Kabul" ||
+      var.timezone == "Asia/Kamchatka" ||
+      var.timezone == "Asia/Karachi" ||
+      var.timezone == "Asia/Katmandu" ||
+      var.timezone == "Asia/Kolkata" ||
+      var.timezone == "Asia/Krasnoyarsk" ||
+      var.timezone == "Asia/Kuala_Lumpur" ||
+      var.timezone == "Asia/Macau" ||
+      var.timezone == "Asia/Magadan" ||
+      var.timezone == "Asia/Makassar" ||
+      var.timezone == "Asia/Manila" ||
+      var.timezone == "Asia/Nicosia" ||
+      var.timezone == "Asia/Omsk" ||
+      var.timezone == "Asia/Pyongyang" ||
+      var.timezone == "Asia/Qatar" ||
+      var.timezone == "Asia/Rangoon" ||
+      var.timezone == "Asia/Riyadh" ||
+      var.timezone == "Asia/Saigon" ||
+      var.timezone == "Asia/Seoul" ||
+      var.timezone == "Asia/Shanghai" ||
+      var.timezone == "Asia/Singapore" ||
+      var.timezone == "Asia/Taipei" ||
+      var.timezone == "Asia/Tashkent" ||
+      var.timezone == "Asia/Tbilisi" ||
+      var.timezone == "Asia/Tehran" ||
+      var.timezone == "Asia/Thimphu" ||
+      var.timezone == "Asia/Tokyo" ||
+      var.timezone == "Asia/Ulaanbaatar" ||
+      var.timezone == "Asia/Vladivostok" ||
+      var.timezone == "Asia/Yakutsk" ||
+      var.timezone == "Asia/Yekaterinburg" ||
+      var.timezone == "Asia/Yerevan" ||
+      var.timezone == "Atlantic/Azores" ||
+      var.timezone == "Atlantic/Bermuda" ||
+      var.timezone == "Atlantic/Canary" ||
+      var.timezone == "Atlantic/Cape_Verde" ||
+      var.timezone == "Atlantic/Faroe" ||
+      var.timezone == "Atlantic/Reykjavik" ||
+      var.timezone == "Atlantic/South_Georgia" ||
+      var.timezone == "Atlantic/Stanley" ||
+      var.timezone == "Australia/Adelaide" ||
+      var.timezone == "Australia/Brisbane" ||
+      var.timezone == "Australia/Darwin" ||
+      var.timezone == "Australia/Hobart" ||
+      var.timezone == "Australia/Perth" ||
+      var.timezone == "Australia/Sydney" ||
+      var.timezone == "Etc/GMT" ||
+      var.timezone == "Europe/Amsterdam" ||
+      var.timezone == "Europe/Andorra" ||
+      var.timezone == "Europe/Athens" ||
+      var.timezone == "Europe/Belgrade" ||
+      var.timezone == "Europe/Berlin" ||
+      var.timezone == "Europe/Brussels" ||
+      var.timezone == "Europe/Bucharest" ||
+      var.timezone == "Europe/Budapest" ||
+      var.timezone == "Europe/Chisinau" ||
+      var.timezone == "Europe/Copenhagen" ||
+      var.timezone == "Europe/Dublin" ||
+      var.timezone == "Europe/Gibraltar" ||
+      var.timezone == "Europe/Helsinki" ||
+      var.timezone == "Europe/Istanbul" ||
+      var.timezone == "Europe/Kaliningrad" ||
+      var.timezone == "Europe/Kiev" ||
+      var.timezone == "Europe/Lisbon" ||
+      var.timezone == "Europe/London" ||
+      var.timezone == "Europe/Luxembourg" ||
+      var.timezone == "Europe/Madrid" ||
+      var.timezone == "Europe/Malta" ||
+      var.timezone == "Europe/Minsk" ||
+      var.timezone == "Europe/Monaco" ||
+      var.timezone == "Europe/Moscow" ||
+      var.timezone == "Europe/Oslo" ||
+      var.timezone == "Europe/Paris" ||
+      var.timezone == "Europe/Prague" ||
+      var.timezone == "Europe/Riga" ||
+      var.timezone == "Europe/Rome" ||
+      var.timezone == "Europe/Samara" ||
+      var.timezone == "Europe/Sofia" ||
+      var.timezone == "Europe/Stockholm" ||
+      var.timezone == "Europe/Tallinn" ||
+      var.timezone == "Europe/Tirane" ||
+      var.timezone == "Europe/Vienna" ||
+      var.timezone == "Europe/Vilnius" ||
+      var.timezone == "Europe/Warsaw" ||
+      var.timezone == "Europe/Zurich" ||
+      var.timezone == "Indian/Chagos" ||
+      var.timezone == "Indian/Christmas" ||
+      var.timezone == "Indian/Cocos" ||
+      var.timezone == "Indian/Kerguelen" ||
+      var.timezone == "Indian/Mahe" ||
+      var.timezone == "Indian/Maldives" ||
+      var.timezone == "Indian/Mauritius" ||
+      var.timezone == "Indian/Reunion" ||
+      var.timezone == "Pacific/Apia" ||
+      var.timezone == "Pacific/Auckland" ||
+      var.timezone == "Pacific/Chuuk" ||
+      var.timezone == "Pacific/Easter" ||
+      var.timezone == "Pacific/Efate" ||
+      var.timezone == "Pacific/Enderbury" ||
+      var.timezone == "Pacific/Fakaofo" ||
+      var.timezone == "Pacific/Fiji" ||
+      var.timezone == "Pacific/Funafuti" ||
+      var.timezone == "Pacific/Galapagos" ||
+      var.timezone == "Pacific/Gambier" ||
+      var.timezone == "Pacific/Guadalcanal" ||
+      var.timezone == "Pacific/Guam" ||
+      var.timezone == "Pacific/Honolulu" ||
+      var.timezone == "Pacific/Kiritimati" ||
+      var.timezone == "Pacific/Kosrae" ||
+      var.timezone == "Pacific/Kwajalein" ||
+      var.timezone == "Pacific/Majuro" ||
+      var.timezone == "Pacific/Marquesas" ||
+      var.timezone == "Pacific/Nauru" ||
+      var.timezone == "Pacific/Niue" ||
+      var.timezone == "Pacific/Norfolk" ||
+      var.timezone == "Pacific/Noumea" ||
+      var.timezone == "Pacific/Pago_Pago" ||
+      var.timezone == "Pacific/Palau" ||
+      var.timezone == "Pacific/Pitcairn" ||
+      var.timezone == "Pacific/Pohnpei" ||
+      var.timezone == "Pacific/Port_Moresby" ||
+      var.timezone == "Pacific/Rarotonga" ||
+      var.timezone == "Pacific/Tahiti" ||
+      var.timezone == "Pacific/Tarawa" ||
+      var.timezone == "Pacific/Tongatapu" ||
+      var.timezone == "Pacific/Wake" ||
+      var.timezone == "Pacific/Wallis"
+    )
+    error_message = "Please Validate that you have input a valid timezone. For a List of supported timezones see the following URL.\r\n https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md."
+  }
 }
 output "timezone" {
   description = "Timezone."
@@ -98,269 +338,4 @@ variable "ntp_servers" {
 output "ntp_servers" {
   description = "List of NTP Server for Kubernetes System Configuration Policy.  If undefined then the dns_servers will be used."
   value       = length(var.ntp_servers) != 0 ? var.ntp_servers : var.dns_servers
-}
-
-#______________________________________________
-#
-# IKS Cluster Variable
-#______________________________________________
-
-variable "cluster_name" {
-  default     = "iks"
-  description = "Intersight Kubernetes Service Cluster Name."
-  type        = string
-}
-output "cluster_name" {
-  description = "Intersight Kubernetes Service Cluster Name."
-  value       = var.cluster_name
-}
-
-
-#______________________________________________
-#
-# Intersight IP Pool Variables
-#______________________________________________
-
-variable "ip_pool" {
-  default     = ""
-  description = "Intersight Kubernetes Service IP Pool.  Default name is {cluster_name}_ip_pool"
-  type        = string
-}
-output "ip_pool" {
-  description = "IP Pool Policy Name."
-  value       = var.ip_pool != "" ? var.ip_pool : join("-", [var.cluster_name, "ip_pool"])
-}
-
-variable "ip_pool_netmask" {
-  default     = "255.255.255.0"
-  description = "IP Pool Netmask."
-  type        = string
-  validation {
-    condition = (
-      can(regex("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", var.ip_pool_netmask))
-    )
-    error_message = "The ip_pool_netmask must be in the format X.X.X.X."
-  }
-}
-output "ip_pool_netmask" {
-  description = "IP Pool Netmask Value."
-  value       = var.ip_pool_netmask
-}
-
-variable "ip_pool_gateway" {
-  default     = "254"
-  description = "IP Pool Gateway last Octet.  The var.network_prefix will be combined with ip_pool_gateway for the Gateway Address."
-  type        = string
-  validation {
-    condition = (
-      can(regex("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", var.ip_pool_gateway)) ||
-      can(regex("^[0-9]{1,3}$", var.ip_pool_gateway))
-    )
-    error_message = "The ip_pool_gateway must be in the format X.X.X.X or X."
-  }
-}
-output "ip_pool_gateway" {
-  description = "IP Pool Gateway Value."
-  value = trimspace(<<-EOT
-  %{if can(regex("[\\d]{1,3}\\.[\\d]{1,3}\\.", var.ip_pool_gateway))}${var.ip_pool_gateway}%{endif}
-  %{if can(regex("^[0-9]{1,3}$", var.ip_pool_gateway))}${join(".", [var.network_prefix, var.ip_pool_gateway])}%{endif}
-  EOT
-  )
-}
-
-variable "ip_pool_from" {
-  default     = "20"
-  description = "IP Pool Starting IP last Octet.  The var.network_prefix will be combined with ip_pool_from for the Starting Address."
-  type        = string
-  validation {
-    condition = (
-      can(regex("^[0-9]{1,3}$", var.ip_pool_from))
-    )
-    error_message = "The ip_pool_from must be in the format X."
-  }
-}
-output "ip_pool_from" {
-  description = "IP Pool Starting IP Value."
-  value       = join(".", [var.network_prefix, var.ip_pool_from])
-}
-
-variable "ip_pool_size" {
-  default     = "30"
-  description = "IP Pool Block Size."
-  type        = string
-  validation {
-    condition = (
-      can(regex("^[0-9]{1,3}$", var.ip_pool_size))
-    )
-    error_message = "The ip_pool_size must be in the X."
-  }
-}
-output "ip_pool_size" {
-  description = "IP Pool Block Size."
-  value       = var.ip_pool_size
-}
-
-#______________________________________________
-#
-# Kubernetes Add-ons Policy Variables
-#______________________________________________
-
-variable "addons_list" {
-  default     = []
-  description = "List of Add-ons for Intersight Kubernetes Service.  Add-ons Options are {ccp-monitor|kubernetes-dashboard}."
-  type        = list(string)
-}
-output "addons_list" {
-  description = "List of Add-ons for Policy Creation."
-  value = [
-    for a in var.addons_list :
-    {
-      addon_policy_name = "${var.cluster_name}_${a}"
-      addon             = a
-      description       = "Policy for ${a}"
-      upgrade_strategy  = "AlwaysReinstall"
-      install_strategy  = "InstallOnly"
-    }
-  ]
-}
-
-
-#______________________________________________
-#
-# Kubernetes Runtime Variables
-#______________________________________________
-
-variable "proxy_http_hostname" {
-  default     = ""
-  description = "HTTP Proxy Server Name or IP Address."
-  type        = string
-}
-output "proxy_http_hostname" {
-  description = "HTTP Proxy Server Name or IP Address."
-  value       = var.proxy_http_hostname
-}
-
-variable "proxy_http_username" {
-  default     = ""
-  description = "HTTP Proxy Username."
-  type        = string
-}
-output "proxy_http_username" {
-  description = "HTTP Proxy Username."
-  value       = var.proxy_http_username
-}
-
-variable "proxy_https_hostname" {
-  default     = ""
-  description = "HTTPS Proxy Server Name or IP Address."
-  type        = string
-}
-output "proxy_https_hostname" {
-  description = "HTTPS Proxy Server Name or IP Address.  If Left blank, and proxy_http_hostname is defined, it will be copied to here."
-  value       = var.proxy_https_hostname != [] ? var.proxy_https_hostname : var.proxy_http_hostname
-}
-
-variable "proxy_https_username" {
-  default     = ""
-  description = "HTTPS Proxy Username."
-  type        = string
-}
-output "proxy_https_username" {
-  description = "HTTPS Proxy Username."
-  value       = var.proxy_https_username != [] ? var.proxy_https_username : var.proxy_http_username
-}
-
-
-#______________________________________________
-#
-# Kubernetes Policy Names
-#______________________________________________
-
-variable "k8s_addon_policy" {
-  default     = ""
-  description = "Kubernetes Runtime Policy Name.  Default name is {cluster_name}-runtime."
-  type        = string
-}
-output "k8s_addon_policy" {
-  description = "Kubernetes Trusted Registry Policy Name."
-  value       = var.k8s_addon_policy != "" ? var.k8s_addon_policy : join("-", [var.cluster_name, "addon"])
-}
-
-variable "k8s_runtime_policy" {
-  default     = ""
-  description = "Kubernetes Runtime Policy Name.  Default name is {cluster_name}-runtime."
-  type        = string
-}
-output "k8s_runtime_policy" {
-  description = "Kubernetes Trusted Registry Policy Name."
-  value       = var.k8s_runtime_policy != "" ? var.k8s_runtime_policy : join("-", [var.cluster_name, "runtime"])
-}
-
-variable "k8s_trusted_registry" {
-  default     = ""
-  description = "Kubernetes Trusted Registry Policy Name.  Default name is {cluster_name}-registry."
-  type        = string
-}
-output "k8s_trusted_registry" {
-  description = "Kubernetes Trusted Registry Policy Name."
-  value       = var.k8s_trusted_registry != "" ? var.k8s_trusted_registry : join("-", [var.cluster_name, "registry"])
-}
-
-variable "k8s_version_policy" {
-  default     = ""
-  description = "Kubernetes Version Policy Name.  Default name is {cluster_name}-k8s-version."
-  type        = string
-}
-output "k8s_version_policy" {
-  description = "Kubernetes Version Policy Name."
-  value       = var.k8s_version_policy != "" ? var.k8s_version_policy : join("-", [var.cluster_name, "k8s-version"])
-}
-
-variable "k8s_vm_network_policy" {
-  default     = ""
-  description = "Kubernetes Network/System Configuration Policy (CIDR, dns, ntp, etc.).  Default name is {cluster_name}-sysconfig."
-  type        = string
-}
-output "k8s_vm_network_policy" {
-  description = "Kubernetes VM Network Policy Name."
-  value       = var.k8s_vm_network_policy != "" ? var.k8s_vm_network_policy : join("-", [var.cluster_name, "sysconfig"])
-}
-
-variable "k8s_vm_infra_policy" {
-  default     = ""
-  description = "Kubernetes Virtual Machine Infrastructure Configuration Policy.  Default name is {cluster_name}-vm-infra-config."
-  type        = string
-}
-output "k8s_vm_infra_policy" {
-  description = "Kubernetes VM Infrastructure Policy Name."
-  value       = var.k8s_vm_infra_policy != "" ? var.k8s_vm_infra_policy : join("-", [var.cluster_name, "vm-infra-config"])
-}
-
-
-#______________________________________________
-#
-# K8S VM Infra Policy Variables
-#______________________________________________
-#
-variable "vsphere_target" {
-  default     = "210"
-  description = "vSphere Server registered as a Target in Intersight.  The default, 210, only works if this is for the DevNet Sandbox."
-  type        = string
-  validation {
-    condition = (
-      can(regex("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", var.vsphere_target)) ||
-      can(regex("^[0-9]{1,3}$", var.vsphere_target)) ||
-      can(regex("^[[:alnum:]]+", var.vsphere_target))
-    )
-    error_message = "The vsphere_target must be in the format hostname or IPv4 Address or just a number."
-  }
-}
-output "vsphere_target" {
-  description = "vSphere Target."
-  value = trimspace(<<-EOT
-  %{if can(regex("[\\d]{1,3}\\.[\\d]{1,3}\\.", var.vsphere_target))}${var.vsphere_target}%{endif}
-  %{if can(regex("^[0-9]{1,3}$", var.vsphere_target))}${join(".", [var.network_prefix, var.vsphere_target])}%{endif}
-  %{if can(regex("^[[:alnum:]]+", var.vsphere_target))}${var.vsphere_target}%{endif}
-  EOT
-  )
 }
