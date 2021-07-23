@@ -5,7 +5,7 @@
 
 output "cluster_name" {
   description = "Intersight Kubernetes Service Cluster Name."
-  value = data.intersight_kubernetes_cluster.results[0].name
+  value       = data.intersight_kubernetes_cluster.results[0].name
 }
 
 output "kube_config" {

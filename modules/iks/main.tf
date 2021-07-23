@@ -3,12 +3,12 @@
 # Get Outputs from the Global Variables Workspace
 #__________________________________________________________
 
-data "terraform_remote_state" "global" {
+data "terraform_remote_state" "tenant" {
   backend = "remote"
   config = {
     organization = var.tfc_organization
     workspaces = {
-      name = var.ws_global_vars
+      name = var.ws_tenant
     }
   }
 }
@@ -16,20 +16,14 @@ data "terraform_remote_state" "global" {
 
 #__________________________________________________________
 #
-# Assign Global Attributes from global_vars Workspace
+# Assign Global Attributes from tenant Workspace
 #__________________________________________________________
 
 locals {
   # Intersight Provider Variables
-  endpoint = yamldecode(data.terraform_remote_state.global.outputs.endpoint)
+  endpoint = data.terraform_remote_state.tenant.outputs.endpoint
   # Intersight Organization
-  organization = yamldecode(data.terraform_remote_state.global.outputs.organization)
-  # DNS Variables
-  dns_servers = data.terraform_remote_state.global.outputs.dns_servers
-  domain_name = yamldecode(data.terraform_remote_state.global.outputs.domain_name)
-  # Time Variables
-  ntp_servers = data.terraform_remote_state.global.outputs.ntp_servers
-  timezone    = yamldecode(data.terraform_remote_state.global.outputs.timezone)
+  organization = data.terraform_remote_state.tenant.outputs.organization
 }
 
 
@@ -48,24 +42,6 @@ data "intersight_organization_organization" "organization_moid" {
 # Create Kubernetes Policies
 #__________________________________________________________
 
-#______________________________________________
-#
-# Create the IP Pool
-#______________________________________________
-
-module "ip_pool" {
-  source           = var.ip_pool_create == true ? "terraform-cisco-modules/iks/intersight//modules/ip_pool" : "data_ip_pool"
-  org_name         = local.organization
-  name             = local.ip_pool
-  gateway          = local.ip_pool_gateway
-  netmask          = local.ip_pool_netmask
-  pool_size        = local.ip_pool_size
-  primary_dns      = local.dns_servers[0]
-  secondary_dns    = length(local.dns_servers) > 1 ? local.dns_servers[1] : null
-  starting_address = local.ip_pool_from
-  tags             = var.tags
-}
-
 #_____________________________________________________
 #
 # Configure Add-Ons Policy for the Kubernetes Cluster
@@ -80,153 +56,10 @@ module "k8s_addons" {
 
 #______________________________________________
 #
-# Create the Kubernetes VM Infra Config
-#______________________________________________
-
-module "k8s_vm_infra_policy" {
-  source           = "terraform-cisco-modules/iks/intersight//modules/infra_config_policy"
-  device_name      = local.vsphere_target
-  name             = local.k8s_vm_infra_policy
-  org_name         = local.organization
-  tags             = var.tags
-  vc_password      = var.vsphere_password
-  vc_cluster       = var.vsphere_cluster
-  vc_datastore     = var.vsphere_datastore
-  vc_portgroup     = var.vsphere_portgroup
-  vc_resource_pool = var.vsphere_resource_pool
-}
-
-#______________________________________________
-#
-# Create the Kubernetes VM Node OS Config Policy
-#______________________________________________
-
-module "k8s_vm_network_policy" {
-  source       = "terraform-cisco-modules/iks/intersight//modules/k8s_network"
-  org_name     = local.organization
-  policy_name  = local.k8s_vm_network_policy
-  cni          = var.cni
-  dns_servers  = local.dns_servers
-  domain_name  = local.domain_name
-  ntp_servers  = local.ntp_servers
-  pod_cidr     = var.k8s_pod_cidr
-  service_cidr = var.k8s_service_cidr
-  timezone     = local.timezone
-  tags         = var.tags
-}
-
-#______________________________________________
-#
-# Create the Kubernetes Version Policy
-#______________________________________________
-
-module "k8s_version_policy" {
-  source           = "terraform-cisco-modules/iks/intersight//modules/version"
-  org_name         = local.organization
-  k8s_version_name = local.k8s_version_policy
-  k8s_version      = var.k8s_version
-  tags             = var.tags
-}
-
-#______________________________________________
-#
-# Create the Kubernetes VM Instance Type Policies
-# * Small
-# * Medium
-# * Large
-#______________________________________________
-
-module "k8s_instance_small" {
-  source    = "terraform-cisco-modules/iks/intersight//modules/worker_profile"
-  org_name  = local.organization
-  name      = join("-", [local.cluster_name, "small"])
-  cpu       = 4
-  disk_size = 40
-  memory    = 16384
-  tags      = var.tags
-}
-
-module "k8s_instance_medium" {
-  source    = "terraform-cisco-modules/iks/intersight//modules/worker_profile"
-  org_name  = local.organization
-  name      = join("-", [local.cluster_name, "medium"])
-  cpu       = 8
-  disk_size = 60
-  memory    = 24576
-  tags      = var.tags
-}
-
-module "k8s_instance_large" {
-  source    = "terraform-cisco-modules/iks/intersight//modules/worker_profile"
-  org_name  = local.organization
-  name      = join("-", [local.cluster_name, "large"])
-  cpu       = 12
-  disk_size = 80
-  memory    = 32768
-  tags      = var.tags
-}
-
-#______________________________________________
-#
-# Create the Kubernetes Runtime Policy
-#______________________________________________
-
-module "k8s_runtime_policy" {
-  source               = "terraform-cisco-modules/iks/intersight//modules/runtime_policy"
-  count                = local.proxy_http_hostname != "" && local.proxy_https_hostname != "" ? 1 : 0
-  docker_no_proxy      = var.docker_no_proxy
-  org_name             = local.organization
-  name                 = local.k8s_runtime_policy
-  proxy_http_hostname  = local.proxy_http_hostname
-  proxy_http_port      = var.proxy_http_port
-  proxy_http_password  = var.proxy_http_password
-  proxy_http_protocol  = var.proxy_http_protocol
-  proxy_http_username  = local.proxy_http_username
-  proxy_https_hostname = local.proxy_https_hostname
-  proxy_https_password = var.proxy_https_password
-  proxy_https_port     = var.proxy_https_port
-  proxy_https_protocol = var.proxy_https_protocol
-  proxy_https_username = local.proxy_https_username
-  tags                 = var.tags
-}
-
-#______________________________________________
-#
-# Create the Kubernetes Trusted Registry Policy
-#______________________________________________
-
-module "k8s_trusted_registry" {
-  count               = length(var.unsigned_registries) > 0 || length(var.root_ca_registries) > 0 ? 1 : 0
-  source              = "terraform-cisco-modules/iks/intersight//modules/trusted_registry"
-  org_name            = local.organization
-  policy_name         = local.k8s_trusted_registry
-  root_ca_registries  = var.root_ca_registries
-  unsigned_registries = var.unsigned_registries
-  tags                = var.tags
-}
-
-
-#__________________________________________________________
-#
-# Create Intersight Kubernetes Cluster
-#__________________________________________________________
-
-#______________________________________________
-#
 # Create the IKS Cluster Profile
 #______________________________________________
 
 module "iks_cluster" {
-  depends_on = [
-    module.ip_pool,
-    module.k8s_instance_small,
-    module.k8s_instance_medium,
-    module.k8s_instance_large,
-    module.k8s_trusted_registry,
-    module.k8s_version_policy,
-    module.k8s_vm_infra_policy,
-    module.k8s_vm_network_policy,
-  ]
   source              = "terraform-cisco-modules/iks/intersight//modules/cluster"
   org_name            = local.organization
   action              = var.action

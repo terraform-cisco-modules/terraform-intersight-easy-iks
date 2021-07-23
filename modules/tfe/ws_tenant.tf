@@ -3,9 +3,9 @@
 # Required Variables
 #__________________________________________________________
 
-variable "prefix_value" {
+variable "tenant_name" {
   default     = "default"
-  description = "Prefix Value for Workspace Creation in Terraform Cloud and IKS Cluster Naming."
+  description = "Tenant Name for Workspace Creation in Terraform Cloud and IKS Cluster Naming."
   type        = string
 }
 
@@ -16,16 +16,17 @@ variable "prefix_value" {
 #______________________________________________
 
 variable "domain_name" {
-  default     = "demo.intra"
+  default     = "example.com"
   description = "Domain Name for Kubernetes Sysconfig Policy."
   type        = string
 }
 
 variable "dns_servers" {
-  default     = ["10.200.0.100"]
+  default     = ["198.18.0.100", "198.18.0.101"]
   description = "DNS Servers for Kubernetes Sysconfig Policy."
   type        = list(string)
 }
+
 
 #______________________________________________
 #
@@ -44,31 +45,90 @@ variable "timezone" {
   type        = string
 }
 
+#______________________________________________
+#
+# IP Pools
+#______________________________________________
+
+variable "ip_pools" {
+  default = {
+    default = {
+      ip_pool_name    = "{tenant_name}_ip_pool"
+      ip_pool_gateway = "198.18.0.1/24"
+      ip_pool_from    = 20
+      ip_pool_size    = 30
+    }
+  }
+  type = map(object(
+    {
+      ip_pool_name    = optional(string)
+      ip_pool_gateway = optional(string)
+      ip_pool_from    = optional(number)
+      ip_pool_size    = optional(number)
+    }
+  ))
+}
+
+
+#______________________________________________
+#
+# IP Pools
+#______________________________________________
+
+variable "k8s_runtime_policy" {
+  default = (
+    {
+      proxy_http_hostname     = ""
+      proxy_http_port         = 8080
+      proxy_http_protocol     = ""
+      proxy_http_username     = ""
+      proxy_https_hostname    = ""
+      proxy_https_port        = 8443
+      proxy_https_protocol    = ""
+      proxy_https_username    = ""
+      k8s_runtime_policy_name = ""
+    }
+  )
+  type = object(
+    {
+      proxy_http_hostname  = optional(string)
+      proxy_http_port      = optional(number)
+      proxy_http_protocol  = optional(string)
+      proxy_http_username  = optional(string)
+      proxy_https_hostname = optional(string)
+      proxy_https_port     = optional(number)
+      proxy_https_protocol = optional(string)
+      proxy_https_username = optional(string)
+      runtime_policy_name  = optional(string)
+    }
+  )
+}
+
 
 #__________________________________________________________
 #
-# Terraform Cloud Workspace: {name_prefix}_global_vars
+# Terraform Cloud Workspace: {tenant_name}
 #__________________________________________________________
 
-module "global_workspace" {
+module "tenant_workspace" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   depends_on = [
     module.tfc_agent_pool
   ]
   auto_apply          = true
-  description         = "${var.name_prefix}_global_vars Workspace."
+  description         = "${var.tenant_name} Workspace."
   global_remote_state = true
-  name                = "${var.name_prefix}_global_vars"
+  name                = var.tenant_name
   terraform_version   = var.terraform_version
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
   vcs_repo            = var.vcs_repo
-  working_directory   = "global_vars"
+  working_directory   = "tenant"
 }
 
-output "global_workspace" {
-  description = "Terraform Cloud Workspace global_vars ID."
-  value       = module.global_workspace
+output "tenant_workspace" {
+  description = "Terraform Cloud Tenant Workspace ID."
+  value       = module.tenant_workspace
 }
 
 #__________________________________________________________
@@ -76,14 +136,13 @@ output "global_workspace" {
 # Terraform Cloud Workspace Variables: global_vars
 #__________________________________________________________
 
-module "tfc_variables_global" {
+module "tenant_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
     module.global_workspace
   ]
   category     = "terraform"
-  for_each     = var.cluster_list
-  workspace_id = module.global_workspace.workspace.id
+  workspace_id = module.tenant_workspace.workspace.id
   variable_list = [
     {
       description = "Intersight Organization."

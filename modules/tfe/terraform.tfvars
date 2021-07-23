@@ -46,8 +46,8 @@ secretkey    = "../../intersight.secret"
 # DNS Variables
 #__________________________________________________________
 
-domain_name="rich.ciscolabs.com"
-dns_servers=["10.101.128.15", "10.101.128.16"]
+domain_name = "rich.ciscolabs.com"
+dns_servers = ["10.101.128.15", "10.101.128.16"]
 
 
 #__________________________________________________________
@@ -66,8 +66,8 @@ timezone = "America/New_York"
 # Cluster Variables
 #__________________________________________________________
 
-prefix_value        = "tyscott"
-tags                = [ { key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" } ]
+tenant_name         = "tyscott"
+tags                = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
 unsigned_registries = ["10.101.128.128"]
 
 cluster_variables = {

@@ -14,73 +14,13 @@ locals {
       vsphere_datastore     = optional(string)
       vsphere_portgroup     = optional(list(string))
       vsphere_resource_pool = optional(string)
-      annotation = (v.annotation != null ? v.annotation : "")
-      name       = coalesce(v.name, "l3out")
-      name_alias = (v.name_alias != null ? v.name_alias : "")
-      vlan_pool  = coalesce(v.vlan_pool, "")
+      annotation            = (v.annotation != null ? v.annotation : "")
+      name                  = coalesce(v.name, "l3out")
+      name_alias            = (v.name_alias != null ? v.name_alias : "")
+      vlan_pool             = coalesce(v.vlan_pool, "")
     }
   }
 }
-
-variable "k8s_cluster_variables" {
-  default = {
-    default = {
-      addons_list           = []
-      cluster_name          = "**REQUIRED**"
-      ip_pool_create        = true
-      ip_pool_name          = "{prefix_value}_{cluster_name}_ip_pool"
-      ip_pool_gateway       = "198.18.0.1/24"
-      ip_pool_from          = 20
-      ip_pool_size          = 30
-      k8s_addon_create      = true
-      k8s_addon_policy      = "{prefix_value}_{cluster_name}_addons"
-      k8s_runtime_create    = true
-      k8s_runtime_policy    = "{prefix_value}_{cluster_name}_ip_pool"
-      k8s_trusted_create    = true
-      k8s_trusted_registry  = "{prefix_value}_{cluster_name}_ip_pool"
-      k8s_version_create    = true
-      k8s_version_policy    = "{prefix_value}_{cluster_name}_ip_pool"
-      k8s_vm_infra_create   = true
-      k8s_vm_infra_policy   = "{prefix_value}_{cluster_name}_ip_pool"
-      k8s_vm_network_create = true
-      k8s_vm_network_policy = "{prefix_value}_{cluster_name}_ip_pool"
-      vsphere_target        = "**OPTIONAL - If shared between Clusters.**"
-      vsphere_cluster       = "**OPTIONAL - If shared between Clusters.**"
-      vsphere_datastore     = "**OPTIONAL - If shared between Clusters.**"
-      vsphere_portgroup     = "**OPTIONAL - If shared between Clusters.**"
-      vsphere_resource_pool = "**OPTIONAL - If shared between Clusters.**"
-    }
-  }
-  type = map(object(
-    {
-      addons_list           = optional(list(string))
-      cluster_name          = string
-      ip_pool_create        = bool
-      ip_pool_name          = string
-      ip_pool_gateway       = optional(string)
-      ip_pool_from          = optional(number)
-      ip_pool_size          = optional(number)
-      k8s_addon_create      = bool
-      k8s_addon_policy      = optional(string)
-      k8s_runtime_create    = bool
-      k8s_runtime_policy    = optional(string)
-      k8s_trusted_create    = bool
-      k8s_trusted_registry  = optional(string)
-      k8s_version_create    = bool
-      k8s_version_policy    = optional(string)
-      k8s_vm_infra_create   = bool
-      k8s_vm_infra_policy   = optional(string)
-      k8s_vm_network_create = bool
-      k8s_vm_network_policy = optional(string)
-      vsphere_target        = optional(string)
-      vsphere_cluster       = optional(string)
-      vsphere_datastore     = optional(string)
-      vsphere_portgroup     = optional(list(string))
-      vsphere_resource_pool = optional(string)
-    }
-  ))
-}
-
 
 #______________________________________________
 #
@@ -359,16 +299,16 @@ variable "addons_list" {
 #__________________________________________________________
 
 module "iks_workspaces" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each            = var.k8s_cluster_variables
-  auto_apply          = true
-  description         = "Intersight Kubernetes Service Workspace."
-  name                = "${var.name_prefix}_${each.value.cluster_name}_iks"
-  terraform_version   = var.terraform_version
-  tfc_oath_token      = var.tfc_oath_token
-  tfc_org_name        = var.tfc_organization
-  vcs_repo            = var.vcs_repo
-  working_directory   = "iks"
+  source            = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  for_each          = var.k8s_cluster_variables
+  auto_apply        = true
+  description       = "Intersight Kubernetes Service Workspace."
+  name              = "${var.name_prefix}_${each.value.cluster_name}_iks"
+  terraform_version = var.terraform_version
+  tfc_oath_token    = var.tfc_oath_token
+  tfc_org_name      = var.tfc_organization
+  vcs_repo          = var.vcs_repo
+  working_directory = "iks"
 }
 
 output "iks_workspaces" {
@@ -386,7 +326,7 @@ module "iks_variables" {
   depends_on = [
     module.iks_workspaces
   ]
-  for_each = var.k8s_cluster_variables
+  for_each     = var.k8s_cluster_variables
   category     = "terraform"
   workspace_id = module.iks_workspaces["${each.value.cluster_name}"].workspace.id
   variable_list = [

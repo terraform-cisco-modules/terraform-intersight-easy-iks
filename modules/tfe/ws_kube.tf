@@ -4,7 +4,7 @@
 #__________________________________________________________
 
 module "kube_workspaces" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each            = var.k8s_cluster_variables
   auto_apply          = true
   description         = "${var.prefix_value}_${each.value.cluster_name} - kube_config Workspace."

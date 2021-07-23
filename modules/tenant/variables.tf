@@ -1,17 +1,35 @@
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 #__________________________________________________________
 #
 # Intersight Provider Variables
 #__________________________________________________________
+
+#__________________________________________________________
+#
+# Intersight Provider Variables
+#__________________________________________________________
+
+variable "apikey" {
+  description = "Intersight API Key."
+  sensitive   = true
+  type        = string
+}
 
 variable "endpoint" {
   default     = "https://intersight.com"
   description = "Intersight URL."
   type        = string
 }
-output "endpoint" {
-  description = "Intersight URL."
-  value       = var.endpoint
+
+variable "secretkey" {
+  description = "Intersight Secret Key."
+  sensitive   = true
+  type        = string
 }
+
 
 #__________________________________________________________
 #
@@ -28,41 +46,54 @@ output "organization" {
   value       = var.organization
 }
 
+
+#______________________________________________
+#
+# Tenant Variables
+#______________________________________________
+
+variable "tenant_name" {
+  default     = "default"
+  description = "Name of the Tenant."
+  type        = string
+}
+
+variable "tags" {
+  default     = []
+  description = "Tags to be Associated with Objects Created in Intersight."
+  type        = list(map(string))
+}
+
+
+
 #______________________________________________
 #
 # DNS Variables
 #______________________________________________
 
 variable "domain_name" {
-  default     = "demo.intra"
+  default     = "example.com"
   description = "Domain Name for Kubernetes Sysconfig Policy."
   type        = string
 }
-output "domain_name" {
-  description = "Domain Name."
-  value       = var.domain_name
+
+variable "dns_servers_v4" {
+  default     = ["198.18.0.100", "198.18.0.101"]
+  description = "DNS Servers for Kubernetes Sysconfig Policy."
+  type        = list(string)
 }
 
-variable "dns_servers" {
-  default     = ["10.200.0.100"]
-  description = "List of DNS Server(s) for Kubernetes System Configuration Policy and IP Pool."
-  type        = list(string)
-  #  validation {
-  #    condition = (
-  #      can(regex("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$", var.dns_primary))
-  #    )
-  #    error_message = "The dns_servers must be in the format X.X.X.X or X."
-  #  }
-}
-output "dns_servers" {
-  description = "List of DNS Server(s) for Kubernetes System Configuration Policy and IP Pool."
-  value       = var.dns_servers
-}
 
 #______________________________________________
 #
 # Time Variables
 #______________________________________________
+
+variable "ntp_servers" {
+  default     = []
+  description = "NTP Servers for Kubernetes Sysconfig Policy."
+  type        = list(string)
+}
 
 variable "timezone" {
   default     = "Etc/GMT"
@@ -325,17 +356,243 @@ variable "timezone" {
     error_message = "Please Validate that you have input a valid timezone. For a List of supported timezones see the following URL.\r\n https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md."
   }
 }
-output "timezone" {
-  description = "Timezone."
-  value       = var.timezone
+
+
+#______________________________________________
+#
+# IP Pool Variables
+#______________________________________________
+
+variable "ip_pools" {
+  default = {
+    default = {
+      from    = 20
+      gateway = "198.18.0.1/24"
+      name    = "{tenant_name}_ip_pool"
+      size    = 30
+      tags    = []
+    }
+  }
+  description = " * from - host address of the pool starting address.  Default is 20\r\n * gateway - ip/prefix of the gateway.  Default is 198.18.0.1/24\r\n * name - Name of the IP Pool.  Default is {tenant}_{cluster_name}_ip_pool.\r\n * size - Number of host addresses to assign to the pool.  Default is 30."
+  type = map(object(
+    {
+      from    = optional(number)
+      gateway = optional(string)
+      name    = optional(string)
+      size    = optional(number)
+      tags    = optional(list(map(string)))
+    }
+  ))
 }
 
-variable "ntp_servers" {
-  default     = []
-  description = "List of NTP Server for Kubernetes System Configuration Policy.  If undefined then the dns_servers will be used."
-  type        = list(string)
+#______________________________________________
+#
+# Kubernetes Runtime Policy Variables
+#______________________________________________
+
+variable "k8s_runtime" {
+  default = (
+    {
+      docker_bridge_cidr = ""
+      docker_no_proxy    = []
+      http_hostname      = ""
+      http_port          = 8080
+      http_protocol      = "http"
+      http_username      = ""
+      https_hostname     = ""
+      https_port         = 8443
+      https_protocol     = "https"
+      https_username     = ""
+      name               = ""
+      tags               = []
+    }
+  )
+  description = ""
+  type = object(
+    {
+      docker_bridge_cidr = optional(string)
+      docker_no_proxy    = optional(list(string))
+      http_hostname      = optional(string)
+      http_port          = optional(number)
+      http_protocol      = optional(string)
+      http_username      = optional(string)
+      https_hostname     = optional(string)
+      https_port         = optional(number)
+      https_protocol     = optional(string)
+      https_username     = optional(string)
+      name               = optional(string)
+      tags               = optional(list(map(string)))
+    }
+  )
 }
-output "ntp_servers" {
-  description = "List of NTP Server for Kubernetes System Configuration Policy.  If undefined then the dns_servers will be used."
-  value       = length(var.ntp_servers) != 0 ? var.ntp_servers : var.dns_servers
+
+variable "k8s_runtime_http_password" {
+  default     = ""
+  description = "Password for the HTTP Proxy Server, If required."
+  sensitive   = true
+  type        = string
 }
+
+variable "k8s_runtime_https_password" {
+  default     = ""
+  description = "Password for the HTTPS Proxy Server, If required."
+  sensitive   = true
+  type        = string
+}
+
+
+#______________________________________________
+#
+# Kubernetes Trusted Registries Variables
+#______________________________________________
+
+variable "k8s_trusted_registry" {
+  default = (
+    {
+      name     = ""
+      root_ca  = []
+      tags     = []
+      unsigned = []
+    }
+  )
+  # description = "Kubernetes Trusted Registry Policy Name.  Default is {tenant_name}_registry."
+  # description = "List of root CA Signed Registries."
+  # description = "List of unsigned registries to be supported."
+  type = object(
+    {
+      name     = optional(string)
+      root_ca  = optional(list(string))
+      tags     = optional(list(map(string)))
+      unsigned = optional(list(string))
+    }
+  )
+}
+
+
+#______________________________________________
+#
+# Kubernetes Trusted Registries Variables
+#______________________________________________
+
+variable "k8s_version" {
+  default = {
+    default = {
+      name    = ""
+      tags    = []
+      version = "1.19.5"
+    }
+  }
+  # description = "Kubernetes Trusted Registry Policy Name.  Default is {tenant_name}_registry."
+  type = map(object(
+    {
+      name    = optional(string)
+      tags    = optional(list(map(string)))
+      version = optional(string)
+    }
+  ))
+}
+
+
+#______________________________________________
+#
+# Kubernetes Virtual Machine Infra Variables
+#______________________________________________
+
+variable "k8s_vm_infra" {
+  default = {
+    default = {
+      name                  = ""
+      tags                  = []
+      vsphere_cluster       = "default"
+      vsphere_datastore     = "datastore1"
+      vsphere_portgroup     = ["VM Network"]
+      vsphere_resource_pool = ""
+      vsphere_target        = ""
+    }
+  }
+  description = "Kubernetes Virtual Machine Infrastructure Configuration Policy.  Default name is {tenant_name}_vm_infra."
+  type = map(object(
+    {
+      name                  = optional(string)
+      tags                  = optional(list(map(string)))
+      vsphere_cluster       = string
+      vsphere_datastore     = string
+      vsphere_portgroup     = list(string)
+      vsphere_resource_pool = optional(string)
+      vsphere_target        = string
+    }
+  ))
+}
+
+variable "k8s_vm_infra_password" {
+  description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
+  sensitive   = true
+  type        = string
+}
+
+
+#______________________________________________
+#
+# Kubernetes Virtual Machine Instance Variables
+#______________________________________________
+
+variable "k8s_vm_instance" {
+  default = {
+    default = {
+      large_cpu     = 12
+      large_disk    = 80
+      large_memory  = 32768
+      medium_cpu    = 8
+      medium_disk   = 60
+      medium_memory = 24576
+      small_cpu     = 4
+      small_disk    = 40
+      small_memory  = 16384
+      tags          = []
+    }
+  }
+  description = "Kubernetes Virtual Machine Instance Policy Variables.  Default name is {tenant_name}_vm_network."
+  type = map(object(
+    {
+      large_cpu     = optional(number)
+      large_disk    = optional(number)
+      large_memory  = optional(number)
+      medium_cpu    = optional(number)
+      medium_disk   = optional(number)
+      medium_memory = optional(number)
+      small_cpu     = optional(number)
+      small_disk    = optional(number)
+      small_memory  = optional(number)
+      tags          = optional(list(map(string)))
+    }
+  ))
+}
+
+
+#______________________________________________
+#
+# Kubernetes Virtual Machine Node OS Variables
+#______________________________________________
+
+variable "k8s_vm_network" {
+  default = {
+    default = {
+      cidr_pod     = "100.64.0.0/16"
+      cidr_service = "100.65.0.0/16"
+      cni          = "Calico"
+      name         = ""
+      tags         = []
+    }
+  }
+  description = "Kubernetes Virtual Machine Network Configuration Policy.  Default name is {tenant_name}_vm_network."
+  type = map(object(
+    {
+      cidr_pod     = optional(string)
+      cidr_service = optional(string)
+      cni          = optional(string)
+      name         = optional(string)
+      tags         = optional(list(map(string)))
+    }
+  ))
+}
+

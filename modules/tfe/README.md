@@ -215,13 +215,17 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_tfc_agent_pool"></a> [tfc\_agent\_pool](#module\_tfc\_agent\_pool) | ../../terraform-cloud/modules/tfc_agent_pool | n/a |
-| <a name="module_tfc_variables_app_hello"></a> [tfc\_variables\_app\_hello](#module\_tfc\_variables\_app\_hello) | ../../terraform-cloud/modules/tfc_variables | n/a |
-| <a name="module_tfc_variables_apps"></a> [tfc\_variables\_apps](#module\_tfc\_variables\_apps) | ../../terraform-cloud/modules/tfc_variables | n/a |
-| <a name="module_tfc_variables_global"></a> [tfc\_variables\_global](#module\_tfc\_variables\_global) | ../../terraform-cloud/modules/tfc_variables | n/a |
-| <a name="module_tfc_variables_iks"></a> [tfc\_variables\_iks](#module\_tfc\_variables\_iks) | ../../terraform-cloud/modules/tfc_variables | n/a |
-| <a name="module_tfc_variables_kube"></a> [tfc\_variables\_kube](#module\_tfc\_variables\_kube) | ../../terraform-cloud/modules/tfc_variables | n/a |
-| <a name="module_tfc_workspaces"></a> [tfc\_workspaces](#module\_tfc\_workspaces) | ../../terraform-cloud/modules/tfc_workspaces | n/a |
+| <a name="module_app_hello_variables"></a> [app\_hello\_variables](#module\_app\_hello\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
+| <a name="module_app_hello_workspaces"></a> [app\_hello\_workspaces](#module\_app\_hello\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_iks_variables"></a> [iks\_variables](#module\_iks\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
+| <a name="module_iks_workspaces"></a> [iks\_workspaces](#module\_iks\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_iwo_variables"></a> [iwo\_variables](#module\_iwo\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
+| <a name="module_iwo_workspaces"></a> [iwo\_workspaces](#module\_iwo\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_kube_variables"></a> [kube\_variables](#module\_kube\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
+| <a name="module_kube_workspaces"></a> [kube\_workspaces](#module\_kube\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_tenant_variables"></a> [tenant\_variables](#module\_tenant\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
+| <a name="module_tenant_workspace"></a> [tenant\_workspace](#module\_tenant\_workspace) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_tfc_agent_pool"></a> [tfc\_agent\_pool](#module\_tfc\_agent\_pool) | terraform-cisco-modules/modules/tfe//modules/tfc_agent_pool | n/a |
 
 ## Resources
 
@@ -235,20 +239,21 @@ No resources.
 | <a name="input_addons_list"></a> [addons\_list](#input\_addons\_list) | List of Add-ons to be added to Cluster. | `string` | `"[]"` | no |
 | <a name="input_agent_pool"></a> [agent\_pool](#input\_agent\_pool) | Terraform Cloud Agent Pool. | `string` | n/a | yes |
 | <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Intersight Kubernetes Service Cluster Name. | `string` | `"iks"` | no |
-| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | Primary DNS Server for Kubernetes Sysconfig Policy. | `string` | `"[\"10.200.0.100\"]"` | no |
+| <a name="input_control_plane_desired_size"></a> [control\_plane\_desired\_size](#input\_control\_plane\_desired\_size) | K8S Control Plane Desired Cluster Size. | `string` | `1` | no |
+| <a name="input_control_plane_instance_type"></a> [control\_plane\_instance\_type](#input\_control\_plane\_instance\_type) | K8S Control Plane Virtual Machine Instance Type.  Options are {small\|medium\|large}. | `string` | `"small"` | no |
+| <a name="input_control_plane_max_size"></a> [control\_plane\_max\_size](#input\_control\_plane\_max\_size) | K8S Control Plane Maximum Cluster Size. | `string` | `1` | no |
+| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | DNS Servers for Kubernetes Sysconfig Policy. | `list(string)` | <pre>[<br>  "198.18.0.100",<br>  "198.18.0.101"<br>]</pre> | no |
 | <a name="input_docker_no_proxy"></a> [docker\_no\_proxy](#input\_docker\_no\_proxy) | Docker no proxy list, when using internet proxy.  Default is no list. | `string` | `"[]"` | no |
-| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain Name for Kubernetes Sysconfig Policy. | `string` | `"demo.intra"` | no |
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain Name for Kubernetes Sysconfig Policy. | `string` | `"example.com"` | no |
 | <a name="input_ip_pool_from"></a> [ip\_pool\_from](#input\_ip\_pool\_from) | IP Pool Starting IP last Octet.  The var.network\_prefix will be combined with ip\_pool\_from for the Gateway Address. | `string` | `"20"` | no |
-| <a name="input_ip_pool_gateway"></a> [ip\_pool\_gateway](#input\_ip\_pool\_gateway) | IP Pool Gateway last Octet.  The var.network\_prefix will be combined with ip\_pool\_gateway for the Gateway Address. | `string` | `"254"` | no |
+| <a name="input_ip_pool_gateway"></a> [ip\_pool\_gateway](#input\_ip\_pool\_gateway) | IP Pool Gateway last Octet.  The var.network\_prefix will be combined with ip\_pool\_gateway for the Gateway Address. | `string` | `"198.18.0.1/24"` | no |
+| <a name="input_ip_pools"></a> [ip\_pools](#input\_ip\_pools) | n/a | <pre>map(object(<br>    {<br>      ip_pool_name    = optional(string)<br>      ip_pool_gateway = optional(string)<br>      ip_pool_from    = optional(number)<br>      ip_pool_size    = optional(number)<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "ip_pool_from": 20,<br>    "ip_pool_gateway": "198.18.0.1/24",<br>    "ip_pool_name": "{tenant_name}_ip_pool",<br>    "ip_pool_size": 30<br>  }<br>}</pre> | no |
 | <a name="input_k8s_pod_cidr"></a> [k8s\_pod\_cidr](#input\_k8s\_pod\_cidr) | Pod CIDR Block to be used to assign Pod IP Addresses. | `string` | `"100.65.0.0/16"` | no |
+| <a name="input_k8s_runtime_policy"></a> [k8s\_runtime\_policy](#input\_k8s\_runtime\_policy) | n/a | <pre>object(<br>    {<br>      proxy_http_hostname  = optional(string)<br>      proxy_http_port      = optional(number)<br>      proxy_http_protocol  = optional(string)<br>      proxy_http_username  = optional(string)<br>      proxy_https_hostname = optional(string)<br>      proxy_https_port     = optional(number)<br>      proxy_https_protocol = optional(string)<br>      proxy_https_username = optional(string)<br>      runtime_policy_name  = optional(string)<br>    }<br>  )</pre> | <pre>{<br>  "k8s_runtime_policy_name": "",<br>  "proxy_http_hostname": "",<br>  "proxy_http_port": 8080,<br>  "proxy_http_protocol": "",<br>  "proxy_http_username": "",<br>  "proxy_https_hostname": "",<br>  "proxy_https_port": 8443,<br>  "proxy_https_protocol": "",<br>  "proxy_https_username": ""<br>}</pre> | no |
 | <a name="input_k8s_service_cidr"></a> [k8s\_service\_cidr](#input\_k8s\_service\_cidr) | Service CIDR Block used to assign Cluster Service IP Addresses. | `string` | `"100.64.0.0/16"` | no |
 | <a name="input_k8s_version"></a> [k8s\_version](#input\_k8s\_version) | Kubernetes Version to Deploy. | `string` | `"1.19.5"` | no |
 | <a name="input_load_balancers"></a> [load\_balancers](#input\_load\_balancers) | Intersight Kubernetes Load Balancer count. | `string` | `3` | no |
-| <a name="input_master_desired_size"></a> [master\_desired\_size](#input\_master\_desired\_size) | K8S Master Desired Cluster Size. | `string` | `1` | no |
-| <a name="input_master_instance_type"></a> [master\_instance\_type](#input\_master\_instance\_type) | K8S Master Virtual Machine Instance Type.  Options are {small\|medium\|large}. | `string` | `"small"` | no |
-| <a name="input_master_max_size"></a> [master\_max\_size](#input\_master\_max\_size) | K8S Master Maximum Cluster Size. | `string` | `1` | no |
-| <a name="input_network_prefix"></a> [network\_prefix](#input\_network\_prefix) | IP Pool Gateway last Octet.  The var.network\_prefix will be combined with ip\_pool\_gateway for the Gateway Address. | `string` | `"10.200.0"` | no |
+| <a name="input_ntp_servers"></a> [ntp\_servers](#input\_ntp\_servers) | NTP Servers for Kubernetes Sysconfig Policy. | `list(string)` | `[]` | no |
 | <a name="input_organization"></a> [organization](#input\_organization) | Intersight Organization Name. | `string` | `"default"` | no |
 | <a name="input_proxy_http_hostname"></a> [proxy\_http\_hostname](#input\_proxy\_http\_hostname) | HTTP Proxy Server Name or IP Address. | `string` | `""` | no |
 | <a name="input_proxy_http_password"></a> [proxy\_http\_password](#input\_proxy\_http\_password) | Password for the HTTP Proxy Server, If required. | `string` | `""` | no |
@@ -265,11 +270,12 @@ No resources.
 | <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | Intersight Kubernetes Service Cluster SSH Public Key. | `string` | n/a | yes |
 | <a name="input_ssh_user"></a> [ssh\_user](#input\_ssh\_user) | Intersight Kubernetes Service Cluster Default User. | `string` | `"iksadmin"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to be Associated with Objects Created in Intersight. | `string` | `"[]"` | no |
+| <a name="input_tenant_name"></a> [tenant\_name](#input\_tenant\_name) | Tenant Name for Workspace Creation in Terraform Cloud and IKS Cluster Naming. | `string` | `"default"` | no |
 | <a name="input_terraform_cloud_token"></a> [terraform\_cloud\_token](#input\_terraform\_cloud\_token) | Token to Authenticate to the Terraform Cloud. | `string` | n/a | yes |
 | <a name="input_terraform_version"></a> [terraform\_version](#input\_terraform\_version) | Terraform Target Version. | `string` | `"1.0.0"` | no |
 | <a name="input_tfc_oath_token"></a> [tfc\_oath\_token](#input\_tfc\_oath\_token) | Terraform Cloud OAuth Token for VCS\_Repo Integration. | `string` | n/a | yes |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization Name. | `string` | n/a | yes |
-| <a name="input_timezone"></a> [timezone](#input\_timezone) | Timezone for Kubernetes Sysconfig Policy. | `string` | `"America/New_York"` | no |
+| <a name="input_timezone"></a> [timezone](#input\_timezone) | Timezone for Deployment.  For a List of supported timezones see the following URL.<br> https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md. | `string` | `"Etc/GMT"` | no |
 | <a name="input_unsigned_registries"></a> [unsigned\_registries](#input\_unsigned\_registries) | List of unsigned registries to be supported. | `string` | `"[]"` | no |
 | <a name="input_vcs_repo"></a> [vcs\_repo](#input\_vcs\_repo) | Version Control System Repository. | `string` | n/a | yes |
 | <a name="input_vsphere_cluster"></a> [vsphere\_cluster](#input\_vsphere\_cluster) | vSphere Cluster to assign the K8S Cluster Deployment. | `string` | `"hx-demo"` | no |
@@ -286,6 +292,10 @@ No resources.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_app_hello_workspaces"></a> [app\_hello\_workspaces](#output\_app\_hello\_workspaces) | Terraform Cloud App Hello Workspace ID(s). |
+| <a name="output_iks_workspaces"></a> [iks\_workspaces](#output\_iks\_workspaces) | Terraform Cloud IKS Workspace ID(s). |
+| <a name="output_iwo_workspaces"></a> [iwo\_workspaces](#output\_iwo\_workspaces) | Terraform Cloud IWO Workspace ID(s). |
+| <a name="output_kube_workspaces"></a> [kube\_workspaces](#output\_kube\_workspaces) | Terraform Cloud Kube Workspace ID(s). |
+| <a name="output_tenant_workspace"></a> [tenant\_workspace](#output\_tenant\_workspace) | Terraform Cloud Tenant Workspace ID. |
 | <a name="output_tfc_agent_pool"></a> [tfc\_agent\_pool](#output\_tfc\_agent\_pool) | Terraform Cloud Agent Pool ID. |
-| <a name="output_tfc_workspaces"></a> [tfc\_workspaces](#output\_tfc\_workspaces) | Terraform Cloud Workspace ID(s). |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
