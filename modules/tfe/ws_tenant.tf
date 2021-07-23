@@ -1,3 +1,7 @@
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 #__________________________________________________________
 #
 # Required Variables
@@ -21,7 +25,7 @@ variable "domain_name" {
   type        = string
 }
 
-variable "dns_servers" {
+variable "dns_servers_v4" {
   default     = ["198.18.0.100", "198.18.0.101"]
   description = "DNS Servers for Kubernetes Sysconfig Policy."
   type        = list(string)
@@ -53,18 +57,18 @@ variable "timezone" {
 variable "ip_pools" {
   default = {
     default = {
-      ip_pool_name    = "{tenant_name}_ip_pool"
-      ip_pool_gateway = "198.18.0.1/24"
-      ip_pool_from    = 20
-      ip_pool_size    = 30
+      name    = "{tenant_name}_ip_pool"
+      gateway = "198.18.0.1/24"
+      from    = 20
+      size    = 30
     }
   }
   type = map(object(
     {
-      ip_pool_name    = optional(string)
-      ip_pool_gateway = optional(string)
-      ip_pool_from    = optional(number)
-      ip_pool_size    = optional(number)
+      name    = optional(string)
+      gateway = optional(string)
+      from    = optional(number)
+      size    = optional(number)
     }
   ))
 }
@@ -137,33 +141,44 @@ output "tenant_workspace" {
 #__________________________________________________________
 
 module "tenant_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  source = "../../../terraform-tfe-modules/modules/tfc_variables"
   depends_on = [
-    module.global_workspace
+    module.tenant_workspace
   ]
   category     = "terraform"
   workspace_id = module.tenant_workspace.workspace.id
-  variable_list = [
-    {
+  variable_list = {
+    intersight_org = {
       description = "Intersight Organization."
       key         = "organization"
       value       = var.organization
     },
-    {
+    domain_name = {
       description = "Domain Name."
       key         = "domain_name"
       value       = var.domain_name
     },
-    {
+    dns_servers = {
       description = "DNS Servers."
-      key         = "dns_servers"
-      value       = "${var.dns_servers}"
+      hcl         = true
+      key         = "dns_servers_v4"
+      value       = "[${join(",", [for s in var.dns_servers_v4 : format("%q", s)])}]"
+      # value       = "[\"${join("\",\"", var.dns_servers_v4)}\"]"
     },
-    {
+    ntp_servers = {
       description = "NTP Servers."
       hcl         = true
       key         = "ntp_servers"
-      value       = "${var.ntp_servers}"
+      value       = "[${join(",", [for s in var.ntp_servers : format("%q", s)])}]"
     },
-  ]
+    ip_pools = {
+      description = "${var.tenant_name} IP Pools."
+      hcl         = true
+      key         = "ip_pools"
+      # value       = "${var.ip_pools}"
+      # value = replace(replace(jsonencode(var.ip_pools), "\"", "\""), ":", "=")
+      # value = replace(replace(jsonencode(var.ip_pools), "\"", ""), ":", "=")
+      value       = "${jsonencode(var.ip_pools)}"
+    },
+  }
 }

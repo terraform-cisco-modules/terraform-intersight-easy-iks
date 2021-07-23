@@ -7,7 +7,7 @@ agent_pool        = "Richfield_Agents"
 terraform_version = "1.0.0"
 tfc_email         = "tyscott@cisco.com"
 tfc_organization  = "Cisco-Richfield-Lab"
-vcs_repo          = "scotttyso/terraform-iks"
+vcs_repo          = "scotttyso/iac"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"
@@ -66,9 +66,19 @@ timezone = "America/New_York"
 # Cluster Variables
 #__________________________________________________________
 
-tenant_name         = "tyscott"
+tenant_name         = "Wakanda"
 tags                = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
 unsigned_registries = ["10.101.128.128"]
+
+ip_pools = {
+  pool_1 = {
+    from    = 101
+    gateway = "10.96.101.1/24"
+    # name    = "{tenant_name}_ip_pool"
+    size = 99
+    tags = []
+  }
+}
 
 cluster_variables = {
   cluster_1 = {

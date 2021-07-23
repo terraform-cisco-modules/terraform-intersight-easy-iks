@@ -45,15 +45,16 @@ timezone = "America/New_York"
 tenant_name = "Wakanda"
 tags        = [{ key = "Module", value = "terraform-iks-iwo" }, { key = "Owner", value = "tyscott" }]
 
-ip_pools = {
-  pool_1 = {
-    from    = 101
-    gateway = "10.96.101.1/24"
-    # name    = "{tenant_name}_ip_pool"
-    size = 99
-    tags = []
-  }
-}
+ip_pools = {"pool_1":{"from":101,"gateway":"10.96.101.1/24","name":null,"size":99}}
+# ip_pools = {
+#   pool_1 = {
+#     from    = 101
+#     gateway = "10.96.101.1/24"
+#     # name    = "{tenant_name}_ip_pool"
+#     size = 99
+#     tags = []
+#   }
+# }
 
 k8s_trusted_registry = {
   unsigned = ["10.101.128.128"]
