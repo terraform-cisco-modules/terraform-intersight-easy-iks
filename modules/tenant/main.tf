@@ -17,11 +17,11 @@ module "ip_pools" {
   tags             = each.value.tags != [] ? each.value.tags : var.tags != [] ? var.tags : []
   ipv4_block = [
     {
-      pool_size   = each.value.size
+      pool_size = each.value.size
       starting_ip = join(".", [
         tostring(element(split(".", each.value.gateway), 0)), tostring(
           element(split(".", each.value.gateway), 1)), tostring(
-          element(split(".", each.value.gateway), 2)), tostring(each.value.from)])
+      element(split(".", each.value.gateway), 2)), tostring(each.value.from)])
     }
   ]
   ipv4_config = [
@@ -54,7 +54,7 @@ module "ip_pools" {
         split("/", each.value.gateway), 1) == "25" ? "255.255.255.128" : element(
         split("/", each.value.gateway), 1) == "26" ? "255.255.255.192" : element(
         split("/", each.value.gateway), 1) == "27" ? "255.255.255.224" : element(
-        split("/", each.value.gateway), 1) == "28" ? "255.255.255.240" : "255.255.255.248"
+      split("/", each.value.gateway), 1) == "28" ? "255.255.255.240" : "255.255.255.248"
     }
   ]
 }
@@ -98,10 +98,10 @@ module "k8s_trusted_registry" {
   count               = var.k8s_trusted_registry.root_ca != null || var.k8s_trusted_registry.unsigned != null ? 1 : 0
   source              = "terraform-cisco-modules/iks/intersight//modules/trusted_registry"
   org_name            = var.organization
-  policy_name         = var.k8s_trusted_registry.name     != null ? var.k8s_trusted_registry.name     : "${var.tenant_name}_registry"
-  root_ca_registries  = var.k8s_trusted_registry.root_ca  != null ? var.k8s_trusted_registry.root_ca  : []
+  policy_name         = var.k8s_trusted_registry.name != null ? var.k8s_trusted_registry.name : "${var.tenant_name}_registry"
+  root_ca_registries  = var.k8s_trusted_registry.root_ca != null ? var.k8s_trusted_registry.root_ca : []
   unsigned_registries = var.k8s_trusted_registry.unsigned != null ? var.k8s_trusted_registry.unsigned : []
-  tags                = var.k8s_trusted_registry.tags     != null ? var.k8s_trusted_registry.tags     : var.tags != [] ? var.tags : []
+  tags                = var.k8s_trusted_registry.tags != null ? var.k8s_trusted_registry.tags : var.tags != [] ? var.tags : []
 }
 
 

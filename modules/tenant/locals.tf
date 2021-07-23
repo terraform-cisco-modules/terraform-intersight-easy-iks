@@ -4,11 +4,11 @@ locals {
   org_moid = data.intersight_organization_organization.org_moid.results.0.moid
   ip_pools = {
     for k, v in var.ip_pools : k => {
-      from    = (v.from    != null ? v.from    : 20)
+      from    = (v.from != null ? v.from : 20)
       gateway = (v.gateway != null ? v.gateway : "198.18.0.1/24")
-      name    = (v.name    != null ? v.name    : "")
-      size    = (v.size    != null ? v.size    : 30)
-      tags    = (v.tags    != null ? v.tags    : [])
+      name    = (v.name != null ? v.name : "")
+      size    = (v.size != null ? v.size : 30)
+      tags    = (v.tags != null ? v.tags : [])
     }
   }
   # k8s_runtime = {
@@ -37,8 +37,8 @@ locals {
   # }
   k8s_version = {
     for k, v in var.k8s_version : k => {
-      name    = (v.name    != null ? v.name    : "")
-      tags    = (v.tags    != null ? v.tags    : [])
+      name    = (v.name != null ? v.name : "")
+      tags    = (v.tags != null ? v.tags : [])
       version = (v.version != null ? v.version : "1.19.5")
     }
   }
@@ -55,25 +55,25 @@ locals {
   }
   k8s_vm_instance = {
     for k, v in var.k8s_vm_instance : k => {
-      large_cpu     = (v.large_cpu     != null ? v.large_cpu     : 12)
-      large_disk    = (v.large_disk    != null ? v.large_disk    : 80)
-      large_memory  = (v.large_memory  != null ? v.large_memory  : 32768)
-      medium_cpu    = (v.medium_cpu    != null ? v.medium_cpu    : 8)
-      medium_disk   = (v.medium_disk   != null ? v.medium_disk   : 60)
+      large_cpu     = (v.large_cpu != null ? v.large_cpu : 12)
+      large_disk    = (v.large_disk != null ? v.large_disk : 80)
+      large_memory  = (v.large_memory != null ? v.large_memory : 32768)
+      medium_cpu    = (v.medium_cpu != null ? v.medium_cpu : 8)
+      medium_disk   = (v.medium_disk != null ? v.medium_disk : 60)
       medium_memory = (v.medium_memory != null ? v.medium_memory : 24576)
-      small_cpu     = (v.small_cpu     != null ? v.small_cpu     : 4)
-      small_disk    = (v.small_disk    != null ? v.small_disk    : 40)
-      small_memory  = (v.small_memory  != null ? v.small_memory  : 16384)
-      tags          = (v.tags          != null ? v.tags          : [])
+      small_cpu     = (v.small_cpu != null ? v.small_cpu : 4)
+      small_disk    = (v.small_disk != null ? v.small_disk : 40)
+      small_memory  = (v.small_memory != null ? v.small_memory : 16384)
+      tags          = (v.tags != null ? v.tags : [])
     }
   }
   k8s_vm_network = {
     for k, v in var.k8s_vm_network : k => {
-      cidr_pod     = (v.cidr_pod     != null ? v.cidr_pod     : "100.64.0.0/16")
+      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
       cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
-      cni          = (v.cni          != null ? v.cni          : "Calico")
-      name         = (v.name         != null ? v.name         : "")
-      tags         = (v.tags         != null ? v.tags         : [])
+      cni          = (v.cni != null ? v.cni : "Calico")
+      name         = (v.name != null ? v.name : "")
+      tags         = (v.tags != null ? v.tags : [])
     }
   }
 }

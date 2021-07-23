@@ -22,8 +22,8 @@ secretkey    = "../../../../intersight.secret"
 # DNS Variables
 #__________________________________________________________
 
-domain_name="rich.ciscolabs.com"
-dns_servers_v4=["10.101.128.15", "10.101.128.16"]
+domain_name    = "rich.ciscolabs.com"
+dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
 
 
 #__________________________________________________________
@@ -42,16 +42,16 @@ timezone = "America/New_York"
 # Cluster Variables
 #__________________________________________________________
 
-tenant_name         = "Wakanda"
-tags                = [ { key = "Module", value = "terraform-iks-iwo" }, { key = "Owner", value = "tyscott" } ]
+tenant_name = "Wakanda"
+tags        = [{ key = "Module", value = "terraform-iks-iwo" }, { key = "Owner", value = "tyscott" }]
 
 ip_pools = {
   pool_1 = {
     from    = 101
     gateway = "10.96.101.1/24"
     # name    = "{tenant_name}_ip_pool"
-    size    = 99
-    tags    = []
+    size = 99
+    tags = []
   }
 }
 
