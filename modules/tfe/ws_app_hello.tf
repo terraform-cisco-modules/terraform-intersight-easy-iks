@@ -18,7 +18,7 @@ module "app_hello_workspaces" {
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
   vcs_repo          = var.vcs_repo
-  working_directory = "app_hello"
+  working_directory = "modules/app_hello"
 }
 
 output "app_hello_workspaces" {

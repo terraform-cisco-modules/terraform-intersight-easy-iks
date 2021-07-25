@@ -598,7 +598,7 @@ module "iks_workspace" {
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
   vcs_repo          = var.vcs_repo
-  working_directory = "iks"
+  working_directory = "modules/iks"
 }
 
 output "iks_workspace" {
@@ -679,7 +679,7 @@ module "iks_variables" {
     },
     tags = {
       description = "Intersight Tags for Poliices and Profiles."
-      hcl         = true
+      hcl         = false
       key         = "tags"
       value       = "${jsonencode(var.tags)}"
     },
@@ -690,13 +690,13 @@ module "iks_variables" {
     },
     ip_pools = {
       description = "${var.tenant_name} IP Pools."
-      hcl         = true
+      hcl         = false
       key         = "ip_pools"
       value       = "${jsonencode(var.ip_pools)}"
     },
     k8s_addons = {
       description = "${var.tenant_name} Addons Policies."
-      hcl         = true
+      hcl         = false
       key         = "k8s_addons"
       value       = "${jsonencode(var.k8s_addons)}"
     },
@@ -707,7 +707,7 @@ module "iks_variables" {
     },
     k8s_runtime = {
       description = "${var.tenant_name} Kubernetes Runtime Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_runtime"
       value       = "${jsonencode(var.k8s_runtime)}"
     },
@@ -718,31 +718,37 @@ module "iks_variables" {
     },
     k8s_trusted_registry = {
       description = "${var.tenant_name} Kubernetes Trusted Registry Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_trusted_registry"
       value       = "${jsonencode(var.k8s_trusted_registry)}"
     },
     k8s_version = {
       description = "${var.tenant_name} Kubernetes Version Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_version"
       value       = "${jsonencode(var.k8s_version)}"
     },
     k8s_vm_infra = {
       description = "${var.tenant_name} Kubernetes VIrtual Machine Infra Config Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_vm_infra"
       value       = "${jsonencode(var.k8s_vm_infra)}"
     },
+    k8s_vm_infra_password = {
+      description = "VIrtual Center Password."
+      key         = "k8s_vm_infra_password"
+      sensitive   = true
+      value       = "var.k8s_vm_infra_password"
+    }
     k8s_vm_instance = {
       description = "${var.tenant_name} Kubernetes Virtual Machine Instance Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_vm_instance"
       value       = "${jsonencode(var.k8s_vm_instance)}"
     },
     k8s_vm_network = {
       description = "${var.tenant_name} Kubernetes Virtual Machine Network Config Policy Variables."
-      hcl         = true
+      hcl         = false
       key         = "k8s_vm_network"
       value       = "${jsonencode(var.k8s_vm_network)}"
     },
@@ -751,7 +757,7 @@ module "iks_variables" {
     #---------------------------
     iks_cluster = {
       description = "${var.tenant_name} IKS Clusters."
-      hcl         = true
+      hcl         = false
       key         = "iks_cluster"
       value       = "${jsonencode(var.iks_cluster)}"
     },

@@ -14,7 +14,7 @@ module "kube_workspaces" {
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
   vcs_repo            = var.vcs_repo
-  working_directory   = "kube"
+  working_directory   = "modules/kube"
 }
 
 output "kube_workspaces" {
@@ -55,14 +55,14 @@ module "kube_variables" {
       key         = "secretkey"
       sensitive   = true
       value       = var.secretkey
+    },
       #---------------------------
       # Cluster Variables
       #---------------------------
-      cluster_name = {
-        description = "${var.tenant_name}_${each.key} Cluster Name."
-        key         = "cluster_name"
-        value       = "${var.tenant_name}_${each.key}"
-      },
+    cluster_name = {
+      description = "${var.tenant_name}_${each.key} Cluster Name."
+      key         = "cluster_name"
+      value       = "${var.tenant_name}_${each.key}"
     },
   }
 }

@@ -18,7 +18,7 @@ module "iwo_workspaces" {
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
   vcs_repo          = var.vcs_repo
-  working_directory = "iwo"
+  working_directory = "modules/iwo"
 }
 
 output "iwo_workspaces" {

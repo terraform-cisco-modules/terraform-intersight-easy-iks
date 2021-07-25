@@ -7,7 +7,7 @@ agent_pool        = "Richfield_Agents"
 terraform_version = "1.0.3"
 # tfc_email         = "tyscott@cisco.com"
 tfc_organization = "Cisco-Richfield-Lab"
-vcs_repo         = "scotttyso/iac"
+vcs_repo         = "scotttyso/terraform-intersight-iks-iwo"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"
@@ -29,7 +29,7 @@ vcs_repo         = "scotttyso/iac"
 
 # endpoint     = "https://intersight.com"
 organization = "Wakanda"
-secretkey    = "../../intersight.secret"
+# secretkey    = "../../../../intersight.secret"
 /*
   To export the Secret Key via an Environment Variable the format is as follows (Note: they are not quotation marks, but escape characters):
   - export TF_VAR_secretkey=`cat ../../intersight.secret`
@@ -156,7 +156,7 @@ k8s_vm_network = {
 
 iks_cluster = {
   cluster01 = {
-    action_cluster             = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    action_cluster             = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     addons                     = ["ccp-monitor", "kubernetes-dashboard"]
     control_plane_desired_size = 1
     control_plane_intance_moid = "small"
