@@ -453,10 +453,6 @@ variable "iks_cluster" {
  type = string
 }
 
-variable "ip_pools" {
- type = string
-}
-
 
 
 #______________________________________________
