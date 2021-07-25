@@ -218,7 +218,7 @@ No providers.
 | <a name="module_app_hello_variables"></a> [app\_hello\_variables](#module\_app\_hello\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
 | <a name="module_app_hello_workspaces"></a> [app\_hello\_workspaces](#module\_app\_hello\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
 | <a name="module_iks_variables"></a> [iks\_variables](#module\_iks\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
-| <a name="module_iks_workspaces"></a> [iks\_workspaces](#module\_iks\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
+| <a name="module_iks_workspace"></a> [iks\_workspace](#module\_iks\_workspace) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
 | <a name="module_iwo_variables"></a> [iwo\_variables](#module\_iwo\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
 | <a name="module_iwo_workspaces"></a> [iwo\_workspaces](#module\_iwo\_workspaces) | terraform-cisco-modules/modules/tfe//modules/tfc_workspace | n/a |
 | <a name="module_kube_variables"></a> [kube\_variables](#module\_kube\_variables) | terraform-cisco-modules/modules/tfe//modules/tfc_variables | n/a |
@@ -274,7 +274,7 @@ No resources.
 | Name | Description |
 |------|-------------|
 | <a name="output_app_hello_workspaces"></a> [app\_hello\_workspaces](#output\_app\_hello\_workspaces) | Terraform Cloud App Hello Workspace ID(s). |
-| <a name="output_iks_workspaces"></a> [iks\_workspaces](#output\_iks\_workspaces) | Terraform Cloud IKS Workspace ID(s). |
+| <a name="output_iks_workspace"></a> [iks\_workspace](#output\_iks\_workspace) | Terraform Cloud IKS Workspace ID(s). |
 | <a name="output_iwo_workspaces"></a> [iwo\_workspaces](#output\_iwo\_workspaces) | Terraform Cloud IWO Workspace ID(s). |
 | <a name="output_kube_workspaces"></a> [kube\_workspaces](#output\_kube\_workspaces) | Terraform Cloud Kube Workspace ID(s). |
 | <a name="output_tfc_agent_pool"></a> [tfc\_agent\_pool](#output\_tfc\_agent\_pool) | Terraform Cloud Agent Pool ID. |

@@ -589,12 +589,11 @@ variable "ssh_key_5" {
 # Terraform Cloud Workspaces
 #__________________________________________________________
 
-module "iks_workspaces" {
+module "iks_workspace" {
   source            = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each          = var.iks_cluster
   auto_apply        = true
   description       = "Intersight Kubernetes Service Workspace."
-  name              = "${var.tenant_name}_${each.key}"
+  name              = var.tenant_name
   terraform_version = var.terraform_version
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
@@ -602,9 +601,9 @@ module "iks_workspaces" {
   working_directory = "iks"
 }
 
-output "iks_workspaces" {
+output "iks_workspace" {
   description = "Terraform Cloud IKS Workspace ID(s)."
-  value       = { for v in sort(keys(module.iks_workspaces)) : v => module.iks_workspaces[v] }
+  value       = module.iks_workspace.workspace.id
 }
 
 #__________________________________________________________
@@ -615,11 +614,10 @@ output "iks_workspaces" {
 module "iks_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
-    module.iks_workspaces
+    module.iks_workspace
   ]
-  for_each     = var.iks_cluster
   category     = "terraform"
-  workspace_id = module.iks_workspaces["${each.key}"].workspace.id
+  workspace_id = module.iks_workspace.workspace.id
   variable_list = {
     #---------------------------
     # Terraform Cloud Variables
