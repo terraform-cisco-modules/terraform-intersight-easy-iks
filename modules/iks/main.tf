@@ -45,7 +45,7 @@ module "ip_pools" {
   dns_servers_v4   = var.dns_servers_v4
   name             = each.value.name != "" ? each.value.name : "${var.tenant_name}_ip_pool"
   org_moid         = local.org_moid
-  tags             = each.value.tags != [] ? each.value.tags : var.tags != [] ? var.tags : []
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
   ipv4_block = [
     {
       pool_size = each.value.size
@@ -111,7 +111,7 @@ module "k8s_addons" {
   org_moid         = local.org_moid
   release_name     = each.value.release_name
   upgrade_strategy = each.value.upgrade_strategy
-  tags             = each.value.tags != [] ? each.value.tags : var.tags
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -136,7 +136,7 @@ module "k8s_runtime_policies" {
   proxy_https_port     = each.value.https_port
   proxy_https_protocol = each.value.https_protocol
   proxy_https_username = each.value.https_username != "" ? each.value.https_username : each.value.http_username
-  tags                 = each.value.tags != [] ? each.value.tags : var.tags
+  tags                 = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -152,7 +152,7 @@ module "k8s_trusted_registries" {
   policy_name         = each.value.name != "" ? each.value.name : "${var.tenant_name}_registry"
   root_ca_registries  = each.value.root_ca != [] ? each.value.root_ca : []
   unsigned_registries = each.value.unsigned != [] ? each.value.unsigned : []
-  tags                = each.value.tags != [] ? each.value.tags : var.tags
+  tags                = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -167,7 +167,7 @@ module "k8s_version_policies" {
   org_name         = var.organization
   k8s_version_name = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.tenant_name}_v${each.value.version}"
   k8s_version      = each.value.version
-  tags             = each.value.tags != [] ? each.value.tags : var.tags
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -182,7 +182,7 @@ module "k8s_vm_infra_policies" {
   description           = "${var.tenant_name} Virtual Machine Infra Config Policy."
   name                  = each.value.name != "" ? each.value.name : "${var.tenant_name}_vm_infra"
   org_moid              = local.org_moid
-  tags                  = each.value.tags != null ? each.value.tags : var.tags
+  tags                  = each.value.tags != null ? each.value.tags : local.tags
   vsphere_password      = var.k8s_vm_infra_password
   vsphere_cluster       = each.value.vsphere_cluster
   vsphere_datastore     = each.value.vsphere_datastore
@@ -205,7 +205,7 @@ module "k8s_vm_instance" {
   memory    = each.value.memory
   name      = "${var.tenant_name}_${each.key}"
   org_name  = var.organization
-  tags      = each.value.tags != [] ? each.value.tags : var.tags
+  tags      = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -226,7 +226,7 @@ module "k8s_vm_network_policy" {
   pod_cidr     = each.value.cidr_pod
   service_cidr = each.value.cidr_service
   timezone     = var.timezone
-  tags         = each.value.tags != null ? each.value.tags : var.tags
+  tags         = each.value.tags != null ? each.value.tags : local.tags
 }
 
 
@@ -263,7 +263,7 @@ module "iks_cluster" {
   ssh_key                  = each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 : each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 : each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 : each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
   ssh_user                 = each.value.ssh_user
   sys_config_moid          = module.k8s_vm_network_policy["${each.value.vm_network_moid}"].sys_config_policy_moid
-  tags                     = each.value.tags != [] ? each.value.tags : var.tags
+  tags                     = each.value.tags != [] ? each.value.tags : local.tags
   trusted_registry_moid    = each.value.registry_moid != "" ? module.k8s_trusted_registries["${each.value.registry_moid}"].trusted_registry_moid : null
   wait_for_completion      = each.value.wait_for_complete
 }
@@ -288,7 +288,7 @@ module "iks_cluster" {
 #   ]
 #   cluster_moid = module.iks_cluster["${each.key}"].moid
 #   org_name     = var.organization
-#   tags         = var.tags
+#   tags         = local.tags
 # }
 
 # module "iks_addon_profile" {
@@ -307,7 +307,7 @@ module "iks_cluster" {
 #   cluster_moid = module.iks_cluster["${each.key}"].moid
 #   name         = "${var.tenant_name}_${each.key}_addons"
 #   org_moid     = local.org_moid
-#   tags         = each.value.tags != [] ? each.value.tags : var.tags
+#   tags         = each.value.tags != [] ? each.value.tags : local.tags
 # }
 
 
@@ -330,7 +330,7 @@ module "control_plane_profile" {
   max_size     = each.value.control_plane_max_size
   name         = "${var.tenant_name}_${each.key}_control_plane"
   node_type    = each.value.worker_desired_size == "0" ? "ControlPlaneWorker" : "ControlPlane"
-  tags         = each.value.tags != [] ? each.value.tags : var.tags
+  tags         = each.value.tags != [] ? each.value.tags : local.tags
   version_moid = module.k8s_version_policies["${each.value.version_moid}"].version_policy_moid
 }
 
@@ -344,7 +344,7 @@ module "control_plane_instance_type" {
   instance_type_moid       = module.k8s_vm_instance["${each.value.control_plane_intance_moid}"].worker_profile_moid
   name                     = "${var.tenant_name}_${each.key}_control_plane"
   node_group_moid          = module.control_plane_profile["${each.key}"].moid
-  tags                     = each.value.tags != [] ? each.value.tags : var.tags
+  tags                     = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -367,7 +367,7 @@ module "worker_profile" {
   max_size     = each.value.worker_max_size
   name         = "${var.tenant_name}_${each.key}_worker"
   node_type    = "Worker"
-  tags         = each.value.tags != [] ? each.value.tags : var.tags
+  tags         = each.value.tags != [] ? each.value.tags : local.tags
   version_moid = module.k8s_version_policies["${each.value.version_moid}"].version_policy_moid
 }
 
@@ -382,5 +382,5 @@ module "worker_instance_type" {
   instance_type_moid       = module.k8s_vm_instance["${each.value.worker_intance_moid}"].worker_profile_moid
   name                     = "${var.tenant_name}_${each.key}_worker"
   node_group_moid          = module.worker_profile["${each.key}"].moid
-  tags                     = each.value.tags != [] ? each.value.tags : var.tags
+  tags                     = each.value.tags != [] ? each.value.tags : local.tags
 }
