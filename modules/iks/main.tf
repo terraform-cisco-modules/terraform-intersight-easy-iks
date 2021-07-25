@@ -253,7 +253,7 @@ module "iks_cluster" {
   ]
   source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster"
   for_each = local.iks_cluster
-  action   = each.value.action
+  action   = each.value.action_cluster
   # container_runtime_config = each.value.runtime_moid != [] ? module.k8s_runtime_policies["${each.value.runtime_moid}"].runtime_policy_moid : null
   ip_pool_moid          = module.ip_pools["${each.value.ip_pool_moid}"].moid
   load_balancer         = each.value.load_balancers
@@ -322,7 +322,7 @@ module "control_plane_profile" {
   ]
   source       = "terraform-cisco-modules/imm/intersight//modules/k8s_node_profile"
   for_each     = local.iks_cluster
-  action       = each.value.action
+  action       = each.value.action_control_plane
   description  = "${var.tenant_name}_${each.key} Control Plane Node Profile"
   cluster_moid = module.iks_cluster["${each.key}"].moid
   desired_size = each.value.control_plane_desired_size
@@ -359,7 +359,7 @@ module "worker_profile" {
   ]
   source       = "terraform-cisco-modules/imm/intersight//modules/k8s_node_profile"
   for_each     = local.iks_cluster
-  action       = each.value.action
+  action       = each.value.action_worker
   description  = "${var.tenant_name}_${each.key} Worker Node Profile"
   cluster_moid = module.iks_cluster["${each.key}"].moid
   desired_size = each.value.worker_desired_size

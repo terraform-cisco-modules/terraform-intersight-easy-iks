@@ -82,7 +82,9 @@ locals {
   # IKS Cluster Variables
   iks_cluster = {
     for k, v in var.iks_cluster : k => {
-      action                     = (v.action != null ? v.action : "Deploy")
+      action_cluster             = (v.action_cluster != null ? v.action_cluster : "Deploy")
+      action_control_plane       = (v.action_control_plane != null ? v.action_control_plane : "No-op")
+      action_worker              = (v.action_worker != null ? v.action_worker : "No-op")
       addons                     = (v.addons != null ? v.addons : [])
       control_plane_desired_size = (v.control_plane_desired_size != null ? v.control_plane_desired_size : 1)
       control_plane_intance_moid = v.control_plane_intance_moid

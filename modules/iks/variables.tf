@@ -676,7 +676,9 @@ variable "k8s_vm_network" {
 variable "iks_cluster" {
   default = {
     default = {
-      action                     = "Deploy"
+      action_cluster             = "Deploy"
+      action_control_plane       = "No-op"
+      action_worker              = "No-op"
       addons                     = []
       control_plane_desired_size = 1
       control_plane_intance_moid = "**REQUIRED**"
@@ -709,6 +711,9 @@ variable "iks_cluster" {
   # description = "K8S Worker Maximum Cluster Size."
   type = map(object(
     {
+      action_cluster             = optional(string)
+      action_control_plane       = optional(string)
+      action_worker              = optional(string)
       action                     = optional(string)
       addons                     = optional(set(string))
       control_plane_desired_size = optional(number)
