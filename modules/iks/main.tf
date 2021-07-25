@@ -251,21 +251,21 @@ module "iks_cluster" {
     module.k8s_vm_instance,
     module.k8s_vm_network_policy
   ]
-  source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster"
-  for_each = local.iks_cluster
-  action   = each.value.action_cluster
-  # container_runtime_config = each.value.runtime_moid != [] ? module.k8s_runtime_policies["${each.value.runtime_moid}"].runtime_policy_moid : null
-  ip_pool_moid          = module.ip_pools["${each.value.ip_pool_moid}"].moid
-  load_balancer         = each.value.load_balancers
-  name                  = "${var.tenant_name}_${each.key}"
-  net_config_moid       = module.k8s_vm_network_policy["${each.value.vm_network_moid}"].network_policy_moid
-  org_moid              = local.org_moid
-  ssh_key               = each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 : each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 : each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 : each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
-  ssh_user              = each.value.ssh_user
-  sys_config_moid       = module.k8s_vm_network_policy["${each.value.vm_network_moid}"].sys_config_policy_moid
-  tags                  = each.value.tags != [] ? each.value.tags : var.tags
-  trusted_registry_moid = each.value.registry_moid != "" ? module.k8s_trusted_registries["${each.value.registry_moid}"].trusted_registry_moid : null
-  wait_for_completion   = each.value.wait_for_complete
+  source                   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster"
+  for_each                 = local.iks_cluster
+  action                   = each.value.action_cluster
+  container_runtime_config = length(each.value.runtime_moid) > 0 ? module.k8s_runtime_policies["${each.value.runtime_moid}"].runtime_policy_moid : []
+  ip_pool_moid             = module.ip_pools["${each.value.ip_pool_moid}"].moid
+  load_balancer            = each.value.load_balancers
+  name                     = "${var.tenant_name}_${each.key}"
+  net_config_moid          = module.k8s_vm_network_policy["${each.value.vm_network_moid}"].network_policy_moid
+  org_moid                 = local.org_moid
+  ssh_key                  = each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 : each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 : each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 : each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
+  ssh_user                 = each.value.ssh_user
+  sys_config_moid          = module.k8s_vm_network_policy["${each.value.vm_network_moid}"].sys_config_policy_moid
+  tags                     = each.value.tags != [] ? each.value.tags : var.tags
+  trusted_registry_moid    = each.value.registry_moid != "" ? module.k8s_trusted_registries["${each.value.registry_moid}"].trusted_registry_moid : null
+  wait_for_completion      = each.value.wait_for_complete
 }
 
 #_____________________________________________________
@@ -291,24 +291,24 @@ module "iks_cluster" {
 #   tags         = var.tags
 # }
 
-module "iks_addon_profile" {
-  depends_on = [
-    module.iks_cluster
-  ]
-  source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons"
-  for_each = local.iks_cluster
-  addons = [
-    for a in each.value.addons :
-    {
-      moid = module.k8s_addons["${a}"].moid
-      name = module.k8s_addons["${a}"].name
-    }
-  ]
-  cluster_moid = module.iks_cluster["${each.key}"].moid
-  name         = "${var.tenant_name}_${each.key}_addons"
-  org_moid     = local.org_moid
-  tags         = each.value.tags != [] ? each.value.tags : var.tags
-}
+# module "iks_addon_profile" {
+#   depends_on = [
+#     module.iks_cluster
+#   ]
+#   source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons"
+#   for_each = local.iks_cluster
+#   addons = [
+#     for a in each.value.addons :
+#     {
+#       moid = module.k8s_addons["${a}"].moid
+#       name = module.k8s_addons["${a}"].name
+#     }
+#   ]
+#   cluster_moid = module.iks_cluster["${each.key}"].moid
+#   name         = "${var.tenant_name}_${each.key}_addons"
+#   org_moid     = local.org_moid
+#   tags         = each.value.tags != [] ? each.value.tags : var.tags
+# }
 
 
 #______________________________________________

@@ -23,7 +23,6 @@ Run the plan from the Terraform cloud workspace.
 |------|--------|---------|
 | <a name="module_control_plane_instance_type"></a> [control\_plane\_instance\_type](#module\_control\_plane\_instance\_type) | terraform-cisco-modules/iks/intersight//modules/infra_provider | n/a |
 | <a name="module_control_plane_profile"></a> [control\_plane\_profile](#module\_control\_plane\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_node_profile | n/a |
-| <a name="module_iks_addon_profile"></a> [iks\_addon\_profile](#module\_iks\_addon\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons | n/a |
 | <a name="module_iks_cluster"></a> [iks\_cluster](#module\_iks\_cluster) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster | n/a |
 | <a name="module_ip_pools"></a> [ip\_pools](#module\_ip\_pools) | terraform-cisco-modules/imm/intersight//modules/pools_ip | n/a |
 | <a name="module_k8s_addons"></a> [k8s\_addons](#module\_k8s\_addons) | terraform-cisco-modules/imm/intersight//modules/policies_k8s_addons | n/a |
