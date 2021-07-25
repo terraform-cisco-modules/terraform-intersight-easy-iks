@@ -11,9 +11,9 @@ module "app_hello_workspaces" {
   for_each          = var.iks_cluster
   agent_pool        = module.tfc_agent_pool.tfc_agent_pool
   auto_apply        = true
-  description       = "${var.tenant_name}_${each.value.cluster_name} - App Hello Workspace."
+  description       = "${var.tenant_name}_${each.key} - App Hello Workspace."
   execution_mode    = "agent"
-  name              = "${var.tenant_name}_${each.value.cluster_name}_app_hello"
+  name              = "${var.tenant_name}_${each.key}_app_hello"
   terraform_version = var.terraform_version
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
@@ -38,7 +38,7 @@ module "app_hello_variables" {
   ]
   for_each     = var.iks_cluster
   category     = "terraform"
-  workspace_id = module.app_hello_workspaces["${each.value.cluster_name}"].workspace.id
+  workspace_id = module.app_hello_workspaces["${each.key}"].workspace.id
   variable_list = {
     #---------------------------
     # Terraform Cloud Variables
@@ -49,9 +49,9 @@ module "app_hello_variables" {
       value       = var.tfc_organization
     },
     tfc_workspace = {
-      description = "${var.tenant_name}_${each.value.cluster_name} Kube Config Workspace."
+      description = "${var.tenant_name}_${each.key} Kube Config Workspace."
       key         = "ws_kube"
-      value       = "${var.tenant_name}_${each.value.cluster_name}_kube"
+      value       = "${var.tenant_name}_${each.key}_kube"
     }
   }
 }

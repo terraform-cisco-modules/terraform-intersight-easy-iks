@@ -1,16 +1,5 @@
 #__________________________________________________________
 #
-# Terraform Cloud Organization
-#__________________________________________________________
-
-variable "tfc_organization" {
-  default     = "CiscoDevNet"
-  description = "Terraform Cloud Organization."
-  type        = string
-}
-
-#__________________________________________________________
-#
 # Intersight Provider Variables
 #__________________________________________________________
 
@@ -20,8 +9,25 @@ variable "apikey" {
   type        = string
 }
 
+variable "endpoint" {
+  default     = "https://intersight.com"
+  description = "Intersight URL."
+  type        = string
+}
+
 variable "secretkey" {
   description = "Intersight Secret Key."
   sensitive   = true
   type        = string
 }
+
+#__________________________________________________________
+#
+# Intersight Kubernetes Service Cluster Name
+#__________________________________________________________
+
+variable "cluster_name" {
+  description = "Intersight Kubernetes Service Cluster Name"
+  type        = string
+}
+

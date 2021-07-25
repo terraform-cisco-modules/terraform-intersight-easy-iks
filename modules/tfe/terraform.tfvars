@@ -94,23 +94,31 @@ ip_pools = {
   }
 }
 
-k8s_addons = ["ccp-monitor", "kubernetes-dashboard"]
+k8s_addons = {
+  ccp-monitor = {
+    # This is empty because I am accepting all the default values
+  }
+  kubernetes-dashboard = {
+    install_strategy = "InstallOnly"
+    upgrade_strategy = "AlwaysReinstall"
+  }
+}
 
 k8s_trusted_create = true
 k8s_trusted_registry = {
-  policy_1 = {
+  default = {
     unsigned = ["10.101.128.128"]
   }
 }
 
 k8s_version = {
-  policy_1 = {
+  default = {
     # This is empty because I am accepting all the default values
   }
 }
 
 k8s_vm_infra = {
-  policy_1 = {
+  default = {
     vsphere_cluster       = "Panther"
     vsphere_datastore     = "NVMe_DS1"
     vsphere_portgroup     = ["prod|nets|Panther_VM1"]
@@ -120,41 +128,52 @@ k8s_vm_infra = {
 }
 
 k8s_vm_instance = {
-  policy_1 = {
+  large = {
+    cpu    = 12
+    disk   = 80
+    memory = 32768
+  }
+  medium = {
+    cpu    = 8
+    disk   = 60
+    memory = 24576
+  }
+  small = {
     # This is empty because I am accepting all the default values
   }
 }
 
 k8s_vm_network = {
-  policy_1 = {
+  default = {
     # This is empty because I am accepting all the default values
   }
 }
 
+#__________________________________________________________
+#
+# Cluster Variables
+#__________________________________________________________
+
 iks_cluster = {
   cluster01 = {
-    action                     = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    cluster_moid               = "cluster01"
+    action_cluster             = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    addons                     = ["ccp-monitor", "kubernetes-dashboard"]
     control_plane_desired_size = 1
-    control_plane_intance_moid = "k8s_vm_instance_small.default"
+    control_plane_intance_moid = "small"
     control_plane_max_size     = 3
-    control_plane_profile_moid = "cluster01"
     ip_pool_moid               = "pool_1"
-    k8s_vm_infra_moid          = "policy_1"
+    k8s_vm_infra_moid          = "default"
     load_balancers             = 3
-    cluster_name               = "cluster01"
-    network_cidr_moid          = "policy_1"
-    nodeos_cfg_moid            = "policy_1"
     ssh_key                    = "ssh_key_1"
     ssh_user                   = "iksadmin"
-    registry_moid              = "policy_1"
-    runtime_moid               = ""
+    registry_moid              = "default"
+    runtime_moid               = []
     tags                       = []
-    version_moid               = "policy_1"
+    version_moid               = "default"
+    vm_network_moid            = "default"
     wait_for_complete          = false
     worker_desired_size        = 1
-    worker_intance_moid        = "k8s_vm_instance_small.policy_1"
+    worker_intance_moid        = "small"
     worker_max_size            = 4
-    worker_profile_moid        = "cluster01"
   }
 }

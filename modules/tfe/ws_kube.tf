@@ -7,9 +7,9 @@ module "kube_workspaces" {
   source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each            = var.iks_cluster
   auto_apply          = true
-  description         = "${var.tenant_name}_${each.value.cluster_name} - kube_config Workspace."
+  description         = "${var.tenant_name}_${each.key} - kube_config Workspace."
   global_remote_state = true
-  name                = "${var.tenant_name}_${each.value.cluster_name}_kube"
+  name                = "${var.tenant_name}_${each.key}_kube"
   terraform_version   = var.terraform_version
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
@@ -34,35 +34,35 @@ module "kube_variables" {
   ]
   for_each     = var.iks_cluster
   category     = "terraform"
-  workspace_id = module.kube_workspaces["${each.value.cluster_name}"].workspace.id
+  workspace_id = module.kube_workspaces["${each.key}"].workspace.id
   variable_list = {
-    #---------------------------
-    # Terraform Cloud Variables
-    #---------------------------
-    tfc_organization = {
-      description = "Terraform Cloud Organization."
-      key         = "tfc_organization"
-      value       = var.tfc_organization
-    },
-    tfc_workspace = {
-      description = "${var.tenant_name}_${each.value.cluster_name} Workspace."
-      key         = "ws_tenant"
-      value       = "${var.tenant_name}_${each.value.cluster_name}"
-    },
     #---------------------------
     # Intersight Variables
     #---------------------------
-    intersight_apikey = {
+    apikey = {
       description = "Intersight API Key."
       key         = "apikey"
       sensitive   = true
       value       = var.apikey
     },
-    intersight_secretkey = {
+    endpoint = {
+      description = "Intersight API Key."
+      key         = "endpoint"
+      value       = var.endpoint
+    },
+    secretkey = {
       description = "Intersight Secret Key."
       key         = "secretkey"
       sensitive   = true
       value       = var.secretkey
-    }
+      #---------------------------
+      # Cluster Variables
+      #---------------------------
+      cluster_name = {
+        description = "${var.tenant_name}_${each.key} Cluster Name."
+        key         = "cluster_name"
+        value       = "${var.tenant_name}_${each.key}"
+      },
+    },
   }
 }
