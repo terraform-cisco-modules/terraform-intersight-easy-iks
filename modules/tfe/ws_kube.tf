@@ -1,15 +1,15 @@
 #__________________________________________________________
 #
-# Kube Workspaces: {prefix_value}_{cluster_name}_kube
+# Kube Workspaces: {tenant_name}_{cluster_name}_kube
 #__________________________________________________________
 
 module "kube_workspaces" {
   source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each            = var.k8s_cluster_variables
+  for_each            = var.iks_cluster
   auto_apply          = true
-  description         = "${var.prefix_value}_${each.value.cluster_name} - kube_config Workspace."
+  description         = "${var.tenant_name}_${each.value.cluster_name} - kube_config Workspace."
   global_remote_state = true
-  name                = "${var.prefix_value}_${each.value.cluster_name}_kube"
+  name                = "${var.tenant_name}_${each.value.cluster_name}_kube"
   terraform_version   = var.terraform_version
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
@@ -24,7 +24,7 @@ output "kube_workspaces" {
 
 #__________________________________________________________
 #
-# Kube Variables: {prefix_value}_{cluster_name}_kube
+# Kube Variables: {tenant_name}_{cluster_name}_kube
 #__________________________________________________________
 
 module "kube_variables" {
@@ -32,7 +32,7 @@ module "kube_variables" {
   depends_on = [
     module.kube_workspaces
   ]
-  for_each     = var.k8s_cluster_variables
+  for_each     = var.iks_cluster
   category     = "terraform"
   workspace_id = module.kube_workspaces["${each.value.cluster_name}"].workspace.id
   variable_list = {
@@ -45,9 +45,9 @@ module "kube_variables" {
       value       = var.tfc_organization
     },
     tfc_workspace = {
-      description = "global_vars Workspace."
-      key         = "ws_global_vars"
-      value       = "${var.prefix_value}_global_vars"
+      description = "${var.tenant_name}_${each.value.cluster_name} Workspace."
+      key         = "ws_tenant"
+      value       = "${var.tenant_name}_${each.value.cluster_name}"
     },
     #---------------------------
     # Intersight Variables
@@ -63,11 +63,6 @@ module "kube_variables" {
       key         = "secretkey"
       sensitive   = true
       value       = var.secretkey
-    },
-    iks_cluster = {
-      description = "Intersight Kubernetes Service Cluster Name."
-      key         = "cluster_name"
-      value       = "${var.name_prefix}_${each.value.cluster_name}"
     }
   }
 }

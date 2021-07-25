@@ -1,3 +1,7 @@
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 #__________________________________________________________
 #
 # Terraform Cloud Variables
@@ -45,6 +49,12 @@ variable "vcs_repo" {
 variable "apikey" {
   description = "Intersight API Key."
   sensitive   = true
+  type        = string
+}
+
+variable "endpoint" {
+  default     = "https://intersight.com"
+  description = "Intersight URL."
   type        = string
 }
 

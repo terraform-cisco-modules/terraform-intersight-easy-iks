@@ -12,14 +12,8 @@ variable "tfc_organization" {
 
 #______________________________________________
 #
-# Terraform Cloud global_vars Workspace
+# Terraform Cloud kube Workspace
 #______________________________________________
-
-variable "ws_global_vars" {
-  default     = ""
-  description = "Global Variables Workspace Name.  The default value will be set to {prefix_value}_global_vars by the tfe variable module."
-  type        = string
-}
 
 variable "ws_kube" {
   default     = ""

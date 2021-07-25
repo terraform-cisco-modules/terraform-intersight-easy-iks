@@ -1,6 +1,6 @@
 #__________________________________________________________
 #
-# IWO Workspaces: {prefix_value}_{cluster_name}_iwo
+# IWO Workspaces: {tenant_name}_{cluster_name}_iwo
 #__________________________________________________________
 
 module "iwo_workspaces" {
@@ -8,12 +8,12 @@ module "iwo_workspaces" {
   depends_on = [
     module.tfc_agent_pool
   ]
-  for_each          = var.k8s_cluster_variables
+  for_each          = var.iks_cluster
   agent_pool        = module.tfc_agent_pool.tfc_agent_pool
   auto_apply        = true
-  description       = "${var.name_prefix}_${each.value.cluster_name} - IWO Workspace."
+  description       = "${var.tenant_name}_${each.value.cluster_name} - IWO Workspace."
   execution_mode    = "agent"
-  name              = "${var.name_prefix}_${each.value.cluster_name}_iwo"
+  name              = "${var.tenant_name}_${each.value.cluster_name}_iwo"
   terraform_version = var.terraform_version
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
@@ -28,7 +28,7 @@ output "iwo_workspaces" {
 
 #__________________________________________________________
 #
-# IWO Variables: {prefix_value}_{cluster_name}_iwo
+# IWO Variables: {tenant_name}_{cluster_name}_iwo
 #__________________________________________________________
 
 module "iwo_variables" {
@@ -36,7 +36,7 @@ module "iwo_variables" {
   depends_on = [
     module.iwo_workspaces
   ]
-  for_each     = var.k8s_cluster_variables
+  for_each     = var.iks_cluster
   category     = "terraform"
   workspace_id = module.iwo_workspaces["${each.value.cluster_name}"].workspace.id
   variable_list = {
@@ -48,15 +48,10 @@ module "iwo_variables" {
       key         = "tfc_organization"
       value       = var.tfc_organization
     },
-    tfc_workspace_1 = {
-      description = "global_vars Workspace."
-      key         = "ws_global_vars"
-      value       = "${var.prefix_value}_global_vars"
-    },
-    tfc_workspace_2 = {
-      description = "Intersight Kubernetes Service kube_config Workspace."
+    tfc_workspace = {
+      description = "${var.tenant_name}_${each.value.cluster_name} Kube Config Workspace."
       key         = "ws_kube"
-      value       = "${var.prefix_value}_${each.value.cluster_name}_kube"
+      value       = "${var.tenant_name}_${each.value.cluster_name}_kube"
     }
   }
 }

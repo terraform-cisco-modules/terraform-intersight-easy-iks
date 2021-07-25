@@ -12,7 +12,3 @@ provider "helm" {
     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
   }
 }
-
-locals {
-  kube_config = yamldecode(data.terraform_remote_state.kube.outputs.kube_config)
-}

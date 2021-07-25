@@ -1,29 +1,24 @@
 #__________________________________________________________
 #
-# Get Outputs from the Global Variables Workspace
+# Get Outputs from the Cluster Workspace
 #__________________________________________________________
 
-data "terraform_remote_state" "global" {
+data "terraform_remote_state" "cluster" {
   backend = "remote"
   config = {
     organization = var.tfc_organization
     workspaces = {
-      name = var.ws_global_vars
+      name = var.ws_cluster
     }
   }
 }
 
-
-#__________________________________________________________
-#
-# Assign Global Attributes from global_vars Workspace
-#__________________________________________________________
-
 locals {
-  # Intersight Provider Variables
-  endpoint = data.terraform_remote_state.global.outputs.endpoint
+  # Intersight Endpoint
+  endpoint = data.terraform_remote_state.cluster.outputs.endpoint
+  # IKS Cluster Name
+  cluster_moid = data.terraform_remote_state.cluster.outputs.iks_cluster
 }
-
 
 #______________________________________________
 #
@@ -31,5 +26,5 @@ locals {
 #______________________________________________
 
 data "intersight_kubernetes_cluster" "kube_config" {
-  name = var.cluster_name
+  moid = local.cluster_moid.cluster_1
 }

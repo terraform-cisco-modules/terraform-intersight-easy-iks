@@ -1,17 +1,7 @@
 #__________________________________________________________
 #
-# Get Outputs from the global_vars and kube Workspace(s)
+# Get Outputs from the kube Workspace
 #__________________________________________________________
-
-data "terraform_remote_state" "global" {
-  backend = "remote"
-  config = {
-    organization = var.tfc_organization
-    workspaces = {
-      name = var.ws_global_vars
-    }
-  }
-}
 
 data "terraform_remote_state" "kube" {
   backend = "remote"
@@ -26,6 +16,8 @@ data "terraform_remote_state" "kube" {
 locals {
   # IKS Cluster Name
   cluster_name = data.terraform_remote_state.kube.outputs.cluster_name
+  # Kubernetes Configuration File
+  kube_config = yamldecode(data.terraform_remote_state.kube.outputs.kube_config)
 }
 
 #______________________________________________________________________
