@@ -16,104 +16,84 @@ Run the plan from the Terraform cloud workspace.
 | Name | Version |
 |------|---------|
 | <a name="provider_intersight"></a> [intersight](#provider\_intersight) | 1.0.11 |
-| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_control_plane_instance_type"></a> [control\_plane\_instance\_type](#module\_control\_plane\_instance\_type) | terraform-cisco-modules/iks/intersight//modules/infra_provider | n/a |
-| <a name="module_control_plane_profile"></a> [control\_plane\_profile](#module\_control\_plane\_profile) | terraform-cisco-modules/iks/intersight//modules/node_profile | n/a |
-| <a name="module_iks_addon_profile"></a> [iks\_addon\_profile](#module\_iks\_addon\_profile) | terraform-cisco-modules/iks/intersight//modules/cluster_addon_profile | n/a |
-| <a name="module_iks_cluster"></a> [iks\_cluster](#module\_iks\_cluster) | terraform-cisco-modules/iks/intersight//modules/cluster | n/a |
-| <a name="module_k8s_addons"></a> [k8s\_addons](#module\_k8s\_addons) | terraform-cisco-modules/iks/intersight//modules/addon_policy | n/a |
+| <a name="module_control_plane_profile"></a> [control\_plane\_profile](#module\_control\_plane\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_node_profile | n/a |
+| <a name="module_iks_addon_profile"></a> [iks\_addon\_profile](#module\_iks\_addon\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons | n/a |
+| <a name="module_iks_cluster"></a> [iks\_cluster](#module\_iks\_cluster) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster | n/a |
+| <a name="module_ip_pools"></a> [ip\_pools](#module\_ip\_pools) | terraform-cisco-modules/imm/intersight//modules/pools_ip | n/a |
+| <a name="module_k8s_addons"></a> [k8s\_addons](#module\_k8s\_addons) | terraform-cisco-modules/imm/intersight//modules/policies_k8s_addons | n/a |
+| <a name="module_k8s_runtime_policies"></a> [k8s\_runtime\_policies](#module\_k8s\_runtime\_policies) | terraform-cisco-modules/iks/intersight//modules/runtime_policy | n/a |
+| <a name="module_k8s_trusted_registries"></a> [k8s\_trusted\_registries](#module\_k8s\_trusted\_registries) | terraform-cisco-modules/iks/intersight//modules/trusted_registry | n/a |
+| <a name="module_k8s_version_policies"></a> [k8s\_version\_policies](#module\_k8s\_version\_policies) | terraform-cisco-modules/iks/intersight//modules/version | n/a |
+| <a name="module_k8s_vm_infra_policies"></a> [k8s\_vm\_infra\_policies](#module\_k8s\_vm\_infra\_policies) | terraform-cisco-modules/imm/intersight//modules/policies_k8s_vm_infra | n/a |
+| <a name="module_k8s_vm_instance"></a> [k8s\_vm\_instance](#module\_k8s\_vm\_instance) | terraform-cisco-modules/iks/intersight//modules/worker_profile | n/a |
+| <a name="module_k8s_vm_network_policy"></a> [k8s\_vm\_network\_policy](#module\_k8s\_vm\_network\_policy) | terraform-cisco-modules/iks/intersight//modules/k8s_network | n/a |
 | <a name="module_worker_instance_type"></a> [worker\_instance\_type](#module\_worker\_instance\_type) | terraform-cisco-modules/iks/intersight//modules/infra_provider | n/a |
-| <a name="module_worker_profile"></a> [worker\_profile](#module\_worker\_profile) | terraform-cisco-modules/iks/intersight//modules/node_profile | n/a |
+| <a name="module_worker_profile"></a> [worker\_profile](#module\_worker\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_node_profile | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [intersight_organization_organization.org_moid](https://registry.terraform.io/providers/CiscoDevNet/intersight/1.0.11/docs/data-sources/organization_organization) | data source |
 | [intersight_organization_organization.organization_moid](https://registry.terraform.io/providers/CiscoDevNet/intersight/1.0.11/docs/data-sources/organization_organization) | data source |
-| [terraform_remote_state.tenant](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_action"></a> [action](#input\_action) | Action to perform on the Intersight Kubernetes Cluster.  Options are {Delete\|Deploy\|Ready\|Unassign}. | `string` | `"Deploy"` | no |
-| <a name="input_addons_list"></a> [addons\_list](#input\_addons\_list) | List of Add-ons for Intersight Kubernetes Service.  Add-ons Options are {ccp-monitor\|kubernetes-dashboard}. | `list(string)` | `[]` | no |
 | <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
-| <a name="input_cni"></a> [cni](#input\_cni) | Supported CNI type. Currently we only support Calico.<br>* Calico - Calico CNI plugin as described in:<br> https://github.com/projectcalico/cni-plugin. | `string` | `"Calico"` | no |
-| <a name="input_control_plane_desired_size"></a> [control\_plane\_desired\_size](#input\_control\_plane\_desired\_size) | K8S Control Plane Desired Cluster Size. | `string` | `1` | no |
-| <a name="input_control_plane_instance_type"></a> [control\_plane\_instance\_type](#input\_control\_plane\_instance\_type) | K8S Control Plane Virtual Machine Instance Type.  Options are {small\|medium\|large}. | `string` | `"small"` | no |
-| <a name="input_control_plane_max_size"></a> [control\_plane\_max\_size](#input\_control\_plane\_max\_size) | K8S Control Plane Maximum Cluster Size. | `string` | `1` | no |
-| <a name="input_docker_no_proxy"></a> [docker\_no\_proxy](#input\_docker\_no\_proxy) | Docker no proxy list, when using internet proxy.  Default is no list. | `list(string)` | `[]` | no |
-| <a name="input_ip_pool"></a> [ip\_pool](#input\_ip\_pool) | Intersight Kubernetes Service IP Pool.  Default name is {cluster\_name}\_ip\_pool | `string` | `""` | no |
-| <a name="input_ip_pool_from"></a> [ip\_pool\_from](#input\_ip\_pool\_from) | IP Pool Starting IP last Octet.  The var.network\_prefix will be combined with ip\_pool\_from for the Starting Address. | `string` | `"20"` | no |
-| <a name="input_ip_pool_gateway"></a> [ip\_pool\_gateway](#input\_ip\_pool\_gateway) | IP Pool Gateway last Octet.  The var.network\_prefix will be combined with ip\_pool\_gateway for the Gateway Address. | `string` | `"254"` | no |
-| <a name="input_ip_pool_netmask"></a> [ip\_pool\_netmask](#input\_ip\_pool\_netmask) | IP Pool Netmask. | `string` | `"255.255.255.0"` | no |
-| <a name="input_ip_pool_size"></a> [ip\_pool\_size](#input\_ip\_pool\_size) | IP Pool Block Size. | `string` | `"30"` | no |
-| <a name="input_k8s_addon_policy"></a> [k8s\_addon\_policy](#input\_k8s\_addon\_policy) | Kubernetes Addon Policy Name.  Default name is {cluster\_name}\_addon. | `string` | `""` | no |
-| <a name="input_k8s_pod_cidr"></a> [k8s\_pod\_cidr](#input\_k8s\_pod\_cidr) | Pod CIDR Block to be used to assign Pod IP Addresses. | `string` | `"100.65.0.0/16"` | no |
-| <a name="input_k8s_runtime_policy"></a> [k8s\_runtime\_policy](#input\_k8s\_runtime\_policy) | Kubernetes Runtime Policy Name.  Default name is {cluster\_name}\_runtime. | `string` | `""` | no |
-| <a name="input_k8s_service_cidr"></a> [k8s\_service\_cidr](#input\_k8s\_service\_cidr) | Service CIDR Block used to assign Cluster Service IP Addresses. | `string` | `"100.64.0.0/16"` | no |
-| <a name="input_k8s_trusted_registry"></a> [k8s\_trusted\_registry](#input\_k8s\_trusted\_registry) | Kubernetes Trusted Registry Policy Name.  Default name is {cluster\_name}\_registry. | `string` | `""` | no |
-| <a name="input_k8s_version"></a> [k8s\_version](#input\_k8s\_version) | Kubernetes Version to Deploy. | `string` | `"1.19.5"` | no |
-| <a name="input_k8s_version_policy"></a> [k8s\_version\_policy](#input\_k8s\_version\_policy) | Kubernetes Version Policy Name.  Default name is {cluster\_name}-k8s-version. | `string` | `""` | no |
-| <a name="input_k8s_vm_infra_policy"></a> [k8s\_vm\_infra\_policy](#input\_k8s\_vm\_infra\_policy) | Kubernetes Virtual Machine Infrastructure Configuration Policy.  Default name is {cluster\_name}-vm-infra-config. | `string` | `""` | no |
-| <a name="input_k8s_vm_network_policy"></a> [k8s\_vm\_network\_policy](#input\_k8s\_vm\_network\_policy) | Kubernetes Network/System Configuration Policy (CIDR, dns, ntp, etc.).  Default name is {cluster\_name}-sysconfig. | `string` | `""` | no |
-| <a name="input_load_balancers"></a> [load\_balancers](#input\_load\_balancers) | Intersight Kubernetes Load Balancer count. | `string` | `3` | no |
-| <a name="input_proxy_http_hostname"></a> [proxy\_http\_hostname](#input\_proxy\_http\_hostname) | HTTP Proxy Server Name or IP Address. | `string` | `""` | no |
-| <a name="input_proxy_http_password"></a> [proxy\_http\_password](#input\_proxy\_http\_password) | Password for the HTTP Proxy Server, If required. | `string` | `""` | no |
-| <a name="input_proxy_http_port"></a> [proxy\_http\_port](#input\_proxy\_http\_port) | Proxy HTTP Port. | `string` | `"8080"` | no |
-| <a name="input_proxy_http_protocol"></a> [proxy\_http\_protocol](#input\_proxy\_http\_protocol) | Proxy HTTP Protocol. | `string` | `"http"` | no |
-| <a name="input_proxy_http_username"></a> [proxy\_http\_username](#input\_proxy\_http\_username) | HTTP Proxy Username. | `string` | `""` | no |
-| <a name="input_proxy_https_hostname"></a> [proxy\_https\_hostname](#input\_proxy\_https\_hostname) | HTTPS Proxy Server Name or IP Address. | `string` | `""` | no |
-| <a name="input_proxy_https_password"></a> [proxy\_https\_password](#input\_proxy\_https\_password) | Password for the HTTPS Proxy Server, If required. | `string` | `""` | no |
-| <a name="input_proxy_https_port"></a> [proxy\_https\_port](#input\_proxy\_https\_port) | Proxy HTTP Port. | `string` | `"8443"` | no |
-| <a name="input_proxy_https_protocol"></a> [proxy\_https\_protocol](#input\_proxy\_https\_protocol) | Proxy HTTP Protocol. | `string` | `"https"` | no |
-| <a name="input_proxy_https_username"></a> [proxy\_https\_username](#input\_proxy\_https\_username) | HTTPS Proxy Username. | `string` | `""` | no |
-| <a name="input_root_ca_registries"></a> [root\_ca\_registries](#input\_root\_ca\_registries) | List of root CA Signed Registries. | `list(string)` | `[]` | no |
+| <a name="input_dns_servers_v4"></a> [dns\_servers\_v4](#input\_dns\_servers\_v4) | DNS Servers for Kubernetes Sysconfig Policy. | `list(string)` | <pre>[<br>  "198.18.0.100",<br>  "198.18.0.101"<br>]</pre> | no |
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain Name for Kubernetes Sysconfig Policy. | `string` | `"example.com"` | no |
+| <a name="input_endpoint"></a> [endpoint](#input\_endpoint) | Intersight URL. | `string` | `"https://intersight.com"` | no |
+| <a name="input_iks_cluster"></a> [iks\_cluster](#input\_iks\_cluster) | Action to perform on the Intersight Kubernetes Cluster.  Options are {Delete\|Deploy\|Ready\|No-op\|Unassign}. | <pre>map(object(<br>    {<br>      action                     = optional(string)<br>      addons                     = optional(set(string))<br>      control_plane_desired_size = optional(number)<br>      control_plane_intance_moid = string<br>      control_plane_max_size     = optional(number)<br>      ip_pool_moid               = string<br>      k8s_vm_infra_moid          = string<br>      load_balancers             = optional(number)<br>      ssh_key                    = string<br>      ssh_user                   = string<br>      registry_moid              = optional(string)<br>      runtime_moid               = optional(list(map(string)))<br>      tags                       = optional(list(map(string)))<br>      version_moid               = string<br>      vm_network_moid            = string<br>      wait_for_complete          = optional(bool)<br>      worker_desired_size        = optional(number)<br>      worker_intance_moid        = string<br>      worker_max_size            = optional(number)<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "action": "Deploy",<br>    "addons": [],<br>    "control_plane_desired_size": 1,<br>    "control_plane_intance_moid": "**REQUIRED**",<br>    "control_plane_max_size": 3,<br>    "ip_pool_moid": "**REQUIRED**",<br>    "k8s_vm_infra_moid": "**REQUIRED**",<br>    "load_balancers": 3,<br>    "registry_moid": "",<br>    "runtime_moid": [],<br>    "ssh_key": "ssh_key_1",<br>    "ssh_user": "iksadmin",<br>    "tags": [],<br>    "version_moid": "**REQUIRED**",<br>    "vm_network_moid": "**REQUIRED**",<br>    "wait_for_complete": false,<br>    "worker_desired_size": 0,<br>    "worker_intance_moid": "**REQUIRED**",<br>    "worker_max_size": 4<br>  }<br>}</pre> | no |
+| <a name="input_ip_pools"></a> [ip\_pools](#input\_ip\_pools) | * from - host address of the pool starting address.  Default is 20<br>* gateway - ip/prefix of the gateway.  Default is 198.18.0.1/24<br>* name - Name of the IP Pool.  Default is {tenant}\_{cluster\_name}\_ip\_pool.<br>* size - Number of host addresses to assign to the pool.  Default is 30. | <pre>map(object(<br>    {<br>      from    = optional(number)<br>      gateway = optional(string)<br>      name    = optional(string)<br>      size    = optional(number)<br>      tags    = optional(list(map(string)))<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "from": 20,<br>    "gateway": "198.18.0.1/24",<br>    "name": "{tenant_name}_ip_pool",<br>    "size": 30,<br>    "tags": []<br>  }<br>}</pre> | no |
+| <a name="input_k8s_addons"></a> [k8s\_addons](#input\_k8s\_addons) | Map of Add-ons for Intersight Kubernetes Service.  Add-ons Options are {ccp-monitor\|kubernetes-dashboard}. | <pre>map(object(<br>    {<br>      install_strategy = optional(string)<br>      name             = optional(string)<br>      release_name     = optional(string)<br>      tags             = optional(list(map(string)))<br>      upgrade_strategy = optional(string)<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "install_strategy": "Always",<br>    "name": "{tenant_name}_{addon_key}",<br>    "release_name": "",<br>    "tags": [],<br>    "upgrade_strategy": "UpgradeOnly"<br>  }<br>}</pre> | no |
+| <a name="input_k8s_runtime"></a> [k8s\_runtime](#input\_k8s\_runtime) | n/a | <pre>map(object(<br>    {<br>      docker_bridge_cidr = optional(string)<br>      docker_no_proxy    = optional(list(string))<br>      http_hostname      = optional(string)<br>      http_port          = optional(number)<br>      http_protocol      = optional(string)<br>      http_username      = optional(string)<br>      https_hostname     = optional(string)<br>      https_port         = optional(number)<br>      https_protocol     = optional(string)<br>      https_username     = optional(string)<br>      name               = optional(string)<br>      tags               = optional(list(map(string)))<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "docker_bridge_cidr": "",<br>    "docker_no_proxy": [],<br>    "http_hostname": "",<br>    "http_port": 8080,<br>    "http_protocol": "http",<br>    "http_username": "",<br>    "https_hostname": "",<br>    "https_port": 8443,<br>    "https_protocol": "https",<br>    "https_username": "",<br>    "name": "",<br>    "tags": []<br>  }<br>}</pre> | no |
+| <a name="input_k8s_runtime_create"></a> [k8s\_runtime\_create](#input\_k8s\_runtime\_create) | Flag to specify if the Kubernetes Runtime Policy should be created or not. | `bool` | `false` | no |
+| <a name="input_k8s_runtime_http_password"></a> [k8s\_runtime\_http\_password](#input\_k8s\_runtime\_http\_password) | Password for the HTTP Proxy Server, If required. | `string` | `""` | no |
+| <a name="input_k8s_runtime_https_password"></a> [k8s\_runtime\_https\_password](#input\_k8s\_runtime\_https\_password) | Password for the HTTPS Proxy Server, If required. | `string` | `""` | no |
+| <a name="input_k8s_trusted_create"></a> [k8s\_trusted\_create](#input\_k8s\_trusted\_create) | Flag to specify if the Kubernetes Runtime Policy should be created or not. | `bool` | `false` | no |
+| <a name="input_k8s_trusted_registry"></a> [k8s\_trusted\_registry](#input\_k8s\_trusted\_registry) | n/a | <pre>map(object(<br>    {<br>      name     = optional(string)<br>      root_ca  = optional(list(string))<br>      tags     = optional(list(map(string)))<br>      unsigned = optional(list(string))<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "name": "",<br>    "root_ca": [],<br>    "tags": [],<br>    "unsigned": []<br>  }<br>}</pre> | no |
+| <a name="input_k8s_version"></a> [k8s\_version](#input\_k8s\_version) | Kubernetes Version to Deploy. | <pre>map(object(<br>    {<br>      name    = optional(string)<br>      tags    = optional(list(map(string)))<br>      version = optional(string)<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "name": "",<br>    "tags": [],<br>    "version": "1.19.5"<br>  }<br>}</pre> | no |
+| <a name="input_k8s_vm_infra"></a> [k8s\_vm\_infra](#input\_k8s\_vm\_infra) | Kubernetes Virtual Machine Infrastructure Configuration Policy.  Default name is {tenant\_name}\_vm\_infra. | <pre>map(object(<br>    {<br>      name                  = optional(string)<br>      tags                  = optional(list(map(string)))<br>      vsphere_cluster       = string<br>      vsphere_datastore     = string<br>      vsphere_portgroup     = list(string)<br>      vsphere_resource_pool = optional(string)<br>      vsphere_target        = string<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "name": "",<br>    "tags": [],<br>    "vsphere_cluster": "default",<br>    "vsphere_datastore": "datastore1",<br>    "vsphere_portgroup": [<br>      "VM Network"<br>    ],<br>    "vsphere_resource_pool": "",<br>    "vsphere_target": ""<br>  }<br>}</pre> | no |
+| <a name="input_k8s_vm_infra_password"></a> [k8s\_vm\_infra\_password](#input\_k8s\_vm\_infra\_password) | vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target. | `string` | n/a | yes |
+| <a name="input_k8s_vm_instance"></a> [k8s\_vm\_instance](#input\_k8s\_vm\_instance) | Kubernetes Virtual Machine Instance Policy Variables.  Default name is {tenant\_name}\_vm\_network. | <pre>map(object(<br>    {<br>      cpu    = optional(number)<br>      disk   = optional(number)<br>      memory = optional(number)<br>      tags   = optional(list(map(string)))<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "cpu": 4,<br>    "disk": 40,<br>    "memory": 16384,<br>    "tags": []<br>  }<br>}</pre> | no |
+| <a name="input_k8s_vm_network"></a> [k8s\_vm\_network](#input\_k8s\_vm\_network) | Kubernetes Virtual Machine Network Configuration Policy.  Default name is {tenant\_name}\_vm\_network. | <pre>map(object(<br>    {<br>      cidr_pod     = optional(string)<br>      cidr_service = optional(string)<br>      cni          = optional(string)<br>      name         = optional(string)<br>      tags         = optional(list(map(string)))<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "cidr_pod": "100.64.0.0/16",<br>    "cidr_service": "100.65.0.0/16",<br>    "cni": "Calico",<br>    "name": "",<br>    "tags": []<br>  }<br>}</pre> | no |
+| <a name="input_ntp_servers"></a> [ntp\_servers](#input\_ntp\_servers) | NTP Servers for Kubernetes Sysconfig Policy. | `list(string)` | `[]` | no |
+| <a name="input_organization"></a> [organization](#input\_organization) | Intersight Organization. | `string` | `"default"` | no |
 | <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
-| <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | Intersight Kubernetes Service Cluster SSH Public Key. | `string` | n/a | yes |
-| <a name="input_ssh_user"></a> [ssh\_user](#input\_ssh\_user) | Intersight Kubernetes Service Cluster Default User. | `string` | `"iksadmin"` | no |
+| <a name="input_ssh_key_1"></a> [ssh\_key\_1](#input\_ssh\_key\_1) | Intersight Kubernetes Service Cluster SSH Public Key 1. | `string` | `""` | no |
+| <a name="input_ssh_key_2"></a> [ssh\_key\_2](#input\_ssh\_key\_2) | Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_3"></a> [ssh\_key\_3](#input\_ssh\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_4"></a> [ssh\_key\_4](#input\_ssh\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_5"></a> [ssh\_key\_5](#input\_ssh\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to be Associated with Objects Created in Intersight. | `list(map(string))` | `[]` | no |
-| <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization. | `string` | `"CiscoDevNet"` | no |
-| <a name="input_unsigned_registries"></a> [unsigned\_registries](#input\_unsigned\_registries) | List of unsigned registries to be supported. | `list(string)` | `[]` | no |
-| <a name="input_vsphere_cluster"></a> [vsphere\_cluster](#input\_vsphere\_cluster) | vSphere Cluster to assign the K8S Cluster Deployment. | `string` | `"hx-demo"` | no |
-| <a name="input_vsphere_datastore"></a> [vsphere\_datastore](#input\_vsphere\_datastore) | vSphere Datastore to assign the K8S Cluster Deployment. | `string` | `"hx-demo-ds1"` | no |
-| <a name="input_vsphere_password"></a> [vsphere\_password](#input\_vsphere\_password) | vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target. | `string` | n/a | yes |
-| <a name="input_vsphere_portgroup"></a> [vsphere\_portgroup](#input\_vsphere\_portgroup) | vSphere Port Group to assign the K8S Cluster Deployment. | `list` | <pre>[<br>  "VM"<br>]</pre> | no |
-| <a name="input_vsphere_resource_pool"></a> [vsphere\_resource\_pool](#input\_vsphere\_resource\_pool) | vSphere Resource Pool to assign the K8S Cluster Deployment. | `string` | `""` | no |
-| <a name="input_vsphere_target"></a> [vsphere\_target](#input\_vsphere\_target) | vSphere Server registered as a Target in Intersight.  The default, 210, only works if this is for the DevNet Sandbox. | `string` | `"210"` | no |
-| <a name="input_worker_desired_size"></a> [worker\_desired\_size](#input\_worker\_desired\_size) | K8S Worker Desired Cluster Size. | `string` | `0` | no |
-| <a name="input_worker_instance_type"></a> [worker\_instance\_type](#input\_worker\_instance\_type) | K8S Worker Virtual Machine Instance Type.  Options are {small\|medium\|large}. | `string` | `"small"` | no |
-| <a name="input_worker_max_size"></a> [worker\_max\_size](#input\_worker\_max\_size) | K8S Worker Maximum Cluster Size. | `string` | `4` | no |
-| <a name="input_ws_global_vars"></a> [ws\_global\_vars](#input\_ws\_global\_vars) | Global Variables Workspace Name.  The default value will be set to {prefix\_value}\_global\_vars by the tfe variable module. | `string` | `""` | no |
+| <a name="input_tenant_name"></a> [tenant\_name](#input\_tenant\_name) | Name of the Tenant. | `string` | `"default"` | no |
+| <a name="input_timezone"></a> [timezone](#input\_timezone) | Timezone for Kubernetes Sysconfig Policy. | `string` | `"Etc/GMT"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_addons_list"></a> [addons\_list](#output\_addons\_list) | List of Add-ons for Policy Creation. |
-| <a name="output_control_plane_profile"></a> [control\_plane\_profile](#output\_control\_plane\_profile) | moid of the Master Node Profile. |
+| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Intersight URL. |
 | <a name="output_iks_cluster"></a> [iks\_cluster](#output\_iks\_cluster) | moid of the IKS Cluster. |
-| <a name="output_ip_pool"></a> [ip\_pool](#output\_ip\_pool) | IP Pool Policy Name. |
-| <a name="output_ip_pool_from"></a> [ip\_pool\_from](#output\_ip\_pool\_from) | IP Pool Starting IP Value. |
-| <a name="output_ip_pool_gateway"></a> [ip\_pool\_gateway](#output\_ip\_pool\_gateway) | IP Pool Gateway Value. |
-| <a name="output_ip_pool_netmask"></a> [ip\_pool\_netmask](#output\_ip\_pool\_netmask) | IP Pool Netmask Value. |
-| <a name="output_ip_pool_size"></a> [ip\_pool\_size](#output\_ip\_pool\_size) | IP Pool Block Size. |
-| <a name="output_k8s_addon_policy"></a> [k8s\_addon\_policy](#output\_k8s\_addon\_policy) | Kubernetes Addon Policy Name. |
-| <a name="output_k8s_runtime_policy"></a> [k8s\_runtime\_policy](#output\_k8s\_runtime\_policy) | Kubernetes Runtime Policy Name. |
-| <a name="output_k8s_trusted_registry"></a> [k8s\_trusted\_registry](#output\_k8s\_trusted\_registry) | Kubernetes Trusted Registry Policy Name. |
-| <a name="output_k8s_version_policy"></a> [k8s\_version\_policy](#output\_k8s\_version\_policy) | Kubernetes Version Policy Name. |
-| <a name="output_k8s_vm_infra_policy"></a> [k8s\_vm\_infra\_policy](#output\_k8s\_vm\_infra\_policy) | Kubernetes VM Infrastructure Policy Name. |
-| <a name="output_k8s_vm_network_policy"></a> [k8s\_vm\_network\_policy](#output\_k8s\_vm\_network\_policy) | Kubernetes VM Network Policy Name. |
-| <a name="output_proxy_http_hostname"></a> [proxy\_http\_hostname](#output\_proxy\_http\_hostname) | HTTP Proxy Server Name or IP Address. |
-| <a name="output_proxy_http_username"></a> [proxy\_http\_username](#output\_proxy\_http\_username) | HTTP Proxy Username. |
-| <a name="output_proxy_https_hostname"></a> [proxy\_https\_hostname](#output\_proxy\_https\_hostname) | HTTPS Proxy Server Name or IP Address.  If Left blank, and proxy\_http\_hostname is defined, it will be copied to here. |
-| <a name="output_proxy_https_username"></a> [proxy\_https\_username](#output\_proxy\_https\_username) | HTTPS Proxy Username. |
-| <a name="output_vsphere_target"></a> [vsphere\_target](#output\_vsphere\_target) | vSphere Target. |
-| <a name="output_worker_profile"></a> [worker\_profile](#output\_worker\_profile) | moid of the Worker Node Profile. |
+| <a name="output_ip_pools"></a> [ip\_pools](#output\_ip\_pools) | moid of the IP Pool |
+| <a name="output_k8s_addons"></a> [k8s\_addons](#output\_k8s\_addons) | moid of the Kubernetes CIDR Policies. |
+| <a name="output_k8s_network_cidr"></a> [k8s\_network\_cidr](#output\_k8s\_network\_cidr) | moid of the Kubernetes CIDR Policies. |
+| <a name="output_k8s_nodeos_config"></a> [k8s\_nodeos\_config](#output\_k8s\_nodeos\_config) | moid of the Kubernetes Node OS Config Policies. |
+| <a name="output_k8s_runtime_policies"></a> [k8s\_runtime\_policies](#output\_k8s\_runtime\_policies) | moid of the Kubernetes Runtime Policy. |
+| <a name="output_k8s_trusted_registries"></a> [k8s\_trusted\_registries](#output\_k8s\_trusted\_registries) | moid of the Kubernetes Trusted Registry Policy. |
+| <a name="output_k8s_version_policies"></a> [k8s\_version\_policies](#output\_k8s\_version\_policies) | moid of the Kubernetes Version Policies. |
+| <a name="output_k8s_vm_infra_policies"></a> [k8s\_vm\_infra\_policies](#output\_k8s\_vm\_infra\_policies) | moid of the Kubernetes VM Infrastructure Policies. |
+| <a name="output_k8s_vm_instance"></a> [k8s\_vm\_instance](#output\_k8s\_vm\_instance) | moid of the Large Kubernetes Instance Type Policies. |
+| <a name="output_org_moid"></a> [org\_moid](#output\_org\_moid) | moid of the Intersight Organization. |
+| <a name="output_organization"></a> [organization](#output\_organization) | Intersight Organization Name. |
+| <a name="output_tags"></a> [tags](#output\_tags) | Tags to be Associated with Objects Created in Intersight. |
+| <a name="output_tenant_name"></a> [tenant\_name](#output\_tenant\_name) | Name of the Tenant. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -386,7 +386,7 @@ variable "ip_pools" {
 #______________________________________________
 
 variable "k8s_addons" {
-  default     = {
+  default = {
     default = {
       install_strategy = "Always"
       name             = "{tenant_name}_{addon_key}"
@@ -396,7 +396,7 @@ variable "k8s_addons" {
     }
   }
   description = "Map of Add-ons for Intersight Kubernetes Service.  Add-ons Options are {ccp-monitor|kubernetes-dashboard}."
-  type        = map(object(
+  type = map(object(
     {
       install_strategy = optional(string)
       name             = optional(string)
@@ -614,19 +614,19 @@ variable "k8s_vm_infra_password" {
 variable "k8s_vm_instance" {
   default = {
     default = {
-      cpu     = 4
-      disk    = 40
-      memory  = 16384
-      tags    = []
+      cpu    = 4
+      disk   = 40
+      memory = 16384
+      tags   = []
     }
   }
   description = "Kubernetes Virtual Machine Instance Policy Variables.  Default name is {tenant_name}_vm_network."
   type = map(object(
     {
-      cpu     = optional(number)
-      disk    = optional(number)
-      memory  = optional(number)
-      tags    = optional(list(map(string)))
+      cpu    = optional(number)
+      disk   = optional(number)
+      memory = optional(number)
+      tags   = optional(list(map(string)))
     }
   ))
 }

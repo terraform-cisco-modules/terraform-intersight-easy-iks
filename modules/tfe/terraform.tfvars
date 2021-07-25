@@ -6,8 +6,8 @@
 agent_pool        = "Richfield_Agents"
 terraform_version = "1.0.3"
 # tfc_email         = "tyscott@cisco.com"
-tfc_organization  = "Cisco-Richfield-Lab"
-vcs_repo          = "scotttyso/iac"
+tfc_organization = "Cisco-Richfield-Lab"
+vcs_repo         = "scotttyso/iac"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"
@@ -46,7 +46,7 @@ secretkey    = "../../intersight.secret"
 # DNS Variables
 #__________________________________________________________
 
-domain_name = "rich.ciscolabs.com"
+domain_name    = "rich.ciscolabs.com"
 dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
 
 
@@ -66,31 +66,31 @@ timezone = "America/New_York"
 # Cluster Variables
 #__________________________________________________________
 
-tenant_name         = "Wakanda"
-ws_tenant           = "wakanda"
-tags                = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
+tenant_name = "Wakanda"
+ws_tenant   = "wakanda"
+tags        = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
 
 ip_pools = {
   pool_1 = {
     from    = 101
     gateway = "10.96.101.1/24"
     name    = "Wakanda_ip_pool1"
-    size = 99
-    tags = []
+    size    = 99
+    tags    = []
   }
   pool_2 = {
     from    = 101
     gateway = "10.96.102.1/24"
     name    = "Wakanda_ip_pool2"
-    size = 99
-    tags = []
+    size    = 99
+    tags    = []
   }
   pool_3 = {
     from    = 101
     gateway = "10.96.103.1/24"
     name    = "Wakanda_ip_pool3"
-    size = 99
-    tags = []
+    size    = 99
+    tags    = []
   }
 }
 

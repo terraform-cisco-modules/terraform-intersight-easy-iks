@@ -21,7 +21,7 @@ locals {
       runtime_moid               = (v.runtime_moid != null ? v.runtime_moid : "")
       tags                       = (v.tags != null ? v.tags : [])
       version_moid               = v.version_moid
-      wait_for_complete          = (v.wait_for_complete   != null ? v.wait_for_complete   : false)
+      wait_for_complete          = (v.wait_for_complete != null ? v.wait_for_complete : false)
       worker_desired_size        = (v.worker_desired_size != null ? v.worker_desired_size : 1)
       worker_intance_moid        = v.worker_intance_moid
       worker_max_size            = (v.worker_max_size != null ? v.worker_max_size : 4)

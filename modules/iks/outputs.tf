@@ -67,14 +67,14 @@ output "k8s_nodeos_config" {
 
 output "k8s_runtime_policies" {
   description = "moid of the Kubernetes Runtime Policy."
-  value       = var.k8s_runtime_create == true ? {
+  value = var.k8s_runtime_create == true ? {
     for v in sort(keys(module.k8s_runtime_policies)) : v => module.k8s_runtime_policies[v].runtime_policy_moid
   } : {}
 }
 
 output "k8s_trusted_registries" {
   description = "moid of the Kubernetes Trusted Registry Policy."
-  value       = var.k8s_trusted_create == true ? {
+  value = var.k8s_trusted_create == true ? {
     for v in sort(keys(module.k8s_trusted_registries)) : v => module.k8s_trusted_registries[v].trusted_registry_moid
   } : {}
 }
