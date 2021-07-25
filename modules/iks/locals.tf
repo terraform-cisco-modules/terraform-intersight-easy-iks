@@ -105,6 +105,7 @@ locals {
       worker_max_size            = (v.worker_max_size != null ? v.worker_max_size : 4)
     }
   }
+  tags = jsondecode(var.tags)
 }
 
 

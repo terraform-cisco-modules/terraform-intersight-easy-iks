@@ -50,9 +50,9 @@ variable "tenant_name" {
 }
 
 variable "tags" {
-  default     = []
+  # default     = []
   description = "Tags to be Associated with Objects Created in Intersight."
-  type        = list(map(string))
+  type        = string
 }
 
 
