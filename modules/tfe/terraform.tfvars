@@ -43,26 +43,6 @@ organization = "Wakanda"
 
 #__________________________________________________________
 #
-# DNS Variables
-#__________________________________________________________
-
-domain_name    = "rich.ciscolabs.com"
-dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
-
-
-#__________________________________________________________
-#
-# Time Variables
-#__________________________________________________________
-/*
-  If ntp_servers is not set, dns_servers will be used as NTP servers
-*/
-# ntp_servers = []
-# For a List of timezones see https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md.
-timezone = "America/New_York"
-
-#__________________________________________________________
-#
 # Cluster Variables
 #__________________________________________________________
 
@@ -94,7 +74,7 @@ ip_pools = {
   }
 }
 
-k8s_addons = {
+k8s_addon_policies = {
   ccp-monitor = {
     # This is empty because I am accepting all the default values
   }
@@ -104,20 +84,38 @@ k8s_addons = {
   }
 }
 
-k8s_trusted_create = true
-k8s_trusted_registry = {
-  default = {
-    unsigned = ["10.101.128.128"]
-  }
-}
-
-k8s_version = {
+k8s_network_cidr = {
   default = {
     # This is empty because I am accepting all the default values
   }
 }
 
-k8s_vm_infra = {
+k8s_nodeos_config = {
+  default = {
+    dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
+    domain_name    = "rich.ciscolabs.com"
+    #  If ntp_servers is not set, dns_servers will be used as NTP servers
+    # ntp_servers = []
+    # For a List of timezones see https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md.
+    timezone = "America/New_York"
+  }
+}
+
+k8s_trusted_create = true
+
+k8s_trusted_registries = {
+  default = {
+    unsigned = ["10.101.128.128"]
+  }
+}
+
+k8s_version_policies = {
+  default = {
+    # This is empty because I am accepting all the default values
+  }
+}
+
+k8s_vm_infra_config = {
   default = {
     vsphere_cluster       = "Panther"
     vsphere_datastore     = "NVMe_DS1"
@@ -127,7 +125,7 @@ k8s_vm_infra = {
   }
 }
 
-k8s_vm_instance = {
+k8s_vm_instance_type = {
   large = {
     cpu    = 12
     disk   = 80
@@ -143,11 +141,6 @@ k8s_vm_instance = {
   }
 }
 
-k8s_vm_network = {
-  default = {
-    # This is empty because I am accepting all the default values
-  }
-}
 
 #__________________________________________________________
 #
@@ -156,24 +149,25 @@ k8s_vm_network = {
 
 iks_cluster = {
   cluster01 = {
-    action_cluster             = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    addons                     = ["ccp-monitor", "kubernetes-dashboard"]
-    control_plane_desired_size = 1
-    control_plane_intance_moid = "small"
-    control_plane_max_size     = 3
-    ip_pool_moid               = "pool_1"
-    k8s_vm_infra_moid          = "default"
-    load_balancers             = 3
-    ssh_key                    = "ssh_key_1"
-    ssh_user                   = "iksadmin"
-    registry_moid              = "default"
-    runtime_moid               = []
-    tags                       = []
-    version_moid               = "default"
-    vm_network_moid            = "default"
-    wait_for_complete          = false
-    worker_desired_size        = 1
-    worker_intance_moid        = "small"
-    worker_max_size            = 4
+    action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    control_plane_desired_size      = 1
+    control_plane_max_size          = 3
+    ip_pool_moid                    = "pool_1"
+    k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
+    k8s_network_cidr_moid           = "default"
+    k8s_nodeos_config_moid          = "default"
+    k8s_registry_moid               = "default"
+    k8s_runtime_moid                = ""
+    k8s_version_moid                = "default"
+    k8s_vm_infra_moid               = "default"
+    k8s_vm_instance_type_ctrl_plane = "small"
+    k8s_vm_instance_type_worker     = "small"
+    load_balancers                  = 3
+    ssh_key                         = "ssh_key_1"
+    ssh_user                        = "iksadmin"
+    tags                            = []
+    wait_for_complete               = false
+    worker_desired_size             = 1
+    worker_max_size                 = 4
   }
 }

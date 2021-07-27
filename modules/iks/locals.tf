@@ -2,26 +2,81 @@ locals {
   # Intersight Organization Variables
   org_name = var.organization
   org_moid = data.intersight_organization_organization.org_moid.results.0.moid
+  # IKS Cluster Variables
+  iks_cluster = {
+    for k, v in jsondecode(var.iks_cluster) : k => {
+      action_cluster                  = (v.action_cluster != null ? v.action_cluster : "Deploy")
+      action_control_plane            = (v.action_control_plane != null ? v.action_control_plane : "No-op")
+      action_worker                   = (v.action_worker != null ? v.action_worker : "No-op")
+      control_plane_desired_size      = (v.control_plane_desired_size != null ? v.control_plane_desired_size : 1)
+      control_plane_k8s_labels        = (v.control_plane_k8s_labels != null ? v.control_plane_k8s_labels : [])
+      control_plane_max_size          = (v.control_plane_max_size != null ? v.control_plane_max_size : 3)
+      description                     = (v.description != null ? v.description : "")
+      ip_pool_moid                    = v.ip_pool_moid
+      k8s_addon_policy_moid           = (v.k8s_addon_policy_moid != null ? v.k8s_addon_policy_moid : [])
+      k8s_network_cidr_moid           = v.k8s_network_cidr_moid
+      k8s_nodeos_config_moid          = v.k8s_nodeos_config_moid
+      k8s_registry_moid               = (v.k8s_registry_moid != null ? v.k8s_registry_moid : "")
+      k8s_runtime_moid                = (v.k8s_runtime_moid != null ? v.k8s_runtime_moid : "")
+      k8s_version_moid                = v.k8s_version_moid
+      k8s_vm_infra_moid               = v.k8s_vm_infra_moid
+      k8s_vm_instance_type_ctrl_plane = v.k8s_vm_instance_type_ctrl_plane
+      k8s_vm_instance_type_worker     = v.k8s_vm_instance_type_worker
+      load_balancers                  = (v.load_balancers != null ? v.load_balancers : 3)
+      ssh_key                         = v.ssh_key
+      ssh_user                        = (v.ssh_user != null ? v.ssh_user : "iksadmin")
+      tags                            = (v.tags != null ? v.tags : [])
+      wait_for_complete               = (v.wait_for_complete != null ? v.wait_for_complete : false)
+      worker_desired_size             = (v.worker_desired_size != null ? v.worker_desired_size : 1)
+      worker_k8s_labels               = (v.worker_k8s_labels != null ? v.worker_k8s_labels : [])
+      worker_max_size                 = (v.worker_max_size != null ? v.worker_max_size : 4)
+    }
+  }
   ip_pools = {
     for k, v in jsondecode(var.ip_pools) : k => {
-      from    = (v.from != null ? v.from : 20)
-      gateway = (v.gateway != null ? v.gateway : "198.18.0.1/24")
-      name    = (v.name != null ? v.name : "")
-      size    = (v.size != null ? v.size : 30)
-      tags    = (v.tags != null ? v.tags : [])
+      description = (v.description != null ? v.description : "")
+      from        = (v.from != null ? v.from : 20)
+      gateway     = (v.gateway != null ? v.gateway : "198.18.0.1/24")
+      name        = (v.name != null ? v.name : "")
+      size        = (v.size != null ? v.size : 30)
+      tags        = (v.tags != null ? v.tags : [])
     }
   }
-  k8s_addons = {
-    for k, v in jsondecode(var.k8s_addons) : k => {
-      install_strategy = (v.install_strategy != null ? v.install_strategy : "Always")
-      name             = (v.name != null ? v.name : "")
-      release_name     = (v.release_name != null ? v.release_name : "")
-      tags             = (v.tags != null ? v.tags : [])
-      upgrade_strategy = (v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly")
+  k8s_addon_policies = {
+    for k, v in jsondecode(var.k8s_addon_policies) : k => {
+      description       = (v.description != null ? v.description : "")
+      install_strategy  = (v.install_strategy != null ? v.install_strategy : "Always")
+      name              = (v.name != null ? v.name : "")
+      release_name      = (v.release_name != null ? v.release_name : "")
+      release_namespace = (v.release_namespace != null ? v.release_namespace : "")
+      tags              = (v.tags != null ? v.tags : [])
+      upgrade_strategy  = (v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly")
     }
   }
-  k8s_runtime = {
-    for k, v in jsondecode(var.k8s_runtime) : k => {
+  k8s_network_cidr = {
+    for k, v in jsondecode(var.k8s_network_cidr) : k => {
+      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
+      cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
+      cni_type     = (v.cni_type != null ? v.cni_type : "Calico")
+      description  = (v.description != null ? v.description : "")
+      name         = (v.name != null ? v.name : "")
+      tags         = (v.tags != null ? v.tags : [])
+    }
+  }
+  k8s_nodeos_config = {
+    for k, v in jsondecode(var.k8s_nodeos_config) : k => {
+      description    = (v.description != null ? v.description : "")
+      dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
+      domain_name    = (v.domain_name != null ? v.domain_name : "example.com")
+      ntp_servers    = (v.ntp_servers != null ? v.ntp_servers : [])
+      name           = (v.name != null ? v.name : "")
+      tags           = (v.tags != null ? v.tags : [])
+      timezone       = (v.timezone != null ? v.timezone : "Etc/GMT")
+    }
+  }
+  k8s_runtime_policies = {
+    for k, v in jsondecode(var.k8s_runtime_policies) : k => {
+      description        = (v.description != null ? v.description : "")
       docker_bridge_cidr = (v.docker_bridge_cidr != null ? v.docker_bridge_cidr : "")
       docker_no_proxy    = (v.docker_no_proxy != null ? v.docker_no_proxy : [])
       http_hostname      = (v.http_hostname != null ? v.http_hostname : "")
@@ -36,23 +91,26 @@ locals {
       tags               = (v.tags != null ? v.tags : [])
     }
   }
-  k8s_trusted_registry = {
-    for k, v in jsondecode(var.k8s_trusted_registry) : k => {
-      name     = (v.name != null ? v.name : "")
-      root_ca  = (v.root_ca != null ? v.root_ca : [])
-      tags     = (v.tags != null ? v.tags : [])
-      unsigned = (v.unsigned != null ? v.unsigned : [])
+  k8s_trusted_registries = {
+    for k, v in jsondecode(var.k8s_trusted_registries) : k => {
+      description = (v.description != null ? v.description : "")
+      name        = (v.name != null ? v.name : "")
+      root_ca     = (v.root_ca != null ? v.root_ca : [])
+      tags        = (v.tags != null ? v.tags : [])
+      unsigned    = (v.unsigned != null ? v.unsigned : [])
     }
   }
-  k8s_version = {
-    for k, v in jsondecode(var.k8s_version) : k => {
-      name    = (v.name != null ? v.name : "")
-      tags    = (v.tags != null ? v.tags : [])
-      version = (v.version != null ? v.version : "1.19.5")
+  k8s_version_policies = {
+    for k, v in jsondecode(var.k8s_version_policies) : k => {
+      description = (v.description != null ? v.description : "")
+      name        = (v.name != null ? v.name : "")
+      tags        = (v.tags != null ? v.tags : [])
+      version     = (v.version != null ? v.version : "1.19.5")
     }
   }
-  k8s_vm_infra = {
-    for k, v in jsondecode(var.k8s_vm_infra) : k => {
+  k8s_vm_infra_config = {
+    for k, v in jsondecode(var.k8s_vm_infra_config) : k => {
+      description           = (v.description != null ? v.description : "")
       name                  = (v.name != null ? v.name : "")
       tags                  = (v.tags != null ? v.tags : [])
       vsphere_cluster       = coalesce(v.vsphere_cluster, "default")
@@ -62,47 +120,13 @@ locals {
       vsphere_target        = coalesce(v.vsphere_target, "")
     }
   }
-  k8s_vm_instance = {
-    for k, v in jsondecode(var.k8s_vm_instance) : k => {
-      cpu    = (v.cpu != null ? v.cpu : 4)
-      disk   = (v.disk != null ? v.disk : 40)
-      memory = (v.memory != null ? v.memory : 16384)
-      tags   = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_vm_network = {
-    for k, v in jsondecode(var.k8s_vm_network) : k => {
-      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
-      cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
-      cni          = (v.cni != null ? v.cni : "Calico")
-      name         = (v.name != null ? v.name : "")
-      tags         = (v.tags != null ? v.tags : [])
-    }
-  }
-  # IKS Cluster Variables
-  iks_cluster = {
-    for k, v in jsondecode(var.iks_cluster) : k => {
-      action_cluster             = (v.action_cluster != null ? v.action_cluster : "Deploy")
-      action_control_plane       = (v.action_control_plane != null ? v.action_control_plane : "No-op")
-      action_worker              = (v.action_worker != null ? v.action_worker : "No-op")
-      addons                     = (v.addons != null ? v.addons : [])
-      control_plane_desired_size = (v.control_plane_desired_size != null ? v.control_plane_desired_size : 1)
-      control_plane_intance_moid = v.control_plane_intance_moid
-      control_plane_max_size     = (v.control_plane_max_size != null ? v.control_plane_max_size : 3)
-      ip_pool_moid               = v.ip_pool_moid
-      k8s_vm_infra_moid          = v.k8s_vm_infra_moid
-      load_balancers             = (v.load_balancers != null ? v.load_balancers : 3)
-      ssh_key                    = v.ssh_key
-      ssh_user                   = (v.ssh_user != null ? v.ssh_user : "iksadmin")
-      registry_moid              = (v.registry_moid != null ? v.registry_moid : "")
-      runtime_moid               = (v.runtime_moid != null ? v.runtime_moid : [])
-      tags                       = (v.tags != null ? v.tags : [])
-      version_moid               = v.version_moid
-      vm_network_moid            = v.vm_network_moid
-      wait_for_complete          = (v.wait_for_complete != null ? v.wait_for_complete : false)
-      worker_desired_size        = (v.worker_desired_size != null ? v.worker_desired_size : 1)
-      worker_intance_moid        = v.worker_intance_moid
-      worker_max_size            = (v.worker_max_size != null ? v.worker_max_size : 4)
+  k8s_vm_instance_type = {
+    for k, v in jsondecode(var.k8s_vm_instance_type) : k => {
+      description = (v.description != null ? v.description : "")
+      cpu         = (v.cpu != null ? v.cpu : 4)
+      disk        = (v.disk != null ? v.disk : 40)
+      memory      = (v.memory != null ? v.memory : 16384)
+      tags        = (v.tags != null ? v.tags : [])
     }
   }
   tags = jsondecode(var.tags)

@@ -50,48 +50,48 @@ output "ip_pools" {
 # Kubernetes Policy Outputs
 #__________________________________________________________
 
-output "k8s_addons" {
+output "k8s_addon_policies" {
   description = "moid of the Kubernetes CIDR Policies."
-  value       = { for v in sort(keys(module.k8s_addons)) : v => module.k8s_addons[v] }
+  value       = { for v in sort(keys(module.k8s_addon_policies)) : v => module.k8s_addon_policies[v] }
 }
 
 output "k8s_network_cidr" {
   description = "moid of the Kubernetes CIDR Policies."
-  value       = { for v in sort(keys(module.k8s_vm_network_policy)) : v => module.k8s_vm_network_policy[v].network_policy_moid }
+  value       = { for v in sort(keys(module.k8s_network_cidr)) : v => module.k8s_network_cidr[v].moid }
 }
 
 output "k8s_nodeos_config" {
   description = "moid of the Kubernetes Node OS Config Policies."
-  value       = { for v in sort(keys(module.k8s_vm_network_policy)) : v => module.k8s_vm_network_policy[v].sys_config_policy_moid }
+  value       = { for v in sort(keys(module.k8s_nodeos_config)) : v => module.k8s_nodeos_config[v].moid }
 }
 
 output "k8s_runtime_policies" {
-  description = "moid of the Kubernetes Runtime Policy."
+  description = "moid of the Kubernetes Runtime Policies."
   value = var.k8s_runtime_create == true ? {
-    for v in sort(keys(module.k8s_runtime_policies)) : v => module.k8s_runtime_policies[v].runtime_policy_moid
+    for v in sort(keys(module.k8s_runtime_policies)) : v => module.k8s_runtime_policies[v].moid
   } : {}
 }
 
 output "k8s_trusted_registries" {
   description = "moid of the Kubernetes Trusted Registry Policy."
   value = var.k8s_trusted_create == true ? {
-    for v in sort(keys(module.k8s_trusted_registries)) : v => module.k8s_trusted_registries[v].trusted_registry_moid
+    for v in sort(keys(module.k8s_trusted_registries)) : v => module.k8s_trusted_registries[v].moid
   } : {}
 }
 
 output "k8s_version_policies" {
   description = "moid of the Kubernetes Version Policies."
-  value       = { for v in sort(keys(module.k8s_version_policies)) : v => module.k8s_version_policies[v].version_policy_moid }
+  value       = { for v in sort(keys(module.k8s_version_policies)) : v => module.k8s_version_policies[v].moid }
 }
 
-output "k8s_vm_infra_policies" {
-  description = "moid of the Kubernetes VM Infrastructure Policies."
-  value       = { for v in sort(keys(module.k8s_vm_infra_policies)) : v => module.k8s_vm_infra_policies[v].moid }
+output "k8s_vm_infra_config" {
+  description = "moid of the Kubernetes VM Infrastructure Configuration Policies."
+  value       = { for v in sort(keys(module.k8s_vm_infra_config)) : v => module.k8s_vm_infra_config[v].moid }
 }
 
-output "k8s_vm_instance" {
+output "k8s_vm_instance_type" {
   description = "moid of the Large Kubernetes Instance Type Policies."
-  value       = { for v in sort(keys(module.k8s_vm_instance)) : v => module.k8s_vm_instance[v].worker_profile_moid }
+  value       = { for v in sort(keys(module.k8s_vm_instance_type)) : v => module.k8s_vm_instance_type[v].moid }
 }
 
 #__________________________________________________________
