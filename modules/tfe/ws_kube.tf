@@ -1,15 +1,15 @@
 #__________________________________________________________
 #
-# Kube Workspaces: {tenant_name}_{cluster_name}_kube
+# Kube Workspaces: {organization}_{cluster_name}_kube
 #__________________________________________________________
 
 module "kube_workspaces" {
   source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each            = var.iks_cluster
   auto_apply          = true
-  description         = "${var.tenant_name}_${each.key} - kube_config Workspace."
+  description         = "${var.organization}_${each.key} - kube_config Workspace."
   global_remote_state = true
-  name                = "${var.tenant_name}_${each.key}_kube"
+  name                = "${var.organization}_${each.key}_kube"
   terraform_version   = var.terraform_version
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
@@ -24,7 +24,7 @@ output "kube_workspaces" {
 
 #__________________________________________________________
 #
-# Kube Variables: {tenant_name}_{cluster_name}_kube
+# Kube Variables: {organization}_{cluster_name}_kube
 #__________________________________________________________
 
 module "kube_variables" {
@@ -46,7 +46,7 @@ module "kube_variables" {
       value       = var.apikey
     },
     endpoint = {
-      description = "Intersight API Key."
+      description = "Intersight Endpoint."
       key         = "endpoint"
       value       = var.endpoint
     },
@@ -60,9 +60,9 @@ module "kube_variables" {
     # Cluster Variables
     #---------------------------
     cluster_name = {
-      description = "${var.tenant_name}_${each.key} Cluster Name."
+      description = "${var.organization}_${each.key} Cluster Name."
       key         = "cluster_name"
-      value       = "${var.tenant_name}_${each.key}"
+      value       = "${var.organization}_${each.key}"
     },
   }
 }

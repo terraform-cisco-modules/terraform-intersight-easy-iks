@@ -8,14 +8,13 @@ locals {
   organization = data.terraform_remote_state.tenant.outputs.organization
   org_moid = data.terraform_remote_state.tenant.outputs.org_moid
   tags = data.terraform_remote_state.tenant.outputs.tags
-  tenant_name = data.terraform_remote_state.tenant.outputs.tenant_name
   #__________________________________________________________
   #
   # IKS Cluster Variables
   #__________________________________________________________
 
-  iks_cluster = {
-    for k, v in jsondecode(var.iks_cluster) : k => {
+  iks_cluster_vars = {
+    for k, v in jsondecode(var.iks_cluster_vars) : k => {
       action_cluster                  = (v.action_cluster != null ? v.action_cluster : "Deploy")
       action_control_plane            = (v.action_control_plane != null ? v.action_control_plane : "No-op")
       action_worker                   = (v.action_worker != null ? v.action_worker : "No-op")

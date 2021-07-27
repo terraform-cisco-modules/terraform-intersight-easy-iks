@@ -38,6 +38,11 @@ variable "organization" {
 }
 
 
+variable "tags" {
+  description = "Please Refer to the tags variable information in the tfe module.  In the tenant module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  type        = string
+}
+
 #______________________________________________
 #
 # DNS Variables
@@ -47,22 +52,6 @@ variable "dns_servers_v4" {
   default     = ["198.18.0.100", "198.18.0.101"]
   description = "DNS Servers for Kubernetes Sysconfig Policy."
   type        = list(string)
-}
-
-#______________________________________________
-#
-# Tenant Variables
-#______________________________________________
-
-variable "tenant_name" {
-  default     = "default"
-  description = "Name of the Tenant."
-  type        = string
-}
-
-variable "tags" {
-  description = "Please Refer to the tags variable information in the tfe module.  In the tenant module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
-  type        = string
 }
 
 #______________________________________________

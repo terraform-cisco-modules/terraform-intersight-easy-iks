@@ -1,6 +1,6 @@
 #__________________________________________________________
 #
-# IWO Workspaces: {tenant_name}_{cluster_name}_iwo
+# IWO Workspaces: {organization}_{cluster_name}_iwo
 #__________________________________________________________
 
 module "iwo_workspaces" {
@@ -11,9 +11,9 @@ module "iwo_workspaces" {
   for_each          = var.iks_cluster
   agent_pool        = module.tfc_agent_pool.tfc_agent_pool
   auto_apply        = true
-  description       = "${var.tenant_name}_${each.key} - IWO Workspace."
+  description       = "${var.organization}_${each.key} - IWO Workspace."
   execution_mode    = "agent"
-  name              = "${var.tenant_name}_${each.key}_iwo"
+  name              = "${var.organization}_${each.key}_iwo"
   terraform_version = var.terraform_version
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
@@ -28,7 +28,7 @@ output "iwo_workspaces" {
 
 #__________________________________________________________
 #
-# IWO Variables: {tenant_name}_{cluster_name}_iwo
+# IWO Variables: {organization}_{cluster_name}_iwo
 #__________________________________________________________
 
 module "iwo_variables" {
@@ -49,9 +49,9 @@ module "iwo_variables" {
       value       = var.tfc_organization
     },
     tfc_workspace = {
-      description = "${var.tenant_name}_${each.key} Kube Config Workspace."
+      description = "${var.organization}_${each.key} Kube Config Workspace."
       key         = "ws_kube"
-      value       = "${var.tenant_name}_${each.key}_kube"
+      value       = "${var.organization}_${each.key}_kube"
     }
   }
 }

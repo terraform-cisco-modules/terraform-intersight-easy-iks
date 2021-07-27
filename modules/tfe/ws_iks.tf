@@ -1,483 +1,3 @@
-locals {
-  # Intersight Organization Variables
-  org_name = var.organization
-  # IKS Cluster Variables
-  iks_cluster = {
-    for k, v in var.iks_cluster : k => {
-      action_cluster                  = (v.action_cluster != null ? v.action_cluster : "Deploy")
-      action_control_plane            = (v.action_control_plane != null ? v.action_control_plane : "No-op")
-      action_worker                   = (v.action_worker != null ? v.action_worker : "No-op")
-      control_plane_desired_size      = (v.control_plane_desired_size != null ? v.control_plane_desired_size : 1)
-      control_plane_k8s_labels        = (v.control_plane_k8s_labels != null ? v.control_plane_k8s_labels : [])
-      control_plane_max_size          = (v.control_plane_max_size != null ? v.control_plane_max_size : 3)
-      description                     = (v.description != null ? v.description : "")
-      ip_pool_moid                    = v.ip_pool_moid
-      k8s_addon_policy_moid           = (v.k8s_addon_policy_moid != null ? v.k8s_addon_policy_moid : [])
-      k8s_network_cidr_moid           = v.k8s_network_cidr_moid
-      k8s_nodeos_config_moid          = v.k8s_nodeos_config_moid
-      k8s_registry_moid               = (v.k8s_registry_moid != null ? v.k8s_registry_moid : "")
-      k8s_runtime_moid                = (v.k8s_runtime_moid != null ? v.k8s_runtime_moid : "")
-      k8s_version_moid                = v.k8s_version_moid
-      k8s_vm_infra_moid               = v.k8s_vm_infra_moid
-      k8s_vm_instance_type_ctrl_plane = v.k8s_vm_instance_type_ctrl_plane
-      k8s_vm_instance_type_worker     = v.k8s_vm_instance_type_worker
-      load_balancers                  = (v.load_balancers != null ? v.load_balancers : 3)
-      ssh_key                         = v.ssh_key
-      ssh_user                        = (v.ssh_user != null ? v.ssh_user : "iksadmin")
-      tags                            = (v.tags != null ? v.tags : [])
-      wait_for_complete               = (v.wait_for_complete != null ? v.wait_for_complete : false)
-      worker_desired_size             = (v.worker_desired_size != null ? v.worker_desired_size : 1)
-      worker_k8s_labels               = (v.worker_k8s_labels != null ? v.worker_k8s_labels : [])
-      worker_max_size                 = (v.worker_max_size != null ? v.worker_max_size : 4)
-    }
-  }
-  ip_pools = {
-    for k, v in var.ip_pools : k => {
-      description = (v.description != null ? v.description : "")
-      from        = (v.from != null ? v.from : 20)
-      gateway     = (v.gateway != null ? v.gateway : "198.18.0.1/24")
-      name        = (v.name != null ? v.name : "")
-      size        = (v.size != null ? v.size : 30)
-      tags        = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_addon_policies = {
-    for k, v in var.k8s_addon_policies : k => {
-      description       = (v.description != null ? v.description : "")
-      install_strategy  = (v.install_strategy != null ? v.install_strategy : "Always")
-      name              = (v.name != null ? v.name : "")
-      release_name      = (v.release_name != null ? v.release_name : "")
-      release_namespace = (v.release_namespace != null ? v.release_namespace : "")
-      tags              = (v.tags != null ? v.tags : [])
-      upgrade_strategy  = (v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly")
-    }
-  }
-  k8s_network_cidr = {
-    for k, v in var.k8s_network_cidr : k => {
-      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
-      cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
-      cni_type     = (v.cni_type != null ? v.cni_type : "Calico")
-      description  = (v.description != null ? v.description : "")
-      name         = (v.name != null ? v.name : "")
-      tags         = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_nodeos_config = {
-    for k, v in var.k8s_nodeos_config : k => {
-      description    = (v.description != null ? v.description : "")
-      dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
-      domain_name    = (v.domain_name != null ? v.domain_name : "example.com")
-      ntp_servers    = (v.ntp_servers != null ? v.ntp_servers : [])
-      name           = (v.name != null ? v.name : "")
-      tags           = (v.tags != null ? v.tags : [])
-      timezone       = (v.timezone != null ? v.timezone : "Etc/GMT")
-    }
-  }
-  k8s_runtime_policies = {
-    for k, v in var.k8s_runtime_policies : k => {
-      description        = (v.description != null ? v.description : "")
-      docker_bridge_cidr = (v.docker_bridge_cidr != null ? v.docker_bridge_cidr : "")
-      docker_no_proxy    = (v.docker_no_proxy != null ? v.docker_no_proxy : [])
-      http_hostname      = (v.http_hostname != null ? v.http_hostname : "")
-      http_port          = (v.http_port != null ? v.http_port : 8080)
-      http_protocol      = (v.http_protocol != null ? v.http_protocol : "http")
-      http_username      = (v.http_username != null ? v.http_username : "")
-      https_hostname     = (v.https_hostname != null ? v.https_hostname : "")
-      https_port         = (v.https_port != null ? v.https_port : 8443)
-      https_protocol     = (v.https_protocol != null ? v.https_protocol : "https")
-      https_username     = (v.https_username != null ? v.https_username : "")
-      name               = (v.name != null ? v.name : "")
-      tags               = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_trusted_registries = {
-    for k, v in var.k8s_trusted_registries : k => {
-      description = (v.description != null ? v.description : "")
-      name        = (v.name != null ? v.name : "")
-      root_ca     = (v.root_ca != null ? v.root_ca : [])
-      tags        = (v.tags != null ? v.tags : [])
-      unsigned    = (v.unsigned != null ? v.unsigned : [])
-    }
-  }
-  k8s_version_policies = {
-    for k, v in var.k8s_version_policies : k => {
-      description = (v.description != null ? v.description : "")
-      name        = (v.name != null ? v.name : "")
-      tags        = (v.tags != null ? v.tags : [])
-      version     = (v.version != null ? v.version : "1.19.5")
-    }
-  }
-  k8s_vm_infra_config = {
-    for k, v in var.k8s_vm_infra_config : k => {
-      description           = (v.description != null ? v.description : "")
-      name                  = (v.name != null ? v.name : "")
-      tags                  = (v.tags != null ? v.tags : [])
-      vsphere_cluster       = coalesce(v.vsphere_cluster, "default")
-      vsphere_datastore     = coalesce(v.vsphere_datastore, "datastore1")
-      vsphere_portgroup     = coalesce(v.vsphere_portgroup, ["VM Network"])
-      vsphere_resource_pool = (v.vsphere_resource_pool != null ? v.vsphere_resource_pool : "")
-      vsphere_target        = coalesce(v.vsphere_target, "")
-    }
-  }
-  k8s_vm_instance_type = {
-    for k, v in var.k8s_vm_instance_type : k => {
-      description = (v.description != null ? v.description : "")
-      cpu         = (v.cpu != null ? v.cpu : 4)
-      disk        = (v.disk != null ? v.disk : 40)
-      memory      = (v.memory != null ? v.memory : 16384)
-      tags        = (v.tags != null ? v.tags : [])
-    }
-  }
-}
-
-
-#______________________________________________
-#
-# DNS Variables
-#______________________________________________
-
-variable "dns_servers_v4" {
-  default     = ["198.18.0.100", "198.18.0.101"]
-  description = "DNS Servers for Kubernetes Sysconfig Policy."
-  type        = list(string)
-}
-
-#__________________________________________________________
-#
-# Required Variables
-#__________________________________________________________
-
-variable "tenant_name" {
-  default     = "default"
-  description = "Tenant Name for Workspace Creation in Terraform Cloud and IKS Cluster Naming."
-  type        = string
-}
-
-variable "tags" {
-  default     = []
-  description = "Tags to be Associated with Objects Created in Intersight."
-  type        = list(map(string))
-}
-
-#______________________________________________
-#
-# IP Pool Variables
-#______________________________________________
-
-variable "ip_pools" {
-  default = {
-    default = {
-      description = ""
-      from        = 20
-      gateway     = "198.18.0.1/24"
-      name        = "{tenant_name}_ip_pool"
-      size        = 30
-      tags        = []
-    }
-  }
-  description = "Intersight IP Pool Variable Map.\r\n1. description - A description for the policy.\r\n2. from - host address of the pool starting address.\r\n3. gateway - ip/prefix of the gateway.\r\n4. name - Name of the IP Pool.\r\n5. size - Number of host addresses to assign to the pool.\r\n6. tags - List of key/value Attributes to Assign to the Policy.\r\n"
-  type = map(object(
-    {
-      description = optional(string)
-      from        = optional(number)
-      gateway     = optional(string)
-      name        = optional(string)
-      size        = optional(number)
-      tags        = optional(list(map(string)))
-    }
-  ))
-}
-
-#__________________________________________________________
-#
-# Kubernetes Policy Variables
-#__________________________________________________________
-
-#______________________________________________
-#
-# Kubernetes Add-ons Policy Variables
-#______________________________________________
-
-variable "k8s_addon_policies" {
-  default = {
-    default = {
-      description       = ""
-      install_strategy  = "Always"
-      name              = "{tenant_name}_{each.key}"
-      release_name      = ""
-      release_namespace = ""
-      tags              = []
-      upgrade_strategy  = "UpgradeOnly"
-    }
-  }
-  description = "Intersight Kubernetes Service Add-ons Variable Map.  Add-ons Options are {ccp-monitor|kubernetes-dashboard} currently.\r\n1. description - A description for the policy.\r\n2. install_strategy - Addon install strategy to determine whether an addon is installed if not present.\r\n * None - Unspecified install strategy.\r\n * NoAction - No install action performed.\r\n * InstallOnly - Only install in green field. No action in case of failure or removal.\r\n * Always - Attempt install if chart is not already installed.\r\n3. name - Name of the concrete policy.\r\n4. release_name - Name for the helm release.\r\n5. release_namespace - Namespace for the helm release.\r\n6. tags - List of key/value Attributes to Assign to the Policy.\r\n7. upgrade_strategy - Addon upgrade strategy to determine whether an addon configuration is overwritten on upgrade.\r\n * None - Unspecified upgrade strategy.\r\n * NoAction - This choice enables No upgrades to be performed.\r\n * UpgradeOnly - Attempt upgrade if chart or overrides options change, no action on upgrade failure.\r\n * ReinstallOnFailure - Attempt upgrade first. Remove and install on upgrade failure.\r\n * AlwaysReinstall - Always remove older release and reinstall."
-  type = map(object(
-    {
-      description       = optional(string)
-      install_strategy  = optional(string)
-      name              = optional(string)
-      release_name      = optional(string)
-      release_namespace = optional(string)
-      tags              = optional(list(map(string)))
-      upgrade_strategy  = optional(string)
-    }
-  ))
-}
-
-
-#______________________________________________
-#
-# Kubernetes Network CIDR Policy Variables
-#______________________________________________
-
-variable "k8s_network_cidr" {
-  default = {
-    default = {
-      cidr_pod     = "100.64.0.0/16"
-      cidr_service = "100.65.0.0/16"
-      cni_type     = "Calico"
-      description  = ""
-      name         = "{tenant_name}_network_cidr"
-      tags         = []
-    }
-  }
-  description = "Intersight Kubernetes Network CIDR Policy Variable Map.\r\n1. cidr_pod - CIDR block to allocate pod network IP addresses from.\r\n2. cidr_service - Pod CIDR Block to be used to assign Pod IP Addresses.\r\n3. cni_type - Supported CNI type. Currently we only support Calico.\r\n* Calico - Calico CNI plugin as described in https://github.com/projectcalico/cni-plugin.\r\n* Aci - Cisco ACI Container Network Interface plugin.\r\n4. description - A description for the policy.\r\n5. name - Name of the concrete policy.\r\n6. tags - tags - List of key/value Attributes to Assign to the Policy."
-  type = map(object(
-    {
-      cidr_pod     = optional(string)
-      cidr_service = optional(string)
-      cni_type     = optional(string)
-      description  = optional(string)
-      name         = optional(string)
-      tags         = optional(list(map(string)))
-    }
-  ))
-}
-
-
-#______________________________________________
-#
-# Kubernetes Node OS Configuration Policy Variables
-#______________________________________________
-
-variable "k8s_nodeos_config" {
-  default = {
-    default = {
-      description    = ""
-      dns_servers_v4 = ["208.67.220.220", "208.67.222.222"]
-      domain_name    = "example.com"
-      ntp_servers    = []
-      name           = "{tenant_name}_nodeos_config"
-      tags           = []
-      timezone       = "Etc/GMT"
-    }
-  }
-  description = "Intersight Kubernetes Node OS Configuration Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. dns_servers_v4 - DNS Servers for the Kubernetes Node OS Configuration Policy.\r\n3. domain_name - Domain Name for the Kubernetes Node OS Configuration Policy.\r\n4. ntp_servers - NTP Servers for the Kubernetes Node OS Configuration Policy.\r\n5. name - Name of the concrete policy.\r\n6. tags - tags - List of key/value Attributes to Assign to the Policy.\r\n7. timezone - The timezone of the node's system clock.  For a List of supported timezones see the following URL.\r\n https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md."
-  type = map(object(
-    {
-      description    = optional(string)
-      dns_servers_v4 = optional(list(string))
-      domain_name    = optional(string)
-      ntp_servers    = optional(list(string))
-      name           = optional(string)
-      tags           = optional(list(map(string)))
-      timezone       = optional(string)
-    }
-  ))
-}
-
-
-#______________________________________________
-#
-# Kubernetes Runtime Policy Variables
-#______________________________________________
-
-variable "k8s_runtime_create" {
-  default     = false
-  description = "Flag to specify if the Kubernetes Runtime Policy should be created or not."
-  type        = bool
-}
-
-variable "k8s_runtime_policies" {
-  default = {
-    default = {
-      description        = ""
-      docker_bridge_cidr = ""
-      docker_no_proxy    = []
-      http_hostname      = ""
-      http_port          = 8080
-      http_protocol      = "http"
-      http_username      = ""
-      https_hostname     = ""
-      https_port         = 8443
-      https_protocol     = "https"
-      https_username     = ""
-      name               = "{tenant_name}_runtime"
-      tags               = []
-    }
-  }
-  description = "Intersight Kubernetes Runtime Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. docker_bridge_cidr - The CIDR for docker bridge network. This address space must not collide with other CIDRs on your networks, including the cluster's service CIDR, pod CIDR and IP Pools.\r\n3. docker_no_proxy - Docker no proxy list, when using internet proxy.\r\n4. http_hostname - Hostname of the HTTP Proxy Server.\r\n5. http_port - HTTP Proxy Port.  Range is 1-65535.\r\n6. http_protocol - HTTP Proxy Protocol. Options are {http|https}.\r\n7. http_username - Username for the HTTP Proxy Server.\r\n8. https_hostname - Hostname of the HTTPS Proxy Server.\r\n9. https_port - HTTPS Proxy Port.  Range is 1-65535\r\n10. https_protocol - HTTPS Proxy Protocol. Options are {http|https}.\r\n11. https_username - Username for the HTTPS Proxy Server.\r\n12. name - Name of the concrete policy.\r\n13. tags - List of key/value Attributes to Assign to the Policy."
-  type = map(object(
-    {
-      description        = optional(string)
-      docker_bridge_cidr = optional(string)
-      docker_no_proxy    = optional(list(string))
-      http_hostname      = optional(string)
-      http_port          = optional(number)
-      http_protocol      = optional(string)
-      http_username      = optional(string)
-      https_hostname     = optional(string)
-      https_port         = optional(number)
-      https_protocol     = optional(string)
-      https_username     = optional(string)
-      name               = optional(string)
-      tags               = optional(list(map(string)))
-    }
-  ))
-}
-
-variable "k8s_runtime_http_password" {
-  default     = ""
-  description = "Password for the HTTP Proxy Server, If required."
-  sensitive   = true
-  type        = string
-}
-
-variable "k8s_runtime_https_password" {
-  default     = ""
-  description = "Password for the HTTPS Proxy Server, If required."
-  sensitive   = true
-  type        = string
-}
-
-
-#______________________________________________
-#
-# Kubernetes Trusted Registries Variables
-#______________________________________________
-
-variable "k8s_trusted_create" {
-  default     = false
-  description = "Flag to specify if the Kubernetes Runtime Policy should be created or not."
-  type        = bool
-}
-
-variable "k8s_trusted_registries" {
-  default = {
-    default = {
-      description = ""
-      name        = "{tenant_name}_registry"
-      root_ca     = []
-      tags        = []
-      unsigned    = []
-    }
-  }
-  description = "Intersight Kubernetes Trusted Registry Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. name - Name of the concrete policy.\r\n3. root_ca - List of root CA Signed Registries.\r\n4. tags - List of key/value Attributes to Assign to the Policy.\r\n5. unsigned - List of unsigned registries to be supported."
-  type = map(object(
-    {
-      description = optional(string)
-      name        = optional(string)
-      root_ca     = optional(list(string))
-      tags        = optional(list(map(string)))
-      unsigned    = optional(list(string))
-    }
-  ))
-}
-
-#______________________________________________
-#
-# Kubernetes Version Variables
-#______________________________________________
-
-variable "k8s_version_policies" {
-  default = {
-    default = {
-      description = ""
-      name        = "{tenant_name}_v{each.value.version}"
-      tags        = []
-      version     = "1.19.5"
-    }
-  }
-  description = "Intersight Kubernetes Version Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. name - Name of the concrete policy.\r\n3. tags - List of key/value Attributes to Assign to the Policy.\r\n4. version - Desired Kubernetes version.  Options are {1.19.5}"
-  type = map(object(
-    {
-      description = optional(string)
-      name        = optional(string)
-      tags        = optional(list(map(string)))
-      version     = optional(string)
-    }
-  ))
-}
-
-
-#______________________________________________
-#
-# Kubernetes Virtual Machine Infra Variables
-#______________________________________________
-
-variable "k8s_vm_infra_config" {
-  default = {
-    default = {
-      description           = ""
-      name                  = "{tenant_name}_vm_infra"
-      tags                  = []
-      vsphere_cluster       = "default"
-      vsphere_datastore     = "datastore1"
-      vsphere_portgroup     = ["VM Network"]
-      vsphere_resource_pool = ""
-      vsphere_target        = ""
-    }
-  }
-  description = "Intersight Kubernetes Virtual Machine Infra Config Policy Variable Map.\r\n\r\n1. description - A description for the policy.\r\n2. name - Name of the concrete policy.\r\n3. tags - List of key/value Attributes to Assign to the Policy.\r\n4. vsphere_cluster - vSphere Cluster to assign the K8S Cluster Deployment.\r\n5. vsphere_datastore - vSphere Datastore to assign the K8S Cluster Deployment.r\n6. vsphere_portgroup - vSphere Port Group to assign the K8S Cluster Deployment.r\n7. vsphere_resource_pool - vSphere Resource Pool to assign the K8S Cluster Deployment.r\n8. vsphere_target - Name of the vSphere Target discovered in Intersight, to provision the cluster on."
-  type = map(object(
-    {
-      description           = optional(string)
-      name                  = optional(string)
-      tags                  = optional(list(map(string)))
-      vsphere_cluster       = string
-      vsphere_datastore     = string
-      vsphere_portgroup     = list(string)
-      vsphere_resource_pool = optional(string)
-      vsphere_target        = string
-    }
-  ))
-}
-
-variable "k8s_vm_infra_password" {
-  description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
-  sensitive   = true
-  type        = string
-}
-
-
-#______________________________________________
-#
-# Kubernetes Virtual Machine Instance Variables
-#______________________________________________
-
-variable "k8s_vm_instance_type" {
-  default = {
-    default = {
-      cpu         = 4
-      description = ""
-      disk        = 40
-      memory      = 16384
-      tags        = []
-    }
-  }
-  description = "Intersight Kubernetes Node OS Configuration Policy Variable Map.  Name of the policy will be {tenant_name}_{each.key}.\r\n1. cpu - Number of CPUs allocated to virtual machine.  Range is 1-40.\r\n2. description - A description for the policy.\r\n3. disk - Ephemeral disk capacity to be provided with units example - 10 for 10 Gigabytes.\r\n4. memory - Virtual machine memory defined in mebibytes (MiB).  Range is 1-4177920.\r\n5. tags - List of key/value Attributes to Assign to the Policy."
-  type = map(object(
-    {
-      cpu         = optional(number)
-      description = optional(string)
-      disk        = optional(number)
-      memory      = optional(number)
-      tags        = optional(list(map(string)))
-    }
-  ))
-}
-
-
 #__________________________________________________________
 #
 # Intersight Kubernetes Service Cluster Variables
@@ -588,14 +108,15 @@ variable "ssh_key_5" {
 
 #__________________________________________________________
 #
-# Terraform Cloud Workspaces
+# Terraform Cloud {organization}_{iks_cluster} Workspaces
 #__________________________________________________________
 
-module "iks_workspace" {
+module "iks_workspaces" {
   source            = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  for_each          = local.iks_cluster
   auto_apply        = true
-  description       = "Intersight Kubernetes Service Workspace."
-  name              = var.tenant_name
+  description       = "${var.organization} ${each.key} Workspace."
+  name              = "${var.organization}_${each.key}"
   terraform_version = var.terraform_version
   tfc_oath_token    = var.tfc_oath_token
   tfc_org_name      = var.tfc_organization
@@ -603,9 +124,9 @@ module "iks_workspace" {
   working_directory = "modules/iks"
 }
 
-output "iks_workspace" {
+output "iks_workspaces" {
   description = "Terraform Cloud IKS Workspace ID(s)."
-  value       = module.iks_workspace.workspace.id
+  value       = { for v in sort(keys(module.iks_workspaces)) : v => module.iks_workspaces[v].workspace.id }
 }
 
 #__________________________________________________________
@@ -616,11 +137,20 @@ output "iks_workspace" {
 module "iks_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
-    module.iks_workspace
+    module.iks_workspaces
   ]
   category     = "terraform"
-  workspace_id = module.iks_workspace.workspace.id
+  for_each     = local.iks_cluster
+  workspace_id = module.iks_workspaces[each.key].workspace.id
   variable_list = {
+    #---------------------------
+    # Terraform Cloud Variables
+    #---------------------------
+    tfc_organization = {
+      description = "Terraform Cloud Organization."
+      key         = "tfc_organization"
+      value       = var.tfc_organization
+    },
     #---------------------------
     # Intersight Variables
     #---------------------------
@@ -630,11 +160,6 @@ module "iks_variables" {
       sensitive   = true
       value       = var.apikey
     },
-    endpoint = {
-      description = "Intersight API Key."
-      key         = "endpoint"
-      value       = var.endpoint
-    },
     secretkey = {
       description = "Intersight Secret Key."
       key         = "secretkey"
@@ -642,103 +167,19 @@ module "iks_variables" {
       value       = var.secretkey
     },
     #---------------------------
-    # K8S Policy Variables
-    #---------------------------
-    dns_servers_v4 = {
-      description = "DNS Servers for the IP Pools."
-      hcl         = true
-      key         = "dns_servers_v4"
-      value       = "[${join(",", [for s in var.dns_servers_v4 : format("%q", s)])}]"
-    },
-    tenant_name = {
-      description = "Tenant Name."
-      key         = "tenant_name"
-      value       = var.tenant_name
-    },
-    tags = {
-      description = "Intersight Tags for Poliices and Profiles."
-      hcl         = false
-      key         = "tags"
-      value       = "${jsonencode(var.tags)}"
-    },
-    ip_pools = {
-      description = "${var.tenant_name} IP Pools."
-      hcl         = false
-      key         = "ip_pools"
-      value       = "${jsonencode(var.ip_pools)}"
-    },
-    k8s_addon_policies = {
-      description = "${var.tenant_name} Addons Policies."
-      hcl         = false
-      key         = "k8s_addon_policies"
-      value       = "${jsonencode(var.k8s_addon_policies)}"
-    },
-    k8s_network_cidr = {
-      description = "${var.tenant_name} Kubernetes Network CIDR Policy Variables."
-      hcl         = false
-      key         = "k8s_network_cidr"
-      value       = "${jsonencode(var.k8s_network_cidr)}"
-    },
-    k8s_nodeos_config = {
-      description = "${var.tenant_name} Kubernetes Node OS Configuration Policy Variables."
-      hcl         = false
-      key         = "k8s_nodeos_config"
-      value       = "${jsonencode(var.k8s_nodeos_config)}"
-    },
-    k8s_runtime_create = {
-      description = "${var.tenant_name} Kubernetes Runtime Policy Create Option."
-      key         = "k8s_runtime_create"
-      value       = var.k8s_runtime_create
-    },
-    k8s_runtime_policies = {
-      description = "${var.tenant_name} Kubernetes Runtime Policy Variables."
-      hcl         = false
-      key         = "k8s_runtime_policies"
-      value       = "${jsonencode(var.k8s_runtime_policies)}"
-    },
-    k8s_trusted_create = {
-      description = "${var.tenant_name} Kubernetes Trusted Registry Policy Create Option."
-      key         = "k8s_trusted_create"
-      value       = var.k8s_trusted_create
-    },
-    k8s_trusted_registries = {
-      description = "${var.tenant_name} Kubernetes Trusted Registry Policy Variables."
-      hcl         = false
-      key         = "k8s_trusted_registries"
-      value       = "${jsonencode(var.k8s_trusted_registries)}"
-    },
-    k8s_version_policies = {
-      description = "${var.tenant_name} Kubernetes Version Policy Variables."
-      hcl         = false
-      key         = "k8s_version_policies"
-      value       = "${jsonencode(var.k8s_version_policies)}"
-    },
-    k8s_vm_infra_config = {
-      description = "${var.tenant_name} Kubernetes VIrtual Machine Infra Config Policy Variables."
-      hcl         = false
-      key         = "k8s_vm_infra_config"
-      value       = "${jsonencode(var.k8s_vm_infra_config)}"
-    },
-    k8s_vm_infra_password = {
-      description = "VIrtual Center Password."
-      key         = "k8s_vm_infra_password"
-      sensitive   = true
-      value       = "var.k8s_vm_infra_password"
-    }
-    k8s_vm_instance_type = {
-      description = "${var.tenant_name} Kubernetes Virtual Machine Instance Policy Variables."
-      hcl         = false
-      key         = "k8s_vm_instance_type"
-      value       = "${jsonencode(var.k8s_vm_instance_type)}"
-    },
-    #---------------------------
     # IKS Cluster Variables
     #---------------------------
     iks_cluster = {
-      description = "${var.tenant_name} IKS Clusters."
+      description = "${var.organization}_${each.key} IKS Cluster."
       hcl         = false
       key         = "iks_cluster"
-      value       = "${jsonencode(var.iks_cluster)}"
+      value       = "${each.key}"
+    },
+    cluster_vars = {
+      description = "${var.organization}_${each.key} IKS Cluster Variables."
+      hcl         = false
+      key         = "cluster_vars"
+      value       = "${jsonencode(local.iks_cluster[each.key])}"
     },
     ssh_key_1 = {
       description = "SSH Key Variable 1."

@@ -28,12 +28,6 @@ output "tags" {
   value       = var.tags
 }
 
-output "tenant_name" {
-  description = "Name of the Tenant."
-  value       = var.tenant_name
-}
-
-
 #__________________________________________________________
 #
 # IP Pool Output

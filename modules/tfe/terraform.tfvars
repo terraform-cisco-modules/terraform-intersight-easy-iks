@@ -49,8 +49,7 @@ dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
 # Cluster Variables
 #__________________________________________________________
 
-tenant_name = "Wakanda"
-ws_tenant   = "wakanda"
+ws_organization = "wakanda"
 tags        = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
 
 ip_pools = {
