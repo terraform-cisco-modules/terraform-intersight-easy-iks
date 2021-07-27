@@ -159,7 +159,7 @@ module "k8s_nodeos_config" {
 
 module "k8s_runtime_policies" {
   source               = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_runtime"
-  for_each             = var.k8s_runtime_create == true ? local.k8s_runtime : {}
+  for_each             = var.k8s_runtime_create == true ? local.k8s_runtime_policies : {}
   description          = each.value.description != "" ? each.value.description : "${var.tenant_name} Runtime Policy."
   docker_bridge_cidr   = each.value.docker_bridge_cidr
   docker_no_proxy      = each.value.docker_no_proxy
@@ -186,7 +186,7 @@ module "k8s_runtime_policies" {
 
 module "k8s_trusted_registries" {
   source              = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_trusted_registries"
-  for_each            = var.k8s_trusted_create == true ? local.k8s_trusted_registry : {}
+  for_each            = var.k8s_trusted_create == true ? local.k8s_trusted_registries : {}
   description         = each.value.description != "" ? each.value.description : "${var.tenant_name} Trusted Registry Policy."
   name                = each.value.name != "" ? each.value.name : "${var.tenant_name}_registry"
   org_moid            = local.org_moid
@@ -203,7 +203,7 @@ module "k8s_trusted_registries" {
 
 module "k8s_version_policies" {
   source      = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_version"
-  for_each    = local.k8s_version
+  for_each    = local.k8s_version_policies
   description = each.value.description != "" ? each.value.description : "${var.tenant_name} Version ${each.value.version} Policy."
   name        = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.tenant_name}_v${each.value.version}"
   org_moid    = local.org_moid
