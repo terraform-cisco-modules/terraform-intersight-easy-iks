@@ -41,8 +41,8 @@ module "iks_addon_profile" {
   addons = [
     for a in each.value.k8s_addon_policy_moid :
     {
-      moid = module.k8s_addon_policies["${a}"].moid
-      name = module.k8s_addon_policies["${a}"].name
+      moid = local.k8s_addon_policies["${a}"].moid
+      name = local.k8s_addon_policies["${a}"].name
     }
   ]
   cluster_moid = module.iks_cluster["${each.key}"].moid
