@@ -40,6 +40,17 @@ variable "organization" {
 
 #______________________________________________
 #
+# DNS Variables
+#______________________________________________
+
+variable "dns_servers_v4" {
+  default     = ["198.18.0.100", "198.18.0.101"]
+  description = "DNS Servers for Kubernetes Sysconfig Policy."
+  type        = list(string)
+}
+
+#______________________________________________
+#
 # Tenant Variables
 #______________________________________________
 
