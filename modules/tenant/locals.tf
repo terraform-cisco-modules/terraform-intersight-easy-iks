@@ -4,7 +4,7 @@ locals {
   org_moid = data.intersight_organization_organization.org_moid.results.0.moid
   # IKS Cluster Variables
   iks_cluster = {
-    for k, v in var.iks_cluster : k => {
+    for k, v in jsondecode(var.iks_cluster) : k => {
       action_cluster                  = (v.action_cluster != null ? v.action_cluster : "Deploy")
       action_control_plane            = (v.action_control_plane != null ? v.action_control_plane : "No-op")
       action_worker                   = (v.action_worker != null ? v.action_worker : "No-op")
@@ -33,7 +33,7 @@ locals {
     }
   }
   ip_pools = {
-    for k, v in var.ip_pools : k => {
+    for k, v in jsondecode(var.ip_pools) : k => {
       description = (v.description != null ? v.description : "")
       from        = (v.from != null ? v.from : 20)
       gateway     = (v.gateway != null ? v.gateway : "198.18.0.1/24")
@@ -43,7 +43,7 @@ locals {
     }
   }
   k8s_addon_policies = {
-    for k, v in var.k8s_addon_policies : k => {
+    for k, v in jsondecode(var.k8s_addon_policies) : k => {
       description       = (v.description != null ? v.description : "")
       install_strategy  = (v.install_strategy != null ? v.install_strategy : "Always")
       name              = (v.name != null ? v.name : "")
@@ -54,7 +54,7 @@ locals {
     }
   }
   k8s_network_cidr = {
-    for k, v in var.k8s_network_cidr : k => {
+    for k, v in jsondecode(var.k8s_network_cidr) : k => {
       cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
       cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
       cni_type     = (v.cni_type != null ? v.cni_type : "Calico")
@@ -64,7 +64,7 @@ locals {
     }
   }
   k8s_nodeos_config = {
-    for k, v in var.k8s_nodeos_config : k => {
+    for k, v in jsondecode(var.k8s_nodeos_config) : k => {
       description    = (v.description != null ? v.description : "")
       dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
       domain_name    = (v.domain_name != null ? v.domain_name : "example.com")
@@ -75,7 +75,7 @@ locals {
     }
   }
   k8s_runtime_policies = {
-    for k, v in var.k8s_runtime_policies : k => {
+    for k, v in jsondecode(var.k8s_runtime_policies) : k => {
       description        = (v.description != null ? v.description : "")
       docker_bridge_cidr = (v.docker_bridge_cidr != null ? v.docker_bridge_cidr : "")
       docker_no_proxy    = (v.docker_no_proxy != null ? v.docker_no_proxy : [])
@@ -92,7 +92,7 @@ locals {
     }
   }
   k8s_trusted_registries = {
-    for k, v in var.k8s_trusted_registries : k => {
+    for k, v in jsondecode(var.k8s_trusted_registries) : k => {
       description = (v.description != null ? v.description : "")
       name        = (v.name != null ? v.name : "")
       root_ca     = (v.root_ca != null ? v.root_ca : [])
@@ -101,7 +101,7 @@ locals {
     }
   }
   k8s_version_policies = {
-    for k, v in var.k8s_version_policies : k => {
+    for k, v in jsondecode(var.k8s_version_policies) : k => {
       description = (v.description != null ? v.description : "")
       name        = (v.name != null ? v.name : "")
       tags        = (v.tags != null ? v.tags : [])
@@ -109,7 +109,7 @@ locals {
     }
   }
   k8s_vm_infra_config = {
-    for k, v in var.k8s_vm_infra_config : k => {
+    for k, v in jsondecode(var.k8s_vm_infra_config) : k => {
       description           = (v.description != null ? v.description : "")
       name                  = (v.name != null ? v.name : "")
       tags                  = (v.tags != null ? v.tags : [])
@@ -121,7 +121,7 @@ locals {
     }
   }
   k8s_vm_instance_type = {
-    for k, v in var.k8s_vm_instance_type : k => {
+    for k, v in jsondecode(var.k8s_vm_instance_type) : k => {
       description = (v.description != null ? v.description : "")
       cpu         = (v.cpu != null ? v.cpu : 4)
       disk        = (v.disk != null ? v.disk : 40)
@@ -129,6 +129,7 @@ locals {
       tags        = (v.tags != null ? v.tags : [])
     }
   }
-  tags = var.tags
+  tags = jsondecode(var.tags)
 }
+
 
