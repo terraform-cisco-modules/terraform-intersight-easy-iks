@@ -344,7 +344,7 @@ module "control_plane_vm_infra_provider" {
   depends_on = [
     module.control_plane_node_group
   ]
-  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_vm_infra_provider"
+  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider"
   for_each                  = local.iks_cluster
   description               = each.value.description != "" ? each.value.description : "${var.tenant_name}_${each.key} Control Plane Virtual machine Infrastructure Provider."
   k8s_node_group_moid       = module.control_plane_node_group["${each.key}"].moid
@@ -383,7 +383,7 @@ module "worker_vm_infra_provider" {
   depends_on = [
     module.worker_node_group
   ]
-  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_vm_infra_provider"
+  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider"
   for_each                  = local.iks_cluster
   description               = each.value.description != "" ? each.value.description : "${var.tenant_name}_${each.key} Worker Virtual machine Infrastructure Provider."
   k8s_node_group_moid       = module.worker_node_group["${each.key}"].moid
