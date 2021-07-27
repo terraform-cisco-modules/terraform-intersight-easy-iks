@@ -93,13 +93,3 @@ output "k8s_vm_instance_type" {
   description = "moid of the Large Kubernetes Instance Type Policies."
   value       = { for v in sort(keys(module.k8s_vm_instance_type)) : v => module.k8s_vm_instance_type[v].moid }
 }
-
-#__________________________________________________________
-#
-# Kubernetes Cluster Outputs
-#__________________________________________________________
-
-output "iks_cluster" {
-  description = "moid of the IKS Cluster."
-  value       = { for v in sort(keys(module.iks_cluster)) : v => module.iks_cluster[v].moid }
-}
