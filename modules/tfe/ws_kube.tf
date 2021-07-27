@@ -56,9 +56,9 @@ module "kube_variables" {
       sensitive   = true
       value       = var.secretkey
     },
-      #---------------------------
-      # Cluster Variables
-      #---------------------------
+    #---------------------------
+    # Cluster Variables
+    #---------------------------
     cluster_name = {
       description = "${var.tenant_name}_${each.key} Cluster Name."
       key         = "cluster_name"

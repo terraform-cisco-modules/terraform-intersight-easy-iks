@@ -139,16 +139,16 @@ module "k8s_network_cidr" {
 #______________________________________________
 
 module "k8s_nodeos_config" {
-  source          = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_nodeos_config"
-  for_each        = local.k8s_nodeos_config
-  description     = each.value.description != "" ? each.value.description : "${var.tenant_name} Kubernetes Network CIDR Policy."
-  dns_servers_v4  = each.value.dns_servers_v4
-  domain_name     = each.value.domain_name
-  name            = each.value.name != "" ? each.value.name : "${var.tenant_name}_nodeos_config"
-  ntp_servers     = each.value.ntp_servers != [] ? each.value.ntp_servers : each.value.dns_servers_v4
-  org_name        = var.organization
-  tags            = each.value.tags != null ? each.value.tags : local.tags
-  timezone        = each.value.timezone
+  source         = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_nodeos_config"
+  for_each       = local.k8s_nodeos_config
+  description    = each.value.description != "" ? each.value.description : "${var.tenant_name} Kubernetes Network CIDR Policy."
+  dns_servers_v4 = each.value.dns_servers_v4
+  domain_name    = each.value.domain_name
+  name           = each.value.name != "" ? each.value.name : "${var.tenant_name}_nodeos_config"
+  ntp_servers    = each.value.ntp_servers != [] ? each.value.ntp_servers : each.value.dns_servers_v4
+  org_name       = var.organization
+  tags           = each.value.tags != null ? each.value.tags : local.tags
+  timezone       = each.value.timezone
 }
 
 
@@ -202,13 +202,13 @@ module "k8s_trusted_registries" {
 #______________________________________________
 
 module "k8s_version_policies" {
-  source           = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_version"
-  for_each         = local.k8s_version
-  description      = each.value.description != "" ? each.value.description : "${var.tenant_name} Version ${each.value.version} Policy."
-  name             = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.tenant_name}_v${each.value.version}"
-  org_name         = var.organization
-  k8s_version      = each.value.version
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
+  source      = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_version"
+  for_each    = local.k8s_version
+  description = each.value.description != "" ? each.value.description : "${var.tenant_name} Version ${each.value.version} Policy."
+  name        = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.tenant_name}_v${each.value.version}"
+  org_name    = var.organization
+  k8s_version = each.value.version
+  tags        = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
