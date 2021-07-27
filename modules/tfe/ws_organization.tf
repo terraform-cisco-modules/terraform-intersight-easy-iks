@@ -355,7 +355,7 @@ module "org_workspace" {
   tfc_oath_token      = var.tfc_oath_token
   tfc_org_name        = var.tfc_organization
   vcs_repo            = var.vcs_repo
-  working_directory   = "modules/iks"
+  working_directory   = "modules/organization"
 }
 
 output "org_workspace" {
@@ -389,6 +389,11 @@ module "org_variables" {
       description = "Intersight Endpoint."
       key         = "endpoint"
       value       = var.endpoint
+    },
+    organization = {
+      description = "Intersight Organization."
+      key         = "organization"
+      value       = var.organization
     },
     secretkey = {
       description = "Intersight Secret Key."

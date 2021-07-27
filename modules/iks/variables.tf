@@ -46,7 +46,7 @@ variable "iks_cluster" {
   type        = string
 }
 
-variable "iks_cluster_vars" {
+variable "cluster_vars" {
   description = "Please Refer to the iks_cluster variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
