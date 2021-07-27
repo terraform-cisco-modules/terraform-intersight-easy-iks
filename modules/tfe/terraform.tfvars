@@ -49,7 +49,7 @@ dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
 # Cluster Variables
 #__________________________________________________________
 
-tags        = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
+tags = [{ key = "Module", value = "terraform-intersight-iks-iwo" }, { key = "Owner", value = "tyscott" }]
 
 ip_pools = {
   pool_1 = {
