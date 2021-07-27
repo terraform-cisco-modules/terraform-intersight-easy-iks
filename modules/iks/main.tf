@@ -185,7 +185,7 @@ module "k8s_runtime_policies" {
 #______________________________________________
 
 module "k8s_trusted_registries" {
-  source              = "terraform-cisco-modules/imm/intersight//modules/k8s_trusted_registries"
+  source              = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_trusted_registries"
   for_each            = var.k8s_trusted_create == true ? local.k8s_trusted_registry : {}
   description         = each.value.description != "" ? each.value.description : "${var.tenant_name} Trusted Registry Policy."
   name                = each.value.name != "" ? each.value.name : "${var.tenant_name}_registry"
