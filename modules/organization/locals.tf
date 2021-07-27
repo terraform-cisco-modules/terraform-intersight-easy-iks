@@ -2,6 +2,7 @@ locals {
   # Intersight Organization Variables
   org_name = var.organization
   org_moid = data.intersight_organization_organization.org_moid.results.0.moid
+  tags     = jsondecode(var.tags)
   # IKS Cluster Variables
   ip_pools = {
     for k, v in jsondecode(var.ip_pools) : k => {
@@ -100,7 +101,6 @@ locals {
       tags        = (v.tags != null ? v.tags : [])
     }
   }
-  tags = jsondecode(var.tags)
 }
 
 

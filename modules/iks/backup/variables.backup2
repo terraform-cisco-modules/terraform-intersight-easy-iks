@@ -1,3 +1,42 @@
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
+#__________________________________________________________
+#
+# Terraform Cloud Variables
+#__________________________________________________________
+
+variable "tfc_organization" {
+  description = "Terraform Cloud Organization Name."
+  type        = string
+}
+
+
+#__________________________________________________________
+#
+# Intersight Provider Variables
+#__________________________________________________________
+
+variable "apikey" {
+  description = "Intersight API Key."
+  sensitive   = true
+  type        = string
+}
+
+variable "organization" {
+  default     = "default"
+  description = "Intersight Organization Name/Workspace."
+  type        = string
+}
+
+variable "secretkey" {
+  description = "Intersight Secret Key."
+  sensitive   = true
+  type        = string
+}
+
+
 #__________________________________________________________
 #
 # Intersight Kubernetes Service Cluster Variables
@@ -105,110 +144,3 @@ variable "ssh_key_5" {
   type        = string
 }
 
-
-#__________________________________________________________
-#
-# Terraform Cloud {organization}_{iks_cluster} Workspaces
-#__________________________________________________________
-
-module "iks_workspaces" {
-  source            = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each          = local.iks_cluster
-  auto_apply        = true
-  description       = "${var.organization} ${each.key} Workspace."
-  name              = "${var.organization}_${each.key}"
-  terraform_version = var.terraform_version
-  tfc_oath_token    = var.tfc_oath_token
-  tfc_org_name      = var.tfc_organization
-  vcs_repo          = var.vcs_repo
-  working_directory = "modules/iks"
-}
-
-output "iks_workspaces" {
-  description = "Terraform Cloud IKS Workspace ID(s)."
-  value       = { for v in sort(keys(module.iks_workspaces)) : v => module.iks_workspaces[v].workspace.id }
-}
-
-#__________________________________________________________
-#
-# Terraform Cloud Workspace Variables: iks
-#__________________________________________________________
-
-module "iks_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
-  depends_on = [
-    module.iks_workspaces
-  ]
-  category     = "terraform"
-  for_each     = local.iks_cluster
-  workspace_id = module.iks_workspaces[each.key].workspace.id
-  variable_list = {
-    #---------------------------
-    # Terraform Cloud Variables
-    #---------------------------
-    tfc_organization = {
-      description = "Terraform Cloud Organization."
-      key         = "tfc_organization"
-      value       = var.tfc_organization
-    },
-    #---------------------------
-    # Intersight Variables
-    #---------------------------
-    apikey = {
-      description = "Intersight API Key."
-      key         = "apikey"
-      sensitive   = true
-      value       = var.apikey
-    },
-    organization = {
-      description = "Intersight Organization Workspace."
-      key         = "organization"
-      value       = var.organization
-    },
-    secretkey = {
-      description = "Intersight Secret Key."
-      key         = "secretkey"
-      sensitive   = true
-      value       = var.secretkey
-    },
-    #---------------------------
-    # IKS Cluster Variables
-    #---------------------------
-    iks_cluster = {
-      description = "${var.organization}_${each.key} IKS Cluster."
-      hcl         = false
-      key         = "iks_cluster"
-      value       = "{ \"${each.key}\": ${jsonencode(local.iks_cluster[each.key])} }"
-    },
-    ssh_key_1 = {
-      description = "SSH Key Variable 1."
-      key         = "ssh_key_1"
-      sensitive   = true
-      value       = var.ssh_key_1
-    },
-    ssh_key_2 = {
-      description = "SSH Key Variable 2."
-      key         = "ssh_key_2"
-      sensitive   = true
-      value       = var.ssh_key_2
-    },
-    ssh_key_3 = {
-      description = "SSH Key Variable 3."
-      key         = "ssh_key_3"
-      sensitive   = true
-      value       = var.ssh_key_3
-    },
-    ssh_key_4 = {
-      description = "SSH Key Variable 4."
-      key         = "ssh_key_4"
-      sensitive   = true
-      value       = var.ssh_key_4
-    },
-    ssh_key_5 = {
-      description = "SSH Key Variable 5."
-      key         = "ssh_key_5"
-      sensitive   = true
-      value       = var.ssh_key_5
-    },
-  }
-}

@@ -25,7 +25,7 @@ output "org_moid" {
 
 output "tags" {
   description = "Tags to be Associated with Objects Created in Intersight."
-  value       = var.tags
+  value       = local.tags
 }
 
 #__________________________________________________________

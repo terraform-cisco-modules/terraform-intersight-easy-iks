@@ -10,7 +10,7 @@ output "endpoint" {
 
 output "organization" {
   description = "Intersight Organization Name."
-  value       = local.organization
+  value       = var.organization
 }
 
 output "org_moid" {
