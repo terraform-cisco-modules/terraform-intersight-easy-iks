@@ -41,6 +41,9 @@ organization = "Wakanda"
 */
 # apikey = "value"
 
+# IP Pool DNS Servers
+dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
+
 #__________________________________________________________
 #
 # Cluster Variables

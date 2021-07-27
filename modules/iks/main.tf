@@ -42,7 +42,7 @@ module "ip_pools" {
   for_each         = local.ip_pools
   assignment_order = "sequential"
   description      = each.value.description != "" ? each.value.description : "${var.tenant_name} IP Pool."
-  dns_servers_v4   = each.value.dns_servers_v4
+  dns_servers_v4   = var.dns_servers_v4
   name             = each.value.name != "" ? each.value.name : "${var.tenant_name}_ip_pool"
   org_moid         = local.org_moid
   tags             = each.value.tags != [] ? each.value.tags : local.tags

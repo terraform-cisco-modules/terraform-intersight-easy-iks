@@ -131,6 +131,17 @@ locals {
 }
 
 
+#______________________________________________
+#
+# DNS Variables
+#______________________________________________
+
+variable "dns_servers_v4" {
+  default     = ["198.18.0.100", "198.18.0.101"]
+  description = "DNS Servers for Kubernetes Sysconfig Policy."
+  type        = list(string)
+}
+
 #__________________________________________________________
 #
 # Required Variables
@@ -633,6 +644,12 @@ module "iks_variables" {
     #---------------------------
     # K8S Policy Variables
     #---------------------------
+    dns_servers_v4 = {
+      description = "DNS Servers for the IP Pools."
+      hcl         = true
+      key         = "dns_servers_v4"
+      value       = "[${join(",", [for s in var.dns_servers_v4 : format("%q", s)])}]"
+    },
     tenant_name = {
       description = "Tenant Name."
       key         = "tenant_name"
