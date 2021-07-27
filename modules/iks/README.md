@@ -23,6 +23,7 @@ Run the plan from the Terraform cloud workspace.
 |------|--------|---------|
 | <a name="module_control_plane_node_group"></a> [control\_plane\_node\_group](#module\_control\_plane\_node\_group) | terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile | n/a |
 | <a name="module_control_plane_vm_infra_provider"></a> [control\_plane\_vm\_infra\_provider](#module\_control\_plane\_vm\_infra\_provider) | terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider | n/a |
+| <a name="module_iks_addon_profile"></a> [iks\_addon\_profile](#module\_iks\_addon\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons | n/a |
 | <a name="module_iks_cluster"></a> [iks\_cluster](#module\_iks\_cluster) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster | n/a |
 | <a name="module_worker_node_group"></a> [worker\_node\_group](#module\_worker\_node\_group) | terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile | n/a |
 | <a name="module_worker_vm_infra_provider"></a> [worker\_vm\_infra\_provider](#module\_worker\_vm\_infra\_provider) | terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider | n/a |

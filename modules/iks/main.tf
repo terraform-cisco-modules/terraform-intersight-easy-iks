@@ -32,24 +32,24 @@ module "iks_cluster" {
 # Attach the Add-Ons Policy to the Kubernetes Cluster
 #_____________________________________________________
 
-# module "iks_addon_profile" {
-#   depends_on = [
-#     module.iks_cluster
-#   ]
-#   source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons"
-#   for_each = local.iks_cluster
-#   addons = [
-#     for a in each.value.k8s_addon_policy_moid :
-#     {
-#       moid = module.k8s_addon_policies["${a}"].moid
-#       name = module.k8s_addon_policies["${a}"].name
-#     }
-#   ]
-#   cluster_moid = module.iks_cluster["${each.key}"].moid
-#   name         = "${var.organization}_${each.key}_addons"
-#   org_moid     = local.org_moid
-#   tags         = each.value.tags != [] ? each.value.tags : local.tags
-# }
+module "iks_addon_profile" {
+  depends_on = [
+    module.iks_cluster
+  ]
+  source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons"
+  for_each = local.iks_cluster
+  addons = [
+    for a in each.value.k8s_addon_policy_moid :
+    {
+      moid = module.k8s_addon_policies["${a}"].moid
+      name = module.k8s_addon_policies["${a}"].name
+    }
+  ]
+  cluster_moid = module.iks_cluster["${each.key}"].moid
+  name         = "${var.organization}_${each.key}_addons"
+  org_moid     = local.org_moid
+  tags         = each.value.tags != [] ? each.value.tags : local.tags
+}
 
 
 #______________________________________________
