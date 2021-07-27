@@ -127,7 +127,7 @@ module "k8s_network_cidr" {
   cidr_service = each.value.cidr_service
   cni_type     = each.value.cni_type
   description  = each.value.description != "" ? each.value.description : "${var.tenant_name} Kubernetes Network CIDR Policy."
-  org_name     = var.organization
+  org_moid     = local.org_moid
   name         = each.value.name != "" ? each.value.name : "${var.tenant_name}_network_cidr"
   tags         = each.value.tags != null ? each.value.tags : local.tags
 }
@@ -146,7 +146,7 @@ module "k8s_nodeos_config" {
   domain_name    = each.value.domain_name
   name           = each.value.name != "" ? each.value.name : "${var.tenant_name}_nodeos_config"
   ntp_servers    = each.value.ntp_servers != [] ? each.value.ntp_servers : each.value.dns_servers_v4
-  org_name       = var.organization
+  org_moid       = local.org_moid
   tags           = each.value.tags != null ? each.value.tags : local.tags
   timezone       = each.value.timezone
 }
@@ -163,7 +163,7 @@ module "k8s_runtime_policies" {
   description          = each.value.description != "" ? each.value.description : "${var.tenant_name} Runtime Policy."
   docker_bridge_cidr   = each.value.docker_bridge_cidr
   docker_no_proxy      = each.value.docker_no_proxy
-  org_name             = var.organization
+  org_moid             = local.org_moid
   name                 = each.value.name != "" ? each.value.name : "${var.tenant_name}_runtime"
   proxy_http_hostname  = each.value.http_hostname
   proxy_http_port      = each.value.http_port
@@ -189,7 +189,7 @@ module "k8s_trusted_registries" {
   for_each            = var.k8s_trusted_create == true ? local.k8s_trusted_registry : {}
   description         = each.value.description != "" ? each.value.description : "${var.tenant_name} Trusted Registry Policy."
   name                = each.value.name != "" ? each.value.name : "${var.tenant_name}_registry"
-  org_name            = var.organization
+  org_moid            = local.org_moid
   root_ca_registries  = each.value.root_ca != [] ? each.value.root_ca : []
   unsigned_registries = each.value.unsigned != [] ? each.value.unsigned : []
   tags                = each.value.tags != [] ? each.value.tags : local.tags
@@ -206,7 +206,7 @@ module "k8s_version_policies" {
   for_each    = local.k8s_version
   description = each.value.description != "" ? each.value.description : "${var.tenant_name} Version ${each.value.version} Policy."
   name        = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.tenant_name}_v${each.value.version}"
-  org_name    = var.organization
+  org_moid    = local.org_moid
   k8s_version = each.value.version
   tags        = each.value.tags != [] ? each.value.tags : local.tags
 }
@@ -246,7 +246,7 @@ module "k8s_vm_instance_type" {
   disk_size   = each.value.disk
   memory      = each.value.memory
   name        = "${var.tenant_name}_${each.key}"
-  org_name    = var.organization
+  org_moid    = local.org_moid
   tags        = each.value.tags != [] ? each.value.tags : local.tags
 }
 
