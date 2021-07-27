@@ -276,7 +276,7 @@ module "iks_cluster" {
   source                   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster"
   for_each                 = local.iks_cluster
   action                   = each.value.action_cluster
-  container_runtime_config = each.value.k8s_runtime_moid != "" ? module.k8s_runtime_policies["${each.value.k8s_runtime_moid}"].moid : []
+  container_runtime_config = each.value.k8s_runtime_moid != "" ? module.k8s_runtime_policies["${each.value.k8s_runtime_moid}"].moid : ""
   description              = each.value.description != "" ? each.value.description : "${var.tenant_name} ${each.key} IKS Cluster."
   ip_pool_moid             = module.ip_pools["${each.value.ip_pool_moid}"].moid
   load_balancer            = each.value.load_balancers
@@ -287,7 +287,7 @@ module "iks_cluster" {
   ssh_user                 = each.value.ssh_user
   sys_config_moid          = module.k8s_nodeos_config["${each.value.k8s_nodeos_config_moid}"].moid
   tags                     = each.value.tags != [] ? each.value.tags : local.tags
-  trusted_registries       = each.value.k8s_registry_moid != "" ? module.k8s_trusted_registries["${each.value.k8s_registry_moid}"].moid : null
+  trusted_registries       = each.value.k8s_registry_moid != "" ? module.k8s_trusted_registries["${each.value.k8s_registry_moid}"].moid : ""
   wait_for_completion      = each.value.wait_for_complete
 }
 
@@ -305,8 +305,8 @@ module "iks_cluster" {
 #   addons = [
 #     for a in each.value.k8s_addon_policy_moid :
 #     {
-#       moid = module.k8s_addons["${a}"].moid
-#       name = module.k8s_addons["${a}"].name
+#       moid = module.k8s_addon_policies["${a}"].moid
+#       name = module.k8s_addon_policies["${a}"].name
 #     }
 #   ]
 #   cluster_moid = module.iks_cluster["${each.key}"].moid
