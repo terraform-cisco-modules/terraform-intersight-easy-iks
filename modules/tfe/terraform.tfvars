@@ -49,27 +49,26 @@ dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
 # Cluster Variables
 #__________________________________________________________
 
-ws_organization = "wakanda"
 tags        = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tyscott" }]
 
 ip_pools = {
   pool_1 = {
     from    = 101
-    gateway = "10.96.101.1/24"
+    gateway = "10.96.110.1/24"
     name    = "Wakanda_ip_pool1"
     size    = 99
     tags    = []
   }
   pool_2 = {
     from    = 101
-    gateway = "10.96.102.1/24"
+    gateway = "10.96.111.1/24"
     name    = "Wakanda_ip_pool2"
     size    = 99
     tags    = []
   }
   pool_3 = {
     from    = 101
-    gateway = "10.96.103.1/24"
+    gateway = "10.96.112.1/24"
     name    = "Wakanda_ip_pool3"
     size    = 99
     tags    = []
