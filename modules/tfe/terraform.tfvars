@@ -162,7 +162,7 @@ k8s_vm_instance_type = {
 #__________________________________________________________
 
 iks_cluster = {
-  Wakanda_cluster01 = {
+  Wakanda_cl01 = {
     action_cluster                  = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     control_plane_desired_size      = 1
     control_plane_max_size          = 3
@@ -185,7 +185,7 @@ iks_cluster = {
     worker_desired_size             = 1
     worker_max_size                 = 4
   }
-  Wakanda_cluster02 = {
+  Wakanda_cl02 = {
     action_cluster                  = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     control_plane_desired_size      = 1
     control_plane_max_size          = 3

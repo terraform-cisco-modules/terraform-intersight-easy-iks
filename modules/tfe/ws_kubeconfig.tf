@@ -14,7 +14,7 @@ module "Kubeconfig_workspaces" {
   tfc_oauth_token     = var.tfc_oauth_token
   tfc_org_name        = var.tfc_organization
   vcs_repo            = var.vcs_repo
-  working_directory   = "modules/Kubeconfig"
+  working_directory   = "modules/kubeconfig"
 }
 
 output "Kubeconfig_workspaces" {
