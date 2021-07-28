@@ -390,10 +390,10 @@ module "k8s_policies_variables" {
       key         = "endpoint"
       value       = var.endpoint
     },
-    organization = {
-      description = "Intersight Organization."
-      key         = "organization"
-      value       = var.organization
+    organizations = {
+      description = "Intersight Organizations."
+      key         = "organizations"
+      value       = "${jsonencode(var.organizations)}"
     },
     secretkey = {
       description = "Intersight Secret Key."
@@ -404,12 +404,6 @@ module "k8s_policies_variables" {
     #---------------------------
     # K8S Policy Variables
     #---------------------------
-    dns_servers_v4 = {
-      description = "DNS Servers for the IP Pools."
-      hcl         = true
-      key         = "dns_servers_v4"
-      value       = "[${join(",", [for s in var.dns_servers_v4 : format("%q", s)])}]"
-    },
     tags = {
       description = "Intersight Tags for Poliices and Profiles."
       hcl         = false
@@ -417,59 +411,59 @@ module "k8s_policies_variables" {
       value       = "${jsonencode(var.tags)}"
     },
     ip_pools = {
-      description = "${var.organization} IP Pools."
+      description = "IP Pools."
       hcl         = false
       key         = "ip_pools"
       value       = "${jsonencode(var.ip_pools)}"
     },
     k8s_addon_policies = {
-      description = "${var.organization} Addons Policies."
+      description = "Addons Policies."
       hcl         = false
       key         = "k8s_addon_policies"
       value       = "${jsonencode(var.k8s_addon_policies)}"
     },
     k8s_network_cidr = {
-      description = "${var.organization} Kubernetes Network CIDR Policy Variables."
+      description = "Kubernetes Network CIDR Policy Variables."
       hcl         = false
       key         = "k8s_network_cidr"
       value       = "${jsonencode(var.k8s_network_cidr)}"
     },
     k8s_nodeos_config = {
-      description = "${var.organization} Kubernetes Node OS Configuration Policy Variables."
+      description = "Kubernetes Node OS Configuration Policy Variables."
       hcl         = false
       key         = "k8s_nodeos_config"
       value       = "${jsonencode(var.k8s_nodeos_config)}"
     },
     k8s_runtime_create = {
-      description = "${var.organization} Kubernetes Runtime Policy Create Option."
+      description = "Kubernetes Runtime Policy Create Option."
       key         = "k8s_runtime_create"
       value       = var.k8s_runtime_create
     },
     k8s_runtime_policies = {
-      description = "${var.organization} Kubernetes Runtime Policy Variables."
+      description = "Kubernetes Runtime Policy Variables."
       hcl         = false
       key         = "k8s_runtime_policies"
       value       = "${jsonencode(var.k8s_runtime_policies)}"
     },
     k8s_trusted_create = {
-      description = "${var.organization} Kubernetes Trusted Registry Policy Create Option."
+      description = "Kubernetes Trusted Registry Policy Create Option."
       key         = "k8s_trusted_create"
       value       = var.k8s_trusted_create
     },
     k8s_trusted_registries = {
-      description = "${var.organization} Kubernetes Trusted Registry Policy Variables."
+      description = "Kubernetes Trusted Registry Policy Variables."
       hcl         = false
       key         = "k8s_trusted_registries"
       value       = "${jsonencode(var.k8s_trusted_registries)}"
     },
     k8s_version_policies = {
-      description = "${var.organization} Kubernetes Version Policy Variables."
+      description = "Kubernetes Version Policy Variables."
       hcl         = false
       key         = "k8s_version_policies"
       value       = "${jsonencode(var.k8s_version_policies)}"
     },
     k8s_vm_infra_config = {
-      description = "${var.organization} Kubernetes VIrtual Machine Infra Config Policy Variables."
+      description = "Kubernetes VIrtual Machine Infra Config Policy Variables."
       hcl         = false
       key         = "k8s_vm_infra_config"
       value       = "${jsonencode(var.k8s_vm_infra_config)}"
@@ -481,7 +475,7 @@ module "k8s_policies_variables" {
       value       = "var.k8s_vm_infra_password"
     }
     k8s_vm_instance_type = {
-      description = "${var.organization} Kubernetes Virtual Machine Instance Policy Variables."
+      description = "Kubernetes Virtual Machine Instance Policy Variables."
       hcl         = false
       key         = "k8s_vm_instance_type"
       value       = "${jsonencode(var.k8s_vm_instance_type)}"

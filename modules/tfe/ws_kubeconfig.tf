@@ -9,7 +9,7 @@ module "Kubeconfig_workspaces" {
   auto_apply          = true
   description         = "${each.key} - Kubeconfig Workspace."
   global_remote_state = true
-  name                = "${each.key}_Kubeconfig"
+  name                = "${each.key}_kubeconfig"
   terraform_version   = var.terraform_version
   tfc_oauth_token     = var.tfc_oauth_token
   tfc_org_name        = var.tfc_organization
@@ -19,7 +19,7 @@ module "Kubeconfig_workspaces" {
 
 output "Kubeconfig_workspaces" {
   description = "Terraform Cloud Kubeconfig Workspace ID(s)."
-  value       = { for v in sort(keys(module.kube_workspaces)) : v => module.kube_workspaces[v] }
+  value       = { for v in sort(keys(module.Kubeconfig_workspaces)) : v => module.Kubeconfig_workspaces[v] }
 }
 
 #__________________________________________________________

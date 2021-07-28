@@ -162,11 +162,6 @@ module "iks_variables" {
       sensitive   = true
       value       = var.apikey
     },
-    organization = {
-      description = "Intersight Organization Workspace."
-      key         = "organization"
-      value       = var.organization
-    },
     secretkey = {
       description = "Intersight Secret Key."
       key         = "secretkey"
@@ -177,7 +172,7 @@ module "iks_variables" {
     # IKS Cluster Variables
     #---------------------------
     iks_cluster = {
-      description = "${var.organization}_${each.key} IKS Cluster."
+      description = "${each.key} IKS Cluster."
       hcl         = false
       key         = "iks_cluster"
       value       = "{ \"${each.key}\": ${jsonencode(local.iks_cluster[each.key])} }"
