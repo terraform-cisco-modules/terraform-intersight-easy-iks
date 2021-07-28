@@ -45,10 +45,10 @@ module "iks_addon_profile" {
       name = local.k8s_addon_policies["${a}"].name
     }
   ]
-  cluster_moid = module.iks_cluster["${each.key}"].moid
-  name         = "${var.organization}_${each.key}_addons"
-  org_moid     = local.org_moid
-  tags         = each.value.tags != [] ? each.value.tags : local.tags
+  iks_cluster_moid = module.iks_cluster[each.key].cluster_moid
+  name             = "${var.organization}_${each.key}_addons"
+  org_moid         = local.org_moid
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -61,19 +61,19 @@ module "control_plane_node_group" {
   depends_on = [
     module.iks_cluster,
   ]
-  source       = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
-  for_each     = local.iks_cluster
-  action       = each.value.action_control_plane
-  description  = each.value.description != "" ? each.value.description : "${var.organization}_${each.key} Control Plane Node Profile"
-  cluster_moid = module.iks_cluster[each.key].moid
-  desired_size = each.value.control_plane_desired_size
-  ip_pool_moid = local.ip_pools[each.value.ip_pool_moid]
-  labels       = each.value.control_plane_k8s_labels
-  max_size     = each.value.control_plane_max_size
-  name         = "${var.organization}_${each.key}_control_plane"
-  node_type    = each.value.worker_desired_size == "0" ? "ControlPlaneWorker" : "ControlPlane"
-  tags         = each.value.tags != [] ? each.value.tags : local.tags
-  version_moid = local.k8s_version_policies[each.value.k8s_version_moid]
+  source           = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
+  for_each         = local.iks_cluster
+  action           = each.value.action_control_plane
+  description      = each.value.description != "" ? each.value.description : "${var.organization}_${each.key} Control Plane Node Profile"
+  desired_size     = each.value.control_plane_desired_size
+  iks_profile_moid = module.iks_cluster[each.key].profile_moid
+  ip_pool_moid     = local.ip_pools[each.value.ip_pool_moid]
+  labels           = each.value.control_plane_k8s_labels
+  max_size         = each.value.control_plane_max_size
+  name             = "${var.organization}_${each.key}_control_plane"
+  node_type        = each.value.worker_desired_size == "0" ? "ControlPlaneWorker" : "ControlPlane"
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
+  version_moid     = local.k8s_version_policies[each.value.k8s_version_moid]
 }
 
 module "control_plane_vm_infra_provider" {
@@ -100,19 +100,19 @@ module "worker_node_group" {
   depends_on = [
     module.iks_cluster
   ]
-  source       = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
-  for_each     = local.iks_cluster
-  action       = each.value.action_worker
-  description  = each.value.description != "" ? each.value.description : "${var.organization}_${each.key} Worker Node Profile"
-  cluster_moid = module.iks_cluster[each.key].moid
-  desired_size = each.value.worker_desired_size
-  ip_pool_moid = local.ip_pools[each.value.ip_pool_moid]
-  labels       = each.value.worker_k8s_labels
-  max_size     = each.value.worker_max_size
-  name         = "${var.organization}_${each.key}_worker"
-  node_type    = "Worker"
-  tags         = each.value.tags != [] ? each.value.tags : local.tags
-  version_moid = local.k8s_version_policies[each.value.k8s_version_moid]
+  source           = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
+  for_each         = local.iks_cluster
+  action           = each.value.action_worker
+  description      = each.value.description != "" ? each.value.description : "${var.organization}_${each.key} Worker Node Profile"
+  iks_profile_moid = module.iks_cluster[each.key].profile_moid
+  desired_size     = each.value.worker_desired_size
+  ip_pool_moid     = local.ip_pools[each.value.ip_pool_moid]
+  labels           = each.value.worker_k8s_labels
+  max_size         = each.value.worker_max_size
+  name             = "${var.organization}_${each.key}_worker"
+  node_type        = "Worker"
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
+  version_moid     = local.k8s_version_policies[each.value.k8s_version_moid]
 }
 
 module "worker_vm_infra_provider" {

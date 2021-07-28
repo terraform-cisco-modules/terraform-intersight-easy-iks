@@ -36,5 +36,10 @@ output "tags" {
 
 output "iks_cluster" {
   description = "moid of the IKS Cluster."
-  value       = { for v in sort(keys(module.iks_cluster)) : v => module.iks_cluster[v].moid }
+  value = {
+    for v in sort(keys(module.iks_cluster)) : v => {
+      cluster_moid = module.iks_cluster[v].cluster_moid
+      profile_moid = module.iks_cluster[v].profile_moid
+    }
+  }
 }
