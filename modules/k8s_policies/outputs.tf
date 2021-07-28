@@ -8,15 +8,14 @@ output "endpoint" {
   value       = var.endpoint
 }
 
-output "organization" {
-  description = "Intersight Organization Name."
-  value       = var.organization
+output "org_moids" {
+  value = {
+    for v in sort(keys(data.intersight_organization_organization.org_moid)) : v => {
+      moid = data.intersight_organization_organization.org_moid[v].results[0].moid
+    }
+  }
 }
 
-output "org_moid" {
-  description = "moid of the Intersight Organization."
-  value       = data.intersight_organization_organization.org_moid.id
-}
 
 #__________________________________________________________
 #
@@ -87,3 +86,4 @@ output "k8s_vm_instance_type" {
   description = "moid of the Large Kubernetes Instance Type Policies."
   value       = { for v in sort(keys(module.k8s_vm_instance_type)) : v => module.k8s_vm_instance_type[v].moid }
 }
+

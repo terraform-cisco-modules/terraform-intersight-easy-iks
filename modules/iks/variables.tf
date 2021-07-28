@@ -12,6 +12,11 @@ variable "tfc_organization" {
   type        = string
 }
 
+variable "ws_k8s_policies" {
+  default     = "Kubernetes_Policies"
+  description = "Name of the k8s_polices workspace."
+  type        = string
+}
 
 #__________________________________________________________
 #

@@ -24,12 +24,6 @@ variable "apikey" {
   type        = string
 }
 
-variable "organization" {
-  default     = "default"
-  description = "Intersight Organization Name/Workspace."
-  type        = string
-}
-
 variable "secretkey" {
   description = "Intersight Secret Key."
   sensitive   = true

@@ -10,10 +10,10 @@ module "ip_pools" {
   source           = "terraform-cisco-modules/imm/intersight//modules/pools_ip"
   for_each         = local.ip_pools
   assignment_order = "sequential"
-  description      = each.value.description != "" ? each.value.description : "${var.organization} IP Pool."
-  dns_servers_v4   = var.dns_servers_v4
-  name             = each.value.name != "" ? each.value.name : "${var.organization}_ip_pool"
-  org_moid         = local.org_moid
+  description      = each.value.description != "" ? each.value.description : "${each.key} IP Pool."
+  dns_servers_v4   = each.value.dns_servers_v4
+  name             = each.key
+  org_moid         = local.org_moids[each.value.organization].moid
   tags             = each.value.tags != [] ? each.value.tags : local.tags
   ipv4_block = [
     {
@@ -74,10 +74,10 @@ module "k8s_addon_policies" {
   source           = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_addons"
   for_each         = local.k8s_addon_policies
   addon            = each.key
-  description      = each.value.description != "" ? each.value.description : "${var.organization} Kubernetes Add-ons Policy for ${each.key}."
+  description      = each.value.description != "" ? each.value.description : "Kubernetes Add-ons Policy for ${each.key}."
   install_strategy = each.value.install_strategy
-  name             = each.value.name != "" ? each.value.name : "${var.organization}_${each.key}"
-  org_moid         = local.org_moid
+  name             = each.key
+  org_moid         = local.org_moids[each.value.organization].moid
   release_name     = each.value.release_name
   upgrade_strategy = each.value.upgrade_strategy
   tags             = each.value.tags != [] ? each.value.tags : local.tags
@@ -95,9 +95,9 @@ module "k8s_network_cidr" {
   cidr_pod     = each.value.cidr_pod
   cidr_service = each.value.cidr_service
   cni_type     = each.value.cni_type
-  description  = each.value.description != "" ? each.value.description : "${var.organization} Kubernetes Network CIDR Policy."
-  org_moid     = local.org_moid
-  name         = each.value.name != "" ? each.value.name : "${var.organization}_network_cidr"
+  description  = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Network CIDR Policy."
+  org_moid     = local.org_moids[each.value.organization].moid
+  name         = each.key
   tags         = each.value.tags != null ? each.value.tags : local.tags
 }
 
@@ -110,12 +110,12 @@ module "k8s_network_cidr" {
 module "k8s_nodeos_config" {
   source         = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_nodeos_config"
   for_each       = local.k8s_nodeos_config
-  description    = each.value.description != "" ? each.value.description : "${var.organization} Kubernetes Network CIDR Policy."
+  description    = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Network CIDR Policy."
   dns_servers_v4 = each.value.dns_servers_v4
   domain_name    = each.value.domain_name
-  name           = each.value.name != "" ? each.value.name : "${var.organization}_nodeos_config"
+  name           = each.key
   ntp_servers    = each.value.ntp_servers != [] ? each.value.ntp_servers : each.value.dns_servers_v4
-  org_moid       = local.org_moid
+  org_moid       = local.org_moids[each.value.organization].moid
   tags           = each.value.tags != null ? each.value.tags : local.tags
   timezone       = each.value.timezone
 }
@@ -129,11 +129,11 @@ module "k8s_nodeos_config" {
 module "k8s_runtime_policies" {
   source               = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_runtime"
   for_each             = var.k8s_runtime_create == true ? local.k8s_runtime_policies : {}
-  description          = each.value.description != "" ? each.value.description : "${var.organization} Runtime Policy."
+  description          = each.value.description != "" ? each.value.description : "${each.key} Runtime Policy."
   docker_bridge_cidr   = each.value.docker_bridge_cidr
   docker_no_proxy      = each.value.docker_no_proxy
-  org_moid             = local.org_moid
-  name                 = each.value.name != "" ? each.value.name : "${var.organization}_runtime"
+  org_moid             = local.org_moids[each.value.organization].moid
+  name                 = each.key
   proxy_http_hostname  = each.value.http_hostname
   proxy_http_port      = each.value.http_port
   proxy_http_password  = var.k8s_runtime_http_password
@@ -156,9 +156,9 @@ module "k8s_runtime_policies" {
 module "k8s_trusted_registries" {
   source              = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_trusted_registries"
   for_each            = var.k8s_trusted_create == true ? local.k8s_trusted_registries : {}
-  description         = each.value.description != "" ? each.value.description : "${var.organization} Trusted Registry Policy."
-  name                = each.value.name != "" ? each.value.name : "${var.organization}_registry"
-  org_moid            = local.org_moid
+  description         = each.value.description != "" ? each.value.description : "${each.key} Trusted Registry Policy."
+  name                = each.key
+  org_moid            = local.org_moids[each.value.organization].moid
   root_ca_registries  = each.value.root_ca != [] ? each.value.root_ca : []
   unsigned_registries = each.value.unsigned != [] ? each.value.unsigned : []
   tags                = each.value.tags != [] ? each.value.tags : local.tags
@@ -173,9 +173,9 @@ module "k8s_trusted_registries" {
 module "k8s_version_policies" {
   source      = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_version"
   for_each    = local.k8s_version_policies
-  description = each.value.description != "" ? each.value.description : "${var.organization} Version ${each.value.version} Policy."
-  name        = each.value.name != "" ? "${each.value.name}_v${each.value.version}" : "${var.organization}_v${each.value.version}"
-  org_moid    = local.org_moid
+  description = each.value.description != "" ? each.value.description : "${each.key} Version Policy."
+  name        = each.key
+  org_moid    = local.org_moids[each.value.organization].moid
   k8s_version = each.value.version
   tags        = each.value.tags != [] ? each.value.tags : local.tags
 }
@@ -189,9 +189,9 @@ module "k8s_version_policies" {
 module "k8s_vm_infra_config" {
   source                = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_vm_infra"
   for_each              = local.k8s_vm_infra_config
-  description           = each.value.description != "" ? each.value.description : "${var.organization} Virtual Machine Infra Config Policy."
-  name                  = each.value.name != "" ? each.value.name : "${var.organization}_vm_infra"
-  org_moid              = local.org_moid
+  description           = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Infra Config Policy."
+  name                  = each.key
+  org_moid              = local.org_moids[each.value.organization].moid
   tags                  = each.value.tags != null ? each.value.tags : local.tags
   vsphere_password      = var.k8s_vm_infra_password
   vsphere_cluster       = each.value.vsphere_cluster
@@ -211,10 +211,10 @@ module "k8s_vm_instance_type" {
   source      = "terraform-cisco-modules/imm/intersight//modules/policies_k8s_vm_instance_type"
   for_each    = local.k8s_vm_instance_type
   cpu         = each.value.cpu
-  description = each.value.description != "" ? each.value.description : "${var.organization} ${each.key} VM Instance Policy."
+  description = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."
   disk_size   = each.value.disk
   memory      = each.value.memory
-  name        = "${var.organization}_${each.key}"
-  org_moid    = local.org_moid
+  name        = each.key
+  org_moid    = local.org_moids[each.value.organization].moid
   tags        = each.value.tags != [] ? each.value.tags : local.tags
 }

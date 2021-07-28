@@ -5,5 +5,6 @@
 #____________________________________________________________
 
 data "intersight_organization_organization" "org_moid" {
-  name = var.organization
+  for_each = var.organizations
+  name     = each.value
 }

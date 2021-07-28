@@ -5,8 +5,7 @@ locals {
   #__________________________________________________________
 
   endpoint     = data.terraform_remote_state.organization.outputs.endpoint
-  organization = data.terraform_remote_state.organization.outputs.organization
-  org_moid     = data.terraform_remote_state.organization.outputs.org_moid
+  org_moids    = data.terraform_remote_state.organization.outputs.org_moids
   tags         = data.terraform_remote_state.organization.outputs.tags
   #__________________________________________________________
   #

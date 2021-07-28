@@ -12,11 +12,11 @@ variable "tfc_organization" {
 
 #______________________________________________
 #
-# Terraform Cloud kube Workspace
+# Terraform Cloud kubeconfig Workspace
 #______________________________________________
 
-variable "ws_kube" {
+variable "ws_kubeconfig" {
   default     = ""
-  description = "Intersight Kubernetes Service (IKS) kube_config Workspace Name.  The default value will be set to {tenant_name}_{cluster_name}_kube by the tfe variable module."
+  description = "Intersight Kubernetes Service (IKS) kubeconfig Workspace Name.  The default value will be set to {cluster_name}_kubeconfig by the tfe variable module."
   type        = string
 }

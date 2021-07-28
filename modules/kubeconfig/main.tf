@@ -1,8 +1,8 @@
 #______________________________________________
 #
-# Get kube_config from IKS Cluster
+# Get kubeconfig from IKS Cluster
 #______________________________________________
 
-data "intersight_kubernetes_cluster" "kube_config" {
+data "intersight_kubernetes_cluster" "kubeconfig" {
   name = var.cluster_name
 }

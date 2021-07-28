@@ -30,7 +30,7 @@ Follow the base repository instructions to obtain values for the following varia
 
 ### When assigning the vSphere Password - It Must match the password used to register the Target in Intersight
 
-* vsphere_password
+* k8s_vm_infra_password
 
 ### Generate SSH Key
 
@@ -63,7 +63,7 @@ export TF_VAR_secretkey=`../../../../intersight_secretkey.txt`
 * vSphere Password
 
 ```bash
-export TF_VAR_vsphere_password="your_vshpere_password"
+export TF_VAR_k8s_vm_infra_password="your_vshpere_password"
 ```
 
 * Kubernetes Cluster ssh_key

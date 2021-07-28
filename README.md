@@ -7,7 +7,7 @@
 * Create TFCB Workspaces using the TFE Provider
 * Execute Plans in Terraform Cloud Workspaces
 * Provision IP Pools, Kubernetes Policies, and an IKS Cluster with TFCB
-* Import the IKS Cluster kube_config into a TFCB Workspace
+* Import the IKS Cluster kubeconfig into a TFCB Workspace
 * Deploy IWO Performance Collector App using Helm
 * Deploy the sample "Hello IKS" App using Helm
 * Try with a Cisco DevNet Sandbox
@@ -55,29 +55,29 @@
 
 ### Execute Plans in Terraform Cloud Workspaces
 
-1. Open the Workspace "{organization}" in TFCB and queue a plan manually. This will Create the Organization Poliices and add outputs to be consumed by the next module {organization}_{cluster_name}.
+1. Open the Workspace "{organization}" in TFCB and queue a plan manually. This will Create the Organization Poliices and add outputs to be consumed by the next module {cluster_name}.
 
 2. You will execute the Runs in the workspaces in this order:
 
-    * {organization}_{cluster_name} - See section below on "Provision IKS Cluster and IP Pools with TFCB"
+    * {cluster_name} - See section below on "Provision IKS Cluster and IP Pools with TFCB"
 
-    * {organization}_{cluster_name}_kube - See section below on "Provision a IKS Cluster with TFCB"
+    * {cluster_name}_kubeconfig - See section below on "Provision a IKS Cluster with TFCB"
 
-    * {organization}_{cluster_name}_iwo - See section below on "Deploy IWO collector using Helm"
+    * {cluster_name}_iwo - See section below on "Deploy IWO collector using Helm"
 
-    * {organization}_{cluster_name}_app_hello - See section below on "Deploy a sample "Hello IKS" App using Helm"
+    * {cluster_name}_app_hello - See section below on "Deploy a sample "Hello IKS" App using Helm"
 
 ### Provision Intersight Kubernetes Service Cluster with TFCB
 
 ![alt text](https://github.com/prathjan/images/blob/main/prof.png?raw=true)
 
-### Get the Cluster kube_config
+### Get the Cluster kubeconfig
 
-Currently due to order of operations in Intersight you must use a seperate task after Cluster creation to download the kube_config.  the {organization}_{cluster_name}_kube Workspace will be used to accomplish this.
+Currently due to order of operations in Intersight you must use a seperate task after Cluster creation to download the kubeconfig.  the {cluster_name}_kubeconfig Workspace will be used to accomplish this.
 
-Once you have confirmed in Intersight that the cluster has been fully provisioned run the plan in the {organization}_{cluster_name}_kube workspace.
+Once you have confirmed in Intersight that the cluster has been fully provisioned run the plan in the {cluster_name}_kubeconfig workspace.
 
-Download the cluster kube_config from from the workspace and run a couple of kubectl commands to verify an operational cluster:
+Download the cluster kubeconfig from from the workspace and run a couple of kubectl commands to verify an operational cluster:
 
     kubectl get nodes
 
@@ -87,13 +87,13 @@ Download the cluster kube_config from from the workspace and run a couple of kub
 
 If you don't have Intersight Workload Optimizer licensing tied to your Intersight Instance you can skip this section.
 
-As a Cloud Admin it is imperative to be able to have insights into the infrastructure. The workspace "{organization}_{cluster_name}_iwo" provides an example helm chart provisioning process to add the iwo collector pod to the deployed cluster.
+As a Cloud Admin it is imperative to be able to have insights into the infrastructure. The workspace "{cluster_name}_iwo" provides an example helm chart provisioning process to add the iwo collector pod to the deployed cluster.
 
-Open "{organization}_{cluster_name}_iwo" and Queue a plan manually.
+Open "{cluster_name}_iwo" and Queue a plan manually.
 
 Once successful, the collector is installed into your Kubernetes cluster and requires you to claim it as target in Intersight->Target. You will use the following steps to get the Device ID and Code:
 
-Download kube_config for the {organization}_{cluster_name} from Intersight or your {organization}_{cluster_name}_kube workspace.
+Download kubeconfig for the {cluster_name} from Intersight or your {cluster_name}_kubeconfig workspace.
 
 Execute:
 
@@ -115,9 +115,9 @@ Note: This can take approximately 30 minutes to begin to see the cluster in IWO.
 
 ### Deploy the sample "Hello IKS" App using Helm
 
-What use is a cluster without an Application? The workspace "{organization}_{cluster_name}_app_hello" accounts for this.
+What use is a cluster without an Application? The workspace "{cluster_name}_app_hello" accounts for this.
 
-Open "{organization}_{cluster_name}_app_hello" and Queue a plan manually.
+Open "{cluster_name}_app_hello" and Queue a plan manually.
 
 Once successful, access the app with the loadbalancer IP:
 

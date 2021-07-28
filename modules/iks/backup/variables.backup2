@@ -24,12 +24,6 @@ variable "apikey" {
   type        = string
 }
 
-variable "organization" {
-  default     = "default"
-  description = "Intersight Organization Name/Workspace."
-  type        = string
-}
-
 variable "secretkey" {
   description = "Intersight Secret Key."
   sensitive   = true
@@ -68,6 +62,7 @@ variable "iks_cluster" {
       k8s_vm_instance_type_ctrl_plane = "**REQUIRED**"
       k8s_vm_instance_type_worker     = "**REQUIRED**"
       load_balancers                  = 3
+      organization                    = "default"
       ssh_key                         = "ssh_key_1"
       ssh_user                        = "iksadmin"
       tags                            = []
@@ -77,7 +72,7 @@ variable "iks_cluster" {
       worker_max_size                 = 4
     }
   }
-  description = "Intersight Kubernetes Service Cluster Profile Variable Map.\r\n1. action_cluster - Action to perform on the Kubernetes Cluster.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n2. action_control_plane - Action to perform on the Kubernetes Control Plane Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n3. action_worker - Action to perform on the Kubernetes Worker Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n4. control_plane_desired_size - Desired number of control plane nodes in this node group, same as minsize initially and is updated by the auto-scaler.  Options are {1|3}.\r\n5. control_plane_k8s_labels - List of key/value Attributes to Assign to the control plane node configuration.\r\n6. control_plane_max_size - Maximum number of control plane nodes desired in this node group.  Range is 1-128.\r\n7. description - A description for the policy.\r\n8. ip_pool_moid - Name of the IP Pool to assign to Cluster and Node Profiles.\r\n9. k8s_addon_policy_moid - Names of the Kubernetes Add-ons to add to the cluster.  Options are {ccp-monitor|kubernetes-dashboard} or [].\r\n10. k8s_network_cidr_moid - Name of the Kubneretes Network CIDR Policy to assign to Cluster.\r\n11. k8s_nodeos_config_moid - Name of the Kubneretes Node OS Config Policy to assign to Cluster and Node Profiles.\r\n12. k8s_registry_moid - Name of the Kubernetes Trusted Registry Policy to assign to Cluster and Node Profiles\r\n.13. k8s_runtime_moid - Name of the Kubernetes Runtime Policy to assign to Cluster and Node Profiles\r\n.14. k8s_version_moid - Name of the Kubernetes Version Policy to assign to the Node Profiles.\r\n15. k8s_vm_infra_moid - Name of the Kubernetes Virtual Machine Infra Config Policy to assign to the Node Profiles.\r\n16. k8s_vm_instance_type_ctrl_plane - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to control plane nodes.\r\n17. k8s_vm_instance_type_worker - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to worker nodes.\r\n18. load_balancers - Number of load balancer addresses to deploy. Range is 1-999.\r\n19. ssh_key - The SSH Key Name should be ssh_key_{1|2|3|4|5}.  This will point to the ssh_key variable that will be used.\r\n20. ssh_user - SSH Username for node login.\r\n21. tags - tags - List of key/value Attributes to Assign to the Profile.\r\n22. wait_for_complete - This model object can trigger workflows. Use this option to wait for all running workflows to reach a complete state.\r\n23. worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.\r\n24. worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.\r\n25. worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.\r\n"
+  description = "Intersight Kubernetes Service Cluster Profile Variable Map.\r\n1. action_cluster - Action to perform on the Kubernetes Cluster.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n2. action_control_plane - Action to perform on the Kubernetes Control Plane Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n3. action_worker - Action to perform on the Kubernetes Worker Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n4. control_plane_desired_size - Desired number of control plane nodes in this node group, same as minsize initially and is updated by the auto-scaler.  Options are {1|3}.\r\n5. control_plane_k8s_labels - List of key/value Attributes to Assign to the control plane node configuration.\r\n6. control_plane_max_size - Maximum number of control plane nodes desired in this node group.  Range is 1-128.\r\n7. description - A description for the policy.\r\n8. ip_pool_moid - Name of the IP Pool to assign to Cluster and Node Profiles.\r\n9. k8s_addon_policy_moid - Names of the Kubernetes Add-ons to add to the cluster.  Options are {ccp-monitor|kubernetes-dashboard} or [].\r\n10. k8s_network_cidr_moid - Name of the Kubneretes Network CIDR Policy to assign to Cluster.\r\n11. k8s_nodeos_config_moid - Name of the Kubneretes Node OS Config Policy to assign to Cluster and Node Profiles.\r\n12. k8s_registry_moid - Name of the Kubernetes Trusted Registry Policy to assign to Cluster and Node Profiles\r\n.13. k8s_runtime_moid - Name of the Kubernetes Runtime Policy to assign to Cluster and Node Profiles\r\n.14. k8s_version_moid - Name of the Kubernetes Version Policy to assign to the Node Profiles.\r\n15. k8s_vm_infra_moid - Name of the Kubernetes Virtual Machine Infra Config Policy to assign to the Node Profiles.\r\n16. k8s_vm_instance_type_ctrl_plane - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to control plane nodes.\r\n17. k8s_vm_instance_type_worker - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to worker nodes.\r\n18. load_balancers - Number of load balancer addresses to deploy. Range is 1-999.\r\n19. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n20. ssh_key - The SSH Key Name should be ssh_key_{1|2|3|4|5}.  This will point to the ssh_key variable that will be used.\r\n21. ssh_user - SSH Username for node login.\r\n22. tags - tags - List of key/value Attributes to Assign to the Profile.\r\n23. wait_for_complete - This model object can trigger workflows. Use this option to wait for all running workflows to reach a complete state.\r\n24. worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.\r\n25. worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.\r\n26. worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.\r\n"
   type = map(object(
     {
       action_cluster                  = optional(string)
@@ -98,6 +93,7 @@ variable "iks_cluster" {
       k8s_vm_instance_type_ctrl_plane = string
       k8s_vm_instance_type_worker     = string
       load_balancers                  = optional(number)
+      organization                    = optional(string)
       ssh_key                         = string
       ssh_user                        = string
       tags                            = optional(list(map(string)))
