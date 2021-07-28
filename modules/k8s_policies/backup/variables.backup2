@@ -32,7 +32,6 @@ variable "secretkey" {
 #__________________________________________________________
 
 variable "organizations" {
-  default     = ["default"]
   description = "Intersight Organization Names to Apply Policy to.  https://intersight.com/an/settings/organizations/."
   type        = set(string)
 }
@@ -65,7 +64,7 @@ variable "ip_pools" {
   type = map(object(
     {
       description    = optional(string)
-      dns_servers_v4 = optional(string)
+      dns_servers_v4 = optional(set(string))
       from           = optional(number)
       gateway        = optional(string)
       organization   = optional(string)

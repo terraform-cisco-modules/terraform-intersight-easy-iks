@@ -1,9 +1,11 @@
 locals {
   # Intersight Organization Variables
   organizations = jsondecode(var.organizations)
-  org_moids     = { for v in sort(keys(
-    data.intersight_organization_organization.org_moid.results)
-    ) : v => data.intersight_organization_organization.org_moid.results[v].moid }
+  org_moids     = {
+    for v in sort(keys(data.intersight_organization_organization.org_moid)) : v => {
+      moid = data.intersight_organization_organization.org_moid[v].results[0].moid
+    }
+  }
   tags     = jsondecode(var.tags)
   # IKS Cluster Variables
   ip_pools = {
