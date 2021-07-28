@@ -8,14 +8,9 @@ output "endpoint" {
   value       = local.endpoint
 }
 
-output "organization" {
-  description = "Intersight Organization Name."
-  value       = var.organization
-}
-
-output "org_moid" {
+output "org_moids" {
   description = "moid of the Intersight Organization."
-  value       = local.org_moid
+  value       = local.org_moids
 }
 
 #__________________________________________________________

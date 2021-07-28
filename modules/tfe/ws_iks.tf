@@ -81,28 +81,28 @@ variable "ssh_key_1" {
 
 variable "ssh_key_2" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_3" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_4" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_5" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
@@ -118,7 +118,7 @@ module "iks_workspaces" {
   for_each          = local.iks_cluster
   auto_apply        = true
   description       = "${each.key} Workspace."
-  name              = "${each.key}"
+  name              = each.key
   terraform_version = var.terraform_version
   tfc_oauth_token   = var.tfc_oauth_token
   tfc_org_name      = var.tfc_organization

@@ -16,9 +16,9 @@ module "iks_cluster" {
   description              = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
   ip_pool_moid             = local.ip_pools[each.value.ip_pool_moid]
   load_balancer            = each.value.load_balancers
-  name                     = "${each.key}"
+  name                     = each.key
   net_config_moid          = local.k8s_network_cidr[each.value.k8s_network_cidr_moid]
-  org_moid                 = local.org_moid
+  org_moid                 = local.org_moids[each.value.organization].moid
   ssh_key                  = each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 : each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 : each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 : each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
   ssh_user                 = each.value.ssh_user
   sys_config_moid          = local.k8s_nodeos_config[each.value.k8s_nodeos_config_moid]
@@ -47,7 +47,7 @@ module "iks_addon_profile" {
   ]
   iks_cluster_moid = module.iks_cluster[each.key].cluster_moid
   name             = "${each.key}_addons"
-  org_moid         = local.org_moid
+  org_moid         = local.org_moids[each.value.organization].moid
   tags             = each.value.tags != [] ? each.value.tags : local.tags
 }
 

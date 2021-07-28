@@ -25,7 +25,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [intersight_kubernetes_cluster.kube_config](https://registry.terraform.io/providers/CiscoDevNet/intersight/latest/docs/data-sources/kubernetes_cluster) | data source |
+| [intersight_kubernetes_cluster.kubeconfig](https://registry.terraform.io/providers/CiscoDevNet/intersight/latest/docs/data-sources/kubernetes_cluster) | data source |
 
 ## Inputs
 
@@ -41,5 +41,5 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Intersight Kubernetes Service Cluster Name. |
-| <a name="output_kube_config"></a> [kube\_config](#output\_kube\_config) | The Intersight Kubernetes Service kube\_config output. |
+| <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | The Intersight Kubernetes Service kubeconfig output. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

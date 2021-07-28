@@ -18,6 +18,7 @@ variable "ws_k8s_policies" {
   type        = string
 }
 
+
 #__________________________________________________________
 #
 # Intersight Provider Variables
@@ -26,12 +27,6 @@ variable "ws_k8s_policies" {
 variable "apikey" {
   description = "Intersight API Key."
   sensitive   = true
-  type        = string
-}
-
-variable "organization" {
-  default     = "default"
-  description = "Intersight Organization Name/Workspace."
   type        = string
 }
 
@@ -66,29 +61,28 @@ variable "ssh_key_1" {
 
 variable "ssh_key_2" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_3" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_4" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_5" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Tenants that use different keys for different clusters."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }
-

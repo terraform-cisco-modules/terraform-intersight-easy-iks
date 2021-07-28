@@ -32,7 +32,7 @@ Run the plan from the Terraform cloud workspace.
 
 | Name | Type |
 |------|------|
-| [terraform_remote_state.organization](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.k8s_policies](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
@@ -40,14 +40,14 @@ Run the plan from the Terraform cloud workspace.
 |------|-------------|------|---------|:--------:|
 | <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
 | <a name="input_iks_cluster"></a> [iks\_cluster](#input\_iks\_cluster) | Please Refer to the iks\_cluster variable information in the tfe module.  In the iks module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals. | `string` | n/a | yes |
-| <a name="input_organization"></a> [organization](#input\_organization) | Intersight Organization Name/Workspace. | `string` | `"default"` | no |
 | <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
 | <a name="input_ssh_key_1"></a> [ssh\_key\_1](#input\_ssh\_key\_1) | Intersight Kubernetes Service Cluster SSH Public Key 1. | `string` | `""` | no |
-| <a name="input_ssh_key_2"></a> [ssh\_key\_2](#input\_ssh\_key\_2) | Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_3"></a> [ssh\_key\_3](#input\_ssh\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_4"></a> [ssh\_key\_4](#input\_ssh\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_5"></a> [ssh\_key\_5](#input\_ssh\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Tenants that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_2"></a> [ssh\_key\_2](#input\_ssh\_key\_2) | Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_3"></a> [ssh\_key\_3](#input\_ssh\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_4"></a> [ssh\_key\_4](#input\_ssh\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_5"></a> [ssh\_key\_5](#input\_ssh\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization Name. | `string` | n/a | yes |
+| <a name="input_ws_k8s_policies"></a> [ws\_k8s\_policies](#input\_ws\_k8s\_policies) | Name of the k8s\_polices workspace. | `string` | `"Kubernetes_Policies"` | no |
 
 ## Outputs
 
@@ -55,7 +55,6 @@ Run the plan from the Terraform cloud workspace.
 |------|-------------|
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Intersight URL. |
 | <a name="output_iks_cluster"></a> [iks\_cluster](#output\_iks\_cluster) | moid of the IKS Cluster. |
-| <a name="output_org_moid"></a> [org\_moid](#output\_org\_moid) | moid of the Intersight Organization. |
-| <a name="output_organization"></a> [organization](#output\_organization) | Intersight Organization Name. |
+| <a name="output_org_moids"></a> [org\_moids](#output\_org\_moids) | moid of the Intersight Organization. |
 | <a name="output_tags"></a> [tags](#output\_tags) | Tags to be Associated with Objects Created in Intersight. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

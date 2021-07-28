@@ -5,7 +5,6 @@ locals {
   #__________________________________________________________
 
   endpoint      = data.terraform_remote_state.k8s_policies.outputs.endpoint
-  organizations = data.terraform_remote_state.k8s_policies.outputs.organizations
   org_moids     = data.terraform_remote_state.k8s_policies.outputs.org_moids
   tags          = data.terraform_remote_state.k8s_policies.outputs.tags
   #__________________________________________________________
@@ -14,7 +13,7 @@ locals {
   #__________________________________________________________
 
   iks_cluster = {
-    for k, v in var.iks_cluster : k => {
+    for k, v in jsondecode(var.iks_cluster) : k => {
       action_cluster                  = (v.action_cluster != null ? v.action_cluster : "Deploy")
       action_control_plane            = (v.action_control_plane != null ? v.action_control_plane : "No-op")
       action_worker                   = (v.action_worker != null ? v.action_worker : "No-op")

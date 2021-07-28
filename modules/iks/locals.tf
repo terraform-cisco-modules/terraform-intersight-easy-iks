@@ -4,9 +4,9 @@ locals {
   # Intersight and Tenant Variables
   #__________________________________________________________
 
-  endpoint     = data.terraform_remote_state.organization.outputs.endpoint
-  org_moids    = data.terraform_remote_state.organization.outputs.org_moids
-  tags         = data.terraform_remote_state.organization.outputs.tags
+  endpoint  = data.terraform_remote_state.k8s_policies.outputs.endpoint
+  org_moids = data.terraform_remote_state.k8s_policies.outputs.org_moids
+  tags      = data.terraform_remote_state.k8s_policies.outputs.tags
   #__________________________________________________________
   #
   # IKS Cluster Variables
@@ -32,6 +32,7 @@ locals {
       k8s_vm_instance_type_ctrl_plane = v.k8s_vm_instance_type_ctrl_plane
       k8s_vm_instance_type_worker     = v.k8s_vm_instance_type_worker
       load_balancers                  = (v.load_balancers != null ? v.load_balancers : 3)
+      organization                    = (v.organization != null ? v.organization : "default")
       ssh_key                         = v.ssh_key
       ssh_user                        = (v.ssh_user != null ? v.ssh_user : "iksadmin")
       tags                            = (v.tags != null ? v.tags : [])
@@ -47,14 +48,14 @@ locals {
   #__________________________________________________________
 
   # IP Pool moid's
-  ip_pools = data.terraform_remote_state.organization.outputs.ip_pools
+  ip_pools = data.terraform_remote_state.k8s_policies.outputs.ip_pools
   # Kubernetes Policies moid's
-  k8s_addon_policies     = data.terraform_remote_state.organization.outputs.k8s_addon_policies
-  k8s_network_cidr       = data.terraform_remote_state.organization.outputs.k8s_network_cidr
-  k8s_nodeos_config      = data.terraform_remote_state.organization.outputs.k8s_nodeos_config
-  k8s_runtime_policies   = data.terraform_remote_state.organization.outputs.k8s_runtime_policies
-  k8s_trusted_registries = data.terraform_remote_state.organization.outputs.k8s_trusted_registries
-  k8s_version_policies   = data.terraform_remote_state.organization.outputs.k8s_version_policies
-  k8s_vm_infra_config    = data.terraform_remote_state.organization.outputs.k8s_vm_infra_config
-  k8s_vm_instance_type   = data.terraform_remote_state.organization.outputs.k8s_vm_instance_type
+  k8s_addon_policies     = data.terraform_remote_state.k8s_policies.outputs.k8s_addon_policies
+  k8s_network_cidr       = data.terraform_remote_state.k8s_policies.outputs.k8s_network_cidr
+  k8s_nodeos_config      = data.terraform_remote_state.k8s_policies.outputs.k8s_nodeos_config
+  k8s_runtime_policies   = data.terraform_remote_state.k8s_policies.outputs.k8s_runtime_policies
+  k8s_trusted_registries = data.terraform_remote_state.k8s_policies.outputs.k8s_trusted_registries
+  k8s_version_policies   = data.terraform_remote_state.k8s_policies.outputs.k8s_version_policies
+  k8s_vm_infra_config    = data.terraform_remote_state.k8s_policies.outputs.k8s_vm_infra_config
+  k8s_vm_instance_type   = data.terraform_remote_state.k8s_policies.outputs.k8s_vm_instance_type
 }

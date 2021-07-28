@@ -30,7 +30,7 @@ locals {
       worker_max_size                 = (v.worker_max_size != null ? v.worker_max_size : 4)
     }
   }
-  tags     = var.tags
+  tags = var.tags
   # IKS Cluster Variables
   ip_pools = {
     for k, v in var.ip_pools : k => {

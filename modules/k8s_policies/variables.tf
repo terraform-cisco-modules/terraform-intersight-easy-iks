@@ -38,7 +38,7 @@ variable "organizations" {
 
 variable "tags" {
   # default     = []
-  description = "Please Refer to the tags variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the tags variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -48,7 +48,7 @@ variable "tags" {
 #______________________________________________
 
 variable "ip_pools" {
-  description = "Please Refer to the ip_pools variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the ip_pools variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -63,7 +63,7 @@ variable "ip_pools" {
 #______________________________________________
 
 variable "k8s_addon_policies" {
-  description = "Please Refer to the k8s_addons variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_addons variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -73,7 +73,7 @@ variable "k8s_addon_policies" {
 #______________________________________________
 
 variable "k8s_network_cidr" {
-  description = "Please Refer to the k8s_network_cidr variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_network_cidr variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -84,7 +84,7 @@ variable "k8s_network_cidr" {
 #______________________________________________
 
 variable "k8s_nodeos_config" {
-  description = "Please Refer to the k8s_nodeos_config variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_nodeos_config variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -95,7 +95,7 @@ variable "k8s_nodeos_config" {
 #______________________________________________
 
 variable "k8s_runtime_policies" {
-  description = "Please Refer to the k8s_runtime_policies variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_runtime_policies variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -132,7 +132,7 @@ variable "k8s_trusted_create" {
 }
 
 variable "k8s_trusted_registries" {
-  description = "Please Refer to the k8s_trusted_registries variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_trusted_registries variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -142,7 +142,7 @@ variable "k8s_trusted_registries" {
 #______________________________________________
 
 variable "k8s_version_policies" {
-  description = "Please Refer to the k8s_version_policies variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_version_policies variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -152,7 +152,7 @@ variable "k8s_version_policies" {
 #______________________________________________
 
 variable "k8s_vm_infra_config" {
-  description = "Please Refer to the k8s_vm_infra_config variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_vm_infra_config variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }
 
@@ -171,6 +171,6 @@ variable "k8s_vm_infra_password" {
 #______________________________________________
 
 variable "k8s_vm_instance_type" {
-  description = "Please Refer to the k8s_vm_instance_type variable information in the tfe module.  In the IKS module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
+  description = "Please Refer to the k8s_vm_instance_type variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = string
 }

@@ -5,7 +5,6 @@ locals {
   #__________________________________________________________
 
   endpoint       = data.terraform_remote_state.k8s_policies.outputs.endpoint
-  organizations  = data.terraform_remote_state.k8s_policies.outputs.organizations
   org_moids      = data.terraform_remote_state.k8s_policies.outputs.org_moids
   tags           = data.terraform_remote_state.k8s_policies.outputs.tags
   #__________________________________________________________
