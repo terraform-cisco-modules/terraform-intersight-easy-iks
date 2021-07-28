@@ -352,7 +352,7 @@ module "k8s_policies_workspace" {
   global_remote_state = true
   name                = "Kubernetes_Policies"
   terraform_version   = var.terraform_version
-  tfc_oath_token      = var.tfc_oath_token
+  tfc_oauth_token     = var.tfc_oauth_token
   tfc_org_name        = var.tfc_organization
   vcs_repo            = var.vcs_repo
   working_directory   = "modules/k8s_policies"
