@@ -19,7 +19,7 @@ vcs_repo         = "scotttyso/terraform-intersight-iks-iwo"
   - export TF_VAR_tfc_oath_token="abcdefghijklmnopqrstuvwxyz.0123456789"
   If you still want to move forward with it in this file, uncomment the line below, and input your value.
 */
-# tfc_oath_token = "value"
+# tfc_oauth_token = "value"
 
 
 #__________________________________________________________
@@ -60,22 +60,22 @@ ip_pools = {
     size           = 99
     tags           = []
   }
-  Wakanda_pool_2 = {
-    dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
-    from           = 101
-    gateway        = "10.96.111.1/24"
-    organization   = "Wakanda"
-    size           = 99
-    tags           = []
-  }
-  Wakanda_pool_3 = {
-    dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
-    from           = 101
-    gateway        = "10.96.112.1/24"
-    organization   = "Wakanda"
-    size           = 99
-    tags           = []
-  }
+  #Wakanda_pool_2 = {
+  #  dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
+  #  from           = 101
+  #  gateway        = "10.96.111.1/24"
+  #  organization   = "Wakanda"
+  #  size           = 99
+  #  tags           = []
+  #}
+  #Wakanda_pool_3 = {
+  #  dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
+  #  from           = 101
+  #  gateway        = "10.96.112.1/24"
+  #  organization   = "Wakanda"
+  #  size           = 99
+  #  tags           = []
+  #}
 }
 
 k8s_addon_policies = {
@@ -163,8 +163,8 @@ k8s_vm_instance_type = {
 
 iks_cluster = {
   Wakanda_cl01 = {
-    action_cluster                  = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    control_plane_desired_size      = 1
+    action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    control_plane_desired_size      = 3
     control_plane_max_size          = 3
     ip_pool_moid                    = "Wakanda_pool_1"
     k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
@@ -175,19 +175,19 @@ iks_cluster = {
     k8s_version_moid                = "Wakanda_v1_19_5"
     k8s_vm_infra_moid               = "Wakanda_vm_infra"
     k8s_vm_instance_type_ctrl_plane = "Wakanda_small"
-    k8s_vm_instance_type_worker     = "Wakanda_small"
+    k8s_vm_instance_type_worker     = "Wakanda_large"
     load_balancers                  = 3
     organization                    = "Wakanda"
     ssh_key                         = "ssh_key_1"
     ssh_user                        = "iksadmin"
     tags                            = []
     wait_for_complete               = false
-    worker_desired_size             = 1
-    worker_max_size                 = 4
+    worker_desired_size             = 3
+    worker_max_size                 = 6
   }
   Wakanda_cl02 = {
-    action_cluster                  = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    control_plane_desired_size      = 1
+    action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    control_plane_desired_size      = 3
     control_plane_max_size          = 3
     ip_pool_moid                    = "Wakanda_pool_1"
     k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
@@ -198,14 +198,14 @@ iks_cluster = {
     k8s_version_moid                = "Wakanda_v1_19_5"
     k8s_vm_infra_moid               = "Wakanda_vm_infra"
     k8s_vm_instance_type_ctrl_plane = "Wakanda_small"
-    k8s_vm_instance_type_worker     = "Wakanda_small"
+    k8s_vm_instance_type_worker     = "Wakanda_large"
     load_balancers                  = 3
     organization                    = "Wakanda"
     ssh_key                         = "ssh_key_1"
     ssh_user                        = "iksadmin"
     tags                            = []
     wait_for_complete               = false
-    worker_desired_size             = 1
-    worker_max_size                 = 4
+    worker_desired_size             = 3
+    worker_max_size                 = 6
   }
 }

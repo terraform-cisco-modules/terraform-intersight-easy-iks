@@ -472,7 +472,7 @@ module "k8s_policies_variables" {
       description = "VIrtual Center Password."
       key         = "k8s_vm_infra_password"
       sensitive   = true
-      value       = "var.k8s_vm_infra_password"
+      value       = var.k8s_vm_infra_password
     }
     k8s_vm_instance_type = {
       description = "Kubernetes Virtual Machine Instance Policy Variables."

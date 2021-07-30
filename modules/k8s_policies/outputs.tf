@@ -1,12 +1,17 @@
 #__________________________________________________________
 #
-# Intersight Global Ouptuts
+# Intersight Provider Ouptuts
 #__________________________________________________________
 
 output "endpoint" {
   description = "Intersight URL."
   value       = var.endpoint
 }
+
+#__________________________________________________________
+#
+# Intersight Organization Ouptuts
+#__________________________________________________________
 
 output "org_moids" {
   value = {
@@ -19,7 +24,7 @@ output "org_moids" {
 
 #__________________________________________________________
 #
-# Global Variable Outputs
+# Intersight Tag Outputs
 #__________________________________________________________
 
 output "tags" {
@@ -33,7 +38,7 @@ output "tags" {
 #__________________________________________________________
 
 output "ip_pools" {
-  description = "moid of the IP Pool"
+  description = "moid of the IP Pools."
   value       = { for v in sort(keys(module.ip_pools)) : v => module.ip_pools[v].moid }
 }
 
