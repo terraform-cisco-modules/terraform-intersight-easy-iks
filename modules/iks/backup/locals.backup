@@ -4,9 +4,9 @@ locals {
   # Intersight and Tenant Variables
   #__________________________________________________________
 
-  endpoint      = data.terraform_remote_state.k8s_policies.outputs.endpoint
-  org_moids     = data.terraform_remote_state.k8s_policies.outputs.org_moids
-  tags          = data.terraform_remote_state.k8s_policies.outputs.tags
+  endpoint  = data.terraform_remote_state.k8s_policies.outputs.endpoint
+  org_moids = data.terraform_remote_state.k8s_policies.outputs.org_moids
+  tags      = data.terraform_remote_state.k8s_policies.outputs.tags
   #__________________________________________________________
   #
   # IKS Cluster Variables

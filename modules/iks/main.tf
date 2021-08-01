@@ -19,7 +19,12 @@ module "iks_cluster" {
   name                     = each.key
   net_config_moid          = local.k8s_network_cidr[each.value.k8s_network_cidr_moid]
   org_moid                 = local.org_moids[each.value.organization].moid
-  ssh_key                  = each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 : each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 : each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 : each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
+  ssh_key                  = <<-EOT
+    each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 :
+    each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 :
+    each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 :
+    each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
+  EOT
   ssh_user                 = each.value.ssh_user
   sys_config_moid          = local.k8s_nodeos_config[each.value.k8s_nodeos_config_moid]
   tags                     = each.value.tags != [] ? each.value.tags : local.tags
