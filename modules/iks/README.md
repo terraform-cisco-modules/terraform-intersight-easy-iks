@@ -39,13 +39,13 @@ Run the plan from the Terraform cloud workspace.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
-| <a name="input_iks_cluster"></a> [iks\_cluster](#input\_iks\_cluster) | Please Refer to the iks\_cluster variable information in the tfe module.  In the iks module the variable<br>is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals. | `string` | n/a | yes |
+| <a name="input_iks_cluster"></a> [iks\_cluster](#input\_iks\_cluster) | Please Refer to the iks\_cluster variable information in the tfe module.  In the iks module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals. | `string` | n/a | yes |
 | <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
 | <a name="input_ssh_key_1"></a> [ssh\_key\_1](#input\_ssh\_key\_1) | Intersight Kubernetes Service Cluster SSH Public Key 1. | `string` | `""` | no |
-| <a name="input_ssh_key_2"></a> [ssh\_key\_2](#input\_ssh\_key\_2) | Intersight Kubernetes Service Cluster SSH Public Key 2.<br>These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_3"></a> [ssh\_key\_3](#input\_ssh\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.<br>These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_4"></a> [ssh\_key\_4](#input\_ssh\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.<br>These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
-| <a name="input_ssh_key_5"></a> [ssh\_key\_5](#input\_ssh\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.<br>These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_2"></a> [ssh\_key\_2](#input\_ssh\_key\_2) | Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_3"></a> [ssh\_key\_3](#input\_ssh\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_4"></a> [ssh\_key\_4](#input\_ssh\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_ssh_key_5"></a> [ssh\_key\_5](#input\_ssh\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization Name. | `string` | n/a | yes |
 | <a name="input_ws_k8s_policies"></a> [ws\_k8s\_policies](#input\_ws\_k8s\_policies) | Name of the k8s\_polices workspace. | `string` | `"Kubernetes_Policies"` | no |
 
