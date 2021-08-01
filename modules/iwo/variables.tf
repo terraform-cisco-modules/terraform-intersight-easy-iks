@@ -17,6 +17,9 @@ variable "tfc_organization" {
 
 variable "ws_kubeconfig" {
   default     = ""
-  description = "Intersight Kubernetes Service (IKS) kubeconfig Workspace Name.  The default value will be set to {cluster_name}_kubeconfig by the tfe variable module."
+  description = <<-EOT
+  Intersight Kubernetes Service (IKS) kubeconfig Workspace Name.  The default value will be set to
+  {cluster_name}_kubeconfig by the tfe variable module.
+  EOT
   type        = string
 }

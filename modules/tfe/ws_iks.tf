@@ -39,7 +39,35 @@ variable "iks_cluster" {
       worker_max_size                 = 4
     }
   }
-  description = "Intersight Kubernetes Service Cluster Profile Variable Map.\r\n1. action_cluster - Action to perform on the Kubernetes Cluster.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n2. action_control_plane - Action to perform on the Kubernetes Control Plane Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n3. action_worker - Action to perform on the Kubernetes Worker Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n4. control_plane_desired_size - Desired number of control plane nodes in this node group, same as minsize initially and is updated by the auto-scaler.  Options are {1|3}.\r\n5. control_plane_k8s_labels - List of key/value Attributes to Assign to the control plane node configuration.\r\n6. control_plane_max_size - Maximum number of control plane nodes desired in this node group.  Range is 1-128.\r\n7. description - A description for the policy.\r\n8. ip_pool_moid - Name of the IP Pool to assign to Cluster and Node Profiles.\r\n9. k8s_addon_policy_moid - Names of the Kubernetes Add-ons to add to the cluster.  Options are {ccp-monitor|kubernetes-dashboard} or [].\r\n10. k8s_network_cidr_moid - Name of the Kubneretes Network CIDR Policy to assign to Cluster.\r\n11. k8s_nodeos_config_moid - Name of the Kubneretes Node OS Config Policy to assign to Cluster and Node Profiles.\r\n12. k8s_registry_moid - Name of the Kubernetes Trusted Registry Policy to assign to Cluster and Node Profiles\r\n.13. k8s_runtime_moid - Name of the Kubernetes Runtime Policy to assign to Cluster and Node Profiles\r\n.14. k8s_version_moid - Name of the Kubernetes Version Policy to assign to the Node Profiles.\r\n15. k8s_vm_infra_moid - Name of the Kubernetes Virtual Machine Infra Config Policy to assign to the Node Profiles.\r\n16. k8s_vm_instance_type_ctrl_plane - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to control plane nodes.\r\n17. k8s_vm_instance_type_worker - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to worker nodes.\r\n18. load_balancers - Number of load balancer addresses to deploy. Range is 1-999.\r\n19. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n20. ssh_key - The SSH Key Name should be ssh_key_{1|2|3|4|5}.  This will point to the ssh_key variable that will be used.\r\n21. ssh_user - SSH Username for node login.\r\n22. tags - tags - List of key/value Attributes to Assign to the Profile.\r\n23. wait_for_complete - This model object can trigger workflows. Use this option to wait for all running workflows to reach a complete state.\r\n24. worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.\r\n25. worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.\r\n26. worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.\r\n"
+  description = <<-EOT
+  Intersight Kubernetes Service Cluster Profile Variable Map.\r\n
+   1. action_cluster - Action to perform on the Kubernetes Cluster.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n
+   2. action_control_plane - Action to perform on the Kubernetes Control Plane Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n
+   3. action_worker - Action to perform on the Kubernetes Worker Nodes.  Options are {Delete|Deploy|Ready|No-op|Unassign}.\r\n
+   4. control_plane_desired_size - Desired number of control plane nodes in this node group, same as minsize initially and is updated by the auto-scaler.  Options are {1|3}.\r\n
+   5. control_plane_k8s_labels - List of key/value Attributes to Assign to the control plane node configuration.\r\n
+   6. control_plane_max_size - Maximum number of control plane nodes desired in this node group.  Range is 1-128.\r\n
+   7. description - A description for the policy.\r\n
+   8. ip_pool_moid - Name of the IP Pool to assign to Cluster and Node Profiles.\r\n
+   9. k8s_addon_policy_moid - Names of the Kubernetes Add-ons to add to the cluster.  Options are {ccp-monitor|kubernetes-dashboard} or [].\r\n
+  10. k8s_network_cidr_moid - Name of the Kubneretes Network CIDR Policy to assign to Cluster.\r\n
+  11. k8s_nodeos_config_moid - Name of the Kubneretes Node OS Config Policy to assign to Cluster and Node Profiles.\r\n
+  12. k8s_registry_moid - Name of the Kubernetes Trusted Registry Policy to assign to Cluster and Node Profiles\r\n
+  13. k8s_runtime_moid - Name of the Kubernetes Runtime Policy to assign to Cluster and Node Profiles\r\n.
+  14. k8s_version_moid - Name of the Kubernetes Version Policy to assign to the Node Profiles.\r\n
+  15. k8s_vm_infra_moid - Name of the Kubernetes Virtual Machine Infra Config Policy to assign to the Node Profiles.\r\n
+  16. k8s_vm_instance_type_ctrl_plane - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to control plane nodes.\r\n
+  17. k8s_vm_instance_type_worker - Name of the Kubernetes Virtual Machine Instance Type Policy to assign to worker nodes.\r\n
+  18. load_balancers - Number of load balancer addresses to deploy. Range is 1-999.\r\n
+  19. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  20. ssh_key - The SSH Key Name should be ssh_key_{1|2|3|4|5}.  This will point to the ssh_key variable that will be used.\r\n
+  21. ssh_user - SSH Username for node login.\r\n
+  22. tags - tags - List of key/value Attributes to Assign to the Profile.\r\n
+  23. wait_for_complete - This model object can trigger workflows. Use this option to wait for all running workflows to reach a complete state.\r\n
+  24. worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.\r\n
+  25. worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.\r\n
+  26. worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.\r\n
+  EOT
   type = map(object(
     {
       action_cluster                  = optional(string)
@@ -72,37 +100,42 @@ variable "iks_cluster" {
   ))
 }
 
-variable "ssh_key_1" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 1."
-  sensitive   = true
-  type        = string
-}
-
 variable "ssh_key_2" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
+  description = <<-EOT
+  Intersight Kubernetes Service Cluster SSH Public Key 2.
+  These are place holders for Clusters that use different keys for different clusters.
+  EOT
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_3" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
+  description = <<-EOT
+  Intersight Kubernetes Service Cluster SSH Public Key 3.
+  These are place holders for Clusters that use different keys for different clusters.
+  EOT
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_4" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
+  description = <<-EOT
+  Intersight Kubernetes Service Cluster SSH Public Key 4.
+  These are place holders for Clusters that use different keys for different clusters.
+  EOT
   sensitive   = true
   type        = string
 }
 
 variable "ssh_key_5" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
+  description = <<-EOT
+  Intersight Kubernetes Service Cluster SSH Public Key 5.
+  These are place holders for Clusters that use different keys for different clusters.
+  EOT
   sensitive   = true
   type        = string
 }

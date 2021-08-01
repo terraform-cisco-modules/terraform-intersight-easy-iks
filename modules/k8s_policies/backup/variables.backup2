@@ -60,7 +60,16 @@ variable "ip_pools" {
       tags           = []
     }
   }
-  description = "Intersight IP Pool Variable Map.\r\n1. description - A description for the policy.\r\n2. dns_servers_v4 - DNS Servers for the IP Pool.\r\n2. from - host address of the pool starting address.\r\n3. gateway - ip/prefix of the gateway.\r\n4. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n4. size - Number of host addresses to assign to the pool.\r\n5. tags - List of key/value Attributes to Assign to the Policy.\r\n"
+  description = <<-EOT
+  Intersight IP Pool Variable Map.\r\n
+  1. description - A description for the policy.\r\n
+  2. dns_servers_v4 - DNS Servers for the IP Pool.\r\n
+  3. from - host address of the pool starting address.\r\n
+  4. gateway - ip/prefix of the gateway.\r\n
+  5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  6. size - Number of host addresses to assign to the pool.\r\n
+  7. tags - List of key/value Attributes to Assign to the Policy.\r\n
+  EOT
   type = map(object(
     {
       description    = optional(string)
@@ -97,7 +106,25 @@ variable "k8s_addon_policies" {
       upgrade_strategy  = "UpgradeOnly"
     }
   }
-  description = "Intersight Kubernetes Service Add-ons Variable Map.  Add-ons Options are {ccp-monitor|kubernetes-dashboard} currently.\r\n1. description - A description for the policy.\r\n2. install_strategy - Addon install strategy to determine whether an addon is installed if not present.\r\n * None - Unspecified install strategy.\r\n * NoAction - No install action performed.\r\n * InstallOnly - Only install in green field. No action in case of failure or removal.\r\n * Always - Attempt install if chart is not already installed.\r\n3. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n4. release_name - Name for the helm release.\r\n5. release_namespace - Namespace for the helm release.\r\n6. tags - List of key/value Attributes to Assign to the Policy.\r\n7. upgrade_strategy - Addon upgrade strategy to determine whether an addon configuration is overwritten on upgrade.\r\n * None - Unspecified upgrade strategy.\r\n * NoAction - This choice enables No upgrades to be performed.\r\n * UpgradeOnly - Attempt upgrade if chart or overrides options change, no action on upgrade failure.\r\n * ReinstallOnFailure - Attempt upgrade first. Remove and install on upgrade failure.\r\n * AlwaysReinstall - Always remove older release and reinstall."
+  description = <<-EOT
+  Intersight Kubernetes Service Add-ons Variable Map.  Add-ons Options are {ccp-monitor|kubernetes-dashboard} currently.\r\n
+  1. description - A description for the policy.\r\n
+  2. install_strategy - Addon install strategy to determine whether an addon is installed if not present.\r\n
+   * None - Unspecified install strategy.\r\n
+   * NoAction - No install action performed.\r\n
+   * InstallOnly - Only install in green field. No action in case of failure or removal.\r\n
+   * Always - Attempt install if chart is not already installed.\r\n
+  3. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  4. release_name - Name for the helm release.\r\n
+  5. release_namespace - Namespace for the helm release.\r\n
+  6. tags - List of key/value Attributes to Assign to the Policy.\r\n
+  7. upgrade_strategy - Addon upgrade strategy to determine whether an addon configuration is overwritten on upgrade.\r\n
+   * None - Unspecified upgrade strategy.\r\n
+   * NoAction - This choice enables No upgrades to be performed.\r\n
+   * UpgradeOnly - Attempt upgrade if chart or overrides options change, no action on upgrade failure.\r\n
+   * ReinstallOnFailure - Attempt upgrade first. Remove and install on upgrade failure.\r\n
+   * AlwaysReinstall - Always remove older release and reinstall.
+  EOT
   type = map(object(
     {
       description       = optional(string)
@@ -128,7 +155,17 @@ variable "k8s_network_cidr" {
       tags         = []
     }
   }
-  description = "Intersight Kubernetes Network CIDR Policy Variable Map.\r\n1. cidr_pod - CIDR block to allocate pod network IP addresses from.\r\n2. cidr_service - Pod CIDR Block to be used to assign Pod IP Addresses.\r\n3. cni_type - Supported CNI type. Currently we only support Calico.\r\n* Calico - Calico CNI plugin as described in https://github.com/projectcalico/cni-plugin.\r\n* Aci - Cisco ACI Container Network Interface plugin.\r\n4. description - A description for the policy.\r\n5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n6. tags - tags - List of key/value Attributes to Assign to the Policy."
+  description = <<-EOT
+  Intersight Kubernetes Network CIDR Policy Variable Map.\r\n
+  1. cidr_pod - CIDR block to allocate pod network IP addresses from.\r\n
+  2. cidr_service - Pod CIDR Block to be used to assign Pod IP Addresses.\r\n
+  3. cni_type - Supported CNI type. Currently we only support Calico.\r\n
+   * Calico - Calico CNI plugin as described in https://github.com/projectcalico/cni-plugin.\r\n
+   * Aci - Cisco ACI Container Network Interface plugin.\r\n
+  4. description - A description for the policy.\r\n
+  5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  6. tags - tags - List of key/value Attributes to Assign to the Policy.
+  EOT
   type = map(object(
     {
       cidr_pod     = optional(string)
@@ -159,7 +196,16 @@ variable "k8s_nodeos_config" {
       timezone       = "Etc/GMT"
     }
   }
-  description = "Intersight Kubernetes Node OS Configuration Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. dns_servers_v4 - DNS Servers for the Kubernetes Node OS Configuration Policy.\r\n3. domain_name - Domain Name for the Kubernetes Node OS Configuration Policy.\r\n4. ntp_servers - NTP Servers for the Kubernetes Node OS Configuration Policy.\r\n5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n6. tags - tags - List of key/value Attributes to Assign to the Policy.\r\n7. timezone - The timezone of the node's system clock.  For a List of supported timezones see the following URL.\r\n https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md."
+  description = <<-EOT
+  Intersight Kubernetes Node OS Configuration Policy Variable Map.\r\n
+  1. description - A description for the policy.\r\n
+  2. dns_servers_v4 - DNS Servers for the Kubernetes Node OS Configuration Policy.\r\n
+  3. domain_name - Domain Name for the Kubernetes Node OS Configuration Policy.\r\n
+  4. ntp_servers - NTP Servers for the Kubernetes Node OS Configuration Policy.\r\n
+  5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  6. tags - tags - List of key/value Attributes to Assign to the Policy.\r\n
+  7. timezone - The timezone of the node's system clock.  For a List of supported timezones see the following URL.\r\n https://github.com/terraform-cisco-modules/terraform-intersight-imm/blob/master/modules/policies_ntp/README.md.
+  EOT
   type = map(object(
     {
       description    = optional(string)
@@ -203,7 +249,22 @@ variable "k8s_runtime_policies" {
       tags               = []
     }
   }
-  description = "Intersight Kubernetes Runtime Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. docker_bridge_cidr - The CIDR for docker bridge network. This address space must not collide with other CIDRs on your networks, including the cluster's service CIDR, pod CIDR and IP Pools.\r\n3. docker_no_proxy - Docker no proxy list, when using internet proxy.\r\n4. http_hostname - Hostname of the HTTP Proxy Server.\r\n5. http_port - HTTP Proxy Port.  Range is 1-65535.\r\n6. http_protocol - HTTP Proxy Protocol. Options are {http|https}.\r\n7. http_username - Username for the HTTP Proxy Server.\r\n8. https_hostname - Hostname of the HTTPS Proxy Server.\r\n9. https_port - HTTPS Proxy Port.  Range is 1-65535\r\n10. https_protocol - HTTPS Proxy Protocol. Options are {http|https}.\r\n11. https_username - Username for the HTTPS Proxy Server.\r\n12. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n13. tags - List of key/value Attributes to Assign to the Policy."
+  description = <<-EOT
+  Intersight Kubernetes Runtime Policy Variable Map.\r\n
+   1. description - A description for the policy.\r\n
+   2. docker_bridge_cidr - The CIDR for docker bridge network. This address space must not collide with other CIDRs on your networks, including the cluster's service CIDR, pod CIDR and IP Pools.\r\n
+   3. docker_no_proxy - Docker no proxy list, when using internet proxy.\r\n
+   4. http_hostname - Hostname of the HTTP Proxy Server.\r\n
+   5. http_port - HTTP Proxy Port.  Range is 1-65535.\r\n
+   6. http_protocol - HTTP Proxy Protocol. Options are {http|https}.\r\n
+   7. http_username - Username for the HTTP Proxy Server.\r\n
+   8. https_hostname - Hostname of the HTTPS Proxy Server.\r\n
+   9. https_port - HTTPS Proxy Port.  Range is 1-65535\r\n
+  10. https_protocol - HTTPS Proxy Protocol. Options are {http|https}.\r\n
+  11. https_username - Username for the HTTPS Proxy Server.\r\n
+  12. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  13. tags - List of key/value Attributes to Assign to the Policy.
+  EOT
   type = map(object(
     {
       description        = optional(string)
@@ -259,7 +320,14 @@ variable "k8s_trusted_registries" {
       unsigned     = []
     }
   }
-  description = "Intersight Kubernetes Trusted Registry Policy Variable Map.\r\n1. description - A description for the policy.\r\n2. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n3. root_ca - List of root CA Signed Registries.\r\n4. tags - List of key/value Attributes to Assign to the Policy.\r\n5. unsigned - List of unsigned registries to be supported."
+  description = <<-EOT
+  Intersight Kubernetes Trusted Registry Policy Variable Map.\r\n
+  1. description - A description for the policy.\r\n
+  2. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  3. root_ca - List of root CA Signed Registries.\r\n
+  4. tags - List of key/value Attributes to Assign to the Policy.\r\n
+  5. unsigned - List of unsigned registries to be supported.
+  EOT
   type = map(object(
     {
       description  = optional(string)
@@ -315,7 +383,17 @@ variable "k8s_vm_infra_config" {
       vsphere_target        = ""
     }
   }
-  description = "Intersight Kubernetes Virtual Machine Infra Config Policy Variable Map.\r\n\r\n1. description - A description for the policy.\r\n2. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n3. tags - List of key/value Attributes to Assign to the Policy.\r\n4. vsphere_cluster - vSphere Cluster to assign the K8S Cluster Deployment.\r\n5. vsphere_datastore - vSphere Datastore to assign the K8S Cluster Deployment.r\n6. vsphere_portgroup - vSphere Port Group to assign the K8S Cluster Deployment.r\n7. vsphere_resource_pool - vSphere Resource Pool to assign the K8S Cluster Deployment.r\n8. vsphere_target - Name of the vSphere Target discovered in Intersight, to provision the cluster on."
+  description = <<-EOT
+  Intersight Kubernetes Virtual Machine Infra Config Policy Variable Map.\r\n
+  1. description - A description for the policy.\r\n
+  2. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/\r\n
+  3. tags - List of key/value Attributes to Assign to the Policy.\r\n
+  4. vsphere_cluster - vSphere Cluster to assign the K8S Cluster Deployment.\r\n
+  5. vsphere_datastore - vSphere Datastore to assign the K8S Cluster Deployment.r\n
+  6. vsphere_portgroup - vSphere Port Group to assign the K8S Cluster Deployment.r\n
+  7. vsphere_resource_pool - vSphere Resource Pool to assign the K8S Cluster Deployment.r\n
+  8. vsphere_target - Name of the vSphere Target discovered in Intersight, to provision the cluster on.
+  EOT
   type = map(object(
     {
       description           = optional(string)
@@ -353,7 +431,15 @@ variable "k8s_vm_instance_type" {
       tags         = []
     }
   }
-  description = "Intersight Kubernetes Node OS Configuration Policy Variable Map.  Name of the policy will be {organization}_{each.key}.\r\n1. cpu - Number of CPUs allocated to virtual machine.  Range is 1-40.\r\n2. description - A description for the policy.\r\n3. disk - Ephemeral disk capacity to be provided with units example - 10 for 10 Gigabytes.\r\n4. memory - Virtual machine memory defined in mebibytes (MiB).  Range is 1-4177920.\r\n5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n6. tags - List of key/value Attributes to Assign to the Policy."
+  description = <<-EOT
+  Intersight Kubernetes Node OS Configuration Policy Variable Map.  Name of the policy will be {organization}_{each.key}.\r\n
+  1. cpu - Number of CPUs allocated to virtual machine.  Range is 1-40.\r\n
+  2. description - A description for the policy.\r\n
+  3. disk - Ephemeral disk capacity to be provided with units example - 10 for 10 Gigabytes.\r\n
+  4. memory - Virtual machine memory defined in mebibytes (MiB).  Range is 1-4177920.\r\n
+  5. organization - Name of the Intersight Organization to assign this pool to.  https://intersight.com/an/settings/organizations/ \r\n
+  6. tags - List of key/value Attributes to Assign to the Policy.
+  EOT
   type = map(object(
     {
       cpu          = optional(number)
