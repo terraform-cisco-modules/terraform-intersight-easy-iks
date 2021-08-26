@@ -1,42 +1,3 @@
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
-
-#__________________________________________________________
-#
-# Terraform Cloud Variables
-#__________________________________________________________
-
-variable "tfc_organization" {
-  description = "Terraform Cloud Organization Name."
-  type        = string
-}
-
-variable "ws_k8s_policies" {
-  default     = "Kubernetes_Policies"
-  description = "Name of the k8s_polices workspace."
-  type        = string
-}
-
-
-#__________________________________________________________
-#
-# Intersight Provider Variables
-#__________________________________________________________
-
-variable "apikey" {
-  description = "Intersight API Key."
-  sensitive   = true
-  type        = string
-}
-
-variable "secretkey" {
-  description = "Intersight Secret Key."
-  sensitive   = true
-  type        = string
-}
-
-
 #__________________________________________________________
 #
 # Intersight Kubernetes Service Cluster Variables
@@ -76,6 +37,7 @@ variable "iks_cluster" {
       worker_desired_size             = 0
       worker_k8s_labels               = []
       worker_max_size                 = 4
+      workspace_name                  = "**REQURIED**"
     }
   }
   description = <<-EOT
@@ -106,6 +68,7 @@ variable "iks_cluster" {
   * worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.
   * worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.
   * worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.
+  * workspace_name - Name of the Terraform Cloud Workspace the IKS Cluster should be assigned to.
   EOT
   type = map(object(
     {
@@ -135,6 +98,7 @@ variable "iks_cluster" {
       worker_desired_size             = optional(number)
       worker_k8s_labels               = optional(list(map(string)))
       worker_max_size                 = optional(number)
+      workspace_name                  = string
     }
   ))
 }

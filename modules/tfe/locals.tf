@@ -28,6 +28,7 @@ locals {
       worker_desired_size             = (v.worker_desired_size != null ? v.worker_desired_size : 1)
       worker_k8s_labels               = (v.worker_k8s_labels != null ? v.worker_k8s_labels : [])
       worker_max_size                 = (v.worker_max_size != null ? v.worker_max_size : 4)
+      workspace_name                  = (v.workspace_name != null ? v.workspace_name : "")
     }
   }
   tags = var.tags
@@ -128,6 +129,16 @@ locals {
       memory       = (v.memory != null ? v.memory : 16384)
       organization = (v.organization != null ? v.organization : "default")
       tags         = (v.tags != null ? v.tags : [])
+    }
+  }
+  workspaces = {
+    for k, v in var.workspaces : k => {
+      auto_apply        = (v.auto_apply != null ? v.auto_apply : true)
+      description       = (v.description != null ? v.description : "")
+      remote_state      = (length(regexall("(app|iks)", v.workspace_type)) > 0 ? true : false)
+      working_directory = (v.working_directory != null ? v.working_directory : "modules/k8s_policies")
+      workspace_type    = (v.workspace_type != null ? v.workspace_type : "k8s_policies")
+      ws_kubeconfig     = (v.ws_kubeconfig != null ? v.ws_kubeconfig : "")
     }
   }
 }
