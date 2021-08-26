@@ -134,6 +134,7 @@ locals {
   workspaces = {
     for k, v in var.workspaces : k => {
       auto_apply        = (v.auto_apply != null ? v.auto_apply : true)
+      cluster_name      = (v.cluster_name != null ? v.cluster_name : "")
       description       = (v.description != null ? v.description : "")
       remote_state      = (length(regexall("(app|iks)", v.workspace_type)) > 0 ? true : false)
       working_directory = (v.working_directory != null ? v.working_directory : "modules/k8s_policies")

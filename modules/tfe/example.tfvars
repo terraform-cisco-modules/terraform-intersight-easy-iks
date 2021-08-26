@@ -93,18 +93,23 @@ workspaces = {
   "Wakanda_k8s_policies" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Policies Workspace."
+    remote_state      = true
     working_directory = "modules/k8s_policies"
     workspace_type    = "k8s_policies"
   }
   "Wakanda_cl01_kubeconfig" = {
     auto_apply        = true
+    cluster_name      = "Wakanda_cl02"
     description       = "Intersight Kubernetes Service - Kube Config Workspace."
+    remote_state      = true
     working_directory = "modules/kubeconfig"
     workspace_type    = "kubeconfig"
   }
   "Wakanda_cl02_kubeconfig" = {
     auto_apply        = true
+    cluster_name      = "Wakanda_cl02"
     description       = "Intersight Kubernetes Service - Kube Config Workspace."
+    remote_state      = true
     working_directory = "modules/kubeconfig"
     workspace_type    = "kubeconfig"
   }

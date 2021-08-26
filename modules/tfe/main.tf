@@ -169,9 +169,12 @@ module "iks_variables" {
   depends_on = [
     module.workspaces
   ]
-  for_each     = local.iks_cluster
+  for_each = {
+    for k, v in local.workspaces : k => v
+    if length(regexall("(iks)", local.workspaces[k].workspace_type)) > 0
+  }
   category     = "terraform"
-  workspace_id = module.workspaces[each.value.workspace_name].workspace.id
+  workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {
     #---------------------------
     # Terraform Cloud Variables

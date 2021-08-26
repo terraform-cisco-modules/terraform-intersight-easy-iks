@@ -92,6 +92,7 @@ variable "workspaces" {
   default = {
     default = {
       auto_apply        = true
+      cluster_name      = ""
       description       = ""
       working_directory = "modules/k8s_policies"
       workspace_type    = "k8s_policies"
@@ -101,6 +102,8 @@ variable "workspaces" {
   description = <<-EOT
   Map of Workspaces to create in Terraform Cloud.
   key - Name of the Workspace to Create.
+  * auto_apply - Terraform Apply occur without a confirmation; after a successful plan.
+  * cluster_name - Name of the Intersight Kubernetes Service Cluster.
   * description - A Description for the Workspace.
   * working_directory - The Directory of the Version Control Repository that contains the Terraform code for UCS Domain Profiles for this Workspace.
   * workspace_type - What Type of Workspace will this Create.  Options are:
@@ -113,6 +116,7 @@ variable "workspaces" {
   type = map(object(
     {
       auto_apply        = optional(bool)
+      cluster_name      = optional(string)
       description       = optional(string)
       working_directory = optional(string)
       workspace_type    = optional(string)
