@@ -57,25 +57,38 @@ tags = [{ key = "Module", value = "terraform-intersight-iks-iwo" }, { key = "Own
 #__________________________________________________________
 
 workspaces = {
-  "Wakanda_app_hello" = {
+  "Wakanda_cl01_app_hello" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Service - App Hello Workspace."
     working_directory = "modules/iks"
     workspace_type    = "app"
-    ws_kubeconfig     = "Wakanda_kubeconfig"
+    ws_kubeconfig     = "Wakanda_cl01_kubeconfig"
   }
-  "Wakanda_iks" = {
+  "Wakanda_cl01" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Service - Cluster Workspace."
     working_directory = "modules/iks"
     workspace_type    = "iks"
   }
-  "Wakanda_iwo" = {
+  "Wakanda_cl02" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - Cluster Workspace."
+    working_directory = "modules/iks"
+    workspace_type    = "iks"
+  }
+  "Wakanda_cl01_iwo" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Service - IWO App Workspace."
     working_directory = "modules/iwo"
     workspace_type    = "app"
-    ws_kubeconfig     = "Wakanda_kubeconfig"
+    ws_kubeconfig     = "Wakanda_cl01_kubeconfig"
+  }
+  "Wakanda_cl02_iwo" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - IWO App Workspace."
+    working_directory = "modules/iwo"
+    workspace_type    = "app"
+    ws_kubeconfig     = "Wakanda_cl02_kubeconfig"
   }
   "Wakanda_k8s_policies" = {
     auto_apply        = true
@@ -83,7 +96,13 @@ workspaces = {
     working_directory = "modules/k8s_policies"
     workspace_type    = "k8s_policies"
   }
-  "Wakanda_kubeconfig" = {
+  "Wakanda_cl01_kubeconfig" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - Kube Config Workspace."
+    working_directory = "modules/kubeconfig"
+    workspace_type    = "kubeconfig"
+  }
+  "Wakanda_cl02_kubeconfig" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Service - Kube Config Workspace."
     working_directory = "modules/kubeconfig"
@@ -224,6 +243,7 @@ iks_cluster = {
     wait_for_complete               = false
     worker_desired_size             = 3
     worker_max_size                 = 6
+    workspace_name                  = "Wakanda_cl01"
   }
   Wakanda_cl02 = {
     action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
@@ -247,5 +267,6 @@ iks_cluster = {
     wait_for_complete               = false
     worker_desired_size             = 3
     worker_max_size                 = 6
+    workspace_name                  = "Wakanda_cl02"
   }
 }
