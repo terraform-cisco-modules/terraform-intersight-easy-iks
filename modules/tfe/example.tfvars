@@ -51,6 +51,46 @@ organizations = ["Wakanda"]
 
 tags = [{ key = "Module", value = "terraform-intersight-iks-iwo" }, { key = "Owner", value = "tyscott" }]
 
+#__________________________________________________________
+#
+# Workspaces to Create
+#__________________________________________________________
+
+workspaces = {
+  "Wakanda_app_hello" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - App Hello Workspace."
+    working_directory = "modules/iks"
+    workspace_type    = "app"
+    ws_kubeconfig     = "Wakanda_kubeconfig"
+  }
+  "Wakanda_iks" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - Cluster Workspace."
+    working_directory = "modules/iks"
+    workspace_type    = "iks"
+  }
+  "Wakanda_iwo" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - IWO App Workspace."
+    working_directory = "modules/iwo"
+    workspace_type    = "app"
+    ws_kubeconfig     = "Wakanda_kubeconfig"
+  }
+  "Wakanda_k8s_policies" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Policies Workspace."
+    working_directory = "modules/k8s_policies"
+    workspace_type    = "k8s_policies"
+  }
+  "Wakanda_kubeconfig" = {
+    auto_apply        = true
+    description       = "Intersight Kubernetes Service - Kube Config Workspace."
+    working_directory = "modules/kubeconfig"
+    workspace_type    = "kubeconfig"
+  }
+}
+
 ip_pools = {
   Wakanda_pool_1 = {
     dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
