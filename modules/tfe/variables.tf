@@ -93,34 +93,35 @@ variable "workspaces" {
     default = {
       auto_apply        = true
       cluster_name      = ""
+      create_app_hello  = false
+      create_iwo        = false
       description       = ""
       working_directory = "modules/k8s_policies"
       workspace_type    = "k8s_policies"
-      ws_kubeconfig     = ""
     }
   }
   description = <<-EOT
   Map of Workspaces to create in Terraform Cloud.
   key - Name of the Workspace to Create.
   * auto_apply - Terraform Apply occur without a confirmation; after a successful plan.
-  * cluster_name - Name of the Intersight Kubernetes Service Cluster.
+  * cluster_name - Use this variable for the IKS Cluster Workspace if the Workspace Name != Cluster Name.
+  * create_app_hello - Use this variable to tell the script to create the app_hello workspace or not.
+  * create_iwo - Use this variable to tell the script to create the iwo workspace or not.
   * description - A Description for the Workspace.
   * working_directory - The Directory of the Version Control Repository that contains the Terraform code for UCS Domain Profiles for this Workspace.
   * workspace_type - What Type of Workspace will this Create.  Options are:
-    - app
     - iks
     - k8s_policies
-    - kubeconfig
-  * ws_kubeconfig - This variable is only required for the workspace_type of app.
   EOT
   type = map(object(
     {
       auto_apply        = optional(bool)
       cluster_name      = optional(string)
+      create_app_hello  = optional(bool)
+      create_iwo        = optional(bool)
       description       = optional(string)
       working_directory = optional(string)
       workspace_type    = optional(string)
-      ws_kubeconfig     = optional(string)
     }
   ))
 }

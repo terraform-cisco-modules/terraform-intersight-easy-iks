@@ -57,66 +57,39 @@ tags = [{ key = "Module", value = "terraform-intersight-iks-iwo" }, { key = "Own
 #__________________________________________________________
 
 workspaces = {
-  "Wakanda_cl01_app_hello" = {
-    auto_apply        = true
-    description       = "Intersight Kubernetes Service - App Hello Workspace."
-    working_directory = "modules/iks"
-    workspace_type    = "app"
-    ws_kubeconfig     = "Wakanda_cl01_kubeconfig"
-  }
-  "Wakanda_cl01" = {
-    auto_apply        = true
-    description       = "Intersight Kubernetes Service - Cluster Workspace."
-    working_directory = "modules/iks"
-    workspace_type    = "iks"
-  }
-  "Wakanda_cl02" = {
-    auto_apply        = true
-    description       = "Intersight Kubernetes Service - Cluster Workspace."
-    working_directory = "modules/iks"
-    workspace_type    = "iks"
-  }
-  "Wakanda_cl01_iwo" = {
-    auto_apply        = true
-    description       = "Intersight Kubernetes Service - IWO App Workspace."
-    working_directory = "modules/iwo"
-    workspace_type    = "app"
-    ws_kubeconfig     = "Wakanda_cl01_kubeconfig"
-  }
-  "Wakanda_cl02_iwo" = {
-    auto_apply        = true
-    description       = "Intersight Kubernetes Service - IWO App Workspace."
-    working_directory = "modules/iwo"
-    workspace_type    = "app"
-    ws_kubeconfig     = "Wakanda_cl02_kubeconfig"
-  }
   "Wakanda_k8s_policies" = {
     auto_apply        = true
     description       = "Intersight Kubernetes Policies Workspace."
-    remote_state      = true
     working_directory = "modules/k8s_policies"
     workspace_type    = "k8s_policies"
   }
-  "Wakanda_cl01_kubeconfig" = {
+  "Tenant1_cl01" = {
     auto_apply        = true
-    cluster_name      = "Wakanda_cl02"
-    description       = "Intersight Kubernetes Service - Kube Config Workspace."
-    remote_state      = true
-    working_directory = "modules/kubeconfig"
-    workspace_type    = "kubeconfig"
+    create_app_hello  = true
+    create_iwo        = true
+    description       = "Tenant1_cl01 - Intersight Kubernetes Service Workspace."
+    working_directory = "modules/iks"
+    workspace_type    = "iks"
   }
-  "Wakanda_cl02_kubeconfig" = {
+  "Tenant2_cl02" = {
     auto_apply        = true
-    cluster_name      = "Wakanda_cl02"
-    description       = "Intersight Kubernetes Service - Kube Config Workspace."
-    remote_state      = true
-    working_directory = "modules/kubeconfig"
-    workspace_type    = "kubeconfig"
+    create_iwo        = true
+    description       = "Tenant1_cl02 - Intersight Kubernetes Service Workspace."
+    working_directory = "modules/iks"
+    workspace_type    = "iks"
   }
 }
 
 ip_pools = {
-  Wakanda_pool_1 = {
+  Tenant1_pool_1 = {
+    dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
+    from           = 101
+    gateway        = "10.92.110.1/24"
+    organization   = "Wakanda"
+    size           = 99
+    tags           = []
+  }
+  Tenant2_pool_1 = {
     dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
     from           = 101
     gateway        = "10.96.110.1/24"
@@ -124,22 +97,6 @@ ip_pools = {
     size           = 99
     tags           = []
   }
-  #Wakanda_pool_2 = {
-  #  dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
-  #  from           = 101
-  #  gateway        = "10.96.111.1/24"
-  #  organization   = "Wakanda"
-  #  size           = 99
-  #  tags           = []
-  #}
-  #Wakanda_pool_3 = {
-  #  dns_servers_v4 = ["10.101.128.15", "10.101.128.16"]
-  #  from           = 101
-  #  gateway        = "10.96.112.1/24"
-  #  organization   = "Wakanda"
-  #  size           = 99
-  #  tags           = []
-  #}
 }
 
 k8s_addon_policies = {
@@ -155,7 +112,13 @@ k8s_addon_policies = {
 }
 
 k8s_network_cidr = {
-  Wakanda_network_cidr = {
+  Tenant1_network_cidr = {
+    organization = "Wakanda"
+    # This is mostly empty because I am accepting all the default values
+  }
+  Tenant2_network_cidr = {
+    cidr_pod     = "198.18.0.0/16"
+    cidr_service = "198.19.0.0/16"
     organization = "Wakanda"
     # This is mostly empty because I am accepting all the default values
   }
@@ -190,11 +153,19 @@ k8s_version_policies = {
 }
 
 k8s_vm_infra_config = {
-  Wakanda_vm_infra = {
+  Tenant1_vm_infra = {
     organization          = "Wakanda"
     vsphere_cluster       = "Panther"
     vsphere_datastore     = "NVMe_DS1"
-    vsphere_portgroup     = ["prod|nets|Panther_VM1"]
+    vsphere_portgroup     = ["Tenant1|nets|iks"]
+    vsphere_resource_pool = "IKS"
+    vsphere_target        = "wakanda-vcenter.rich.ciscolabs.com"
+  }
+  Tenant2_vm_infra = {
+    organization          = "Wakanda"
+    vsphere_cluster       = "Panther"
+    vsphere_datastore     = "NVMe_DS1"
+    vsphere_portgroup     = ["Tenant2|nets|iks"]
     vsphere_resource_pool = "IKS"
     vsphere_target        = "wakanda-vcenter.rich.ciscolabs.com"
   }
@@ -226,18 +197,18 @@ k8s_vm_instance_type = {
 #__________________________________________________________
 
 iks_cluster = {
-  Wakanda_cl01 = {
+  Tenant1_cl01 = {
     action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     control_plane_desired_size      = 3
     control_plane_max_size          = 3
-    ip_pool_moid                    = "Wakanda_pool_1"
+    ip_pool_moid                    = "Tenant1_pool_1"
     k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
-    k8s_network_cidr_moid           = "Wakanda_network_cidr"
+    k8s_network_cidr_moid           = "Tenant1_network_cidr"
     k8s_nodeos_config_moid          = "Wakanda_nodeos_config"
     k8s_registry_moid               = "Wakanda_registry"
     k8s_runtime_moid                = ""
     k8s_version_moid                = "Wakanda_v1_19_5"
-    k8s_vm_infra_moid               = "Wakanda_vm_infra"
+    k8s_vm_infra_moid               = "Tenant1_vm_infra"
     k8s_vm_instance_type_ctrl_plane = "Wakanda_small"
     k8s_vm_instance_type_worker     = "Wakanda_large"
     load_balancers                  = 3
@@ -248,20 +219,19 @@ iks_cluster = {
     wait_for_complete               = false
     worker_desired_size             = 3
     worker_max_size                 = 6
-    workspace_name                  = "Wakanda_cl01"
   }
-  Wakanda_cl02 = {
+  Tenant2_cl01 = {
     action_cluster                  = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     control_plane_desired_size      = 3
     control_plane_max_size          = 3
-    ip_pool_moid                    = "Wakanda_pool_1"
+    ip_pool_moid                    = "Tenant2_pool_1"
     k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
-    k8s_network_cidr_moid           = "Wakanda_network_cidr"
+    k8s_network_cidr_moid           = "Tenant2_network_cidr"
     k8s_nodeos_config_moid          = "Wakanda_nodeos_config"
     k8s_registry_moid               = "Wakanda_registry"
     k8s_runtime_moid                = ""
     k8s_version_moid                = "Wakanda_v1_19_5"
-    k8s_vm_infra_moid               = "Wakanda_vm_infra"
+    k8s_vm_infra_moid               = "Tenant2_vm_infra"
     k8s_vm_instance_type_ctrl_plane = "Wakanda_small"
     k8s_vm_instance_type_worker     = "Wakanda_large"
     load_balancers                  = 3
@@ -272,6 +242,5 @@ iks_cluster = {
     wait_for_complete               = false
     worker_desired_size             = 3
     worker_max_size                 = 6
-    workspace_name                  = "Wakanda_cl02"
   }
 }

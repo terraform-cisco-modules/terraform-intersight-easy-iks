@@ -37,7 +37,6 @@ variable "iks_cluster" {
       worker_desired_size             = 0
       worker_k8s_labels               = []
       worker_max_size                 = 4
-      workspace_name                  = "**REQURIED**"
     }
   }
   description = <<-EOT
@@ -68,7 +67,6 @@ variable "iks_cluster" {
   * worker_desired_size - Desired number of nodes in this worker node group, same as minsize initially and is updated by the auto-scaler.  Range is 1-128.
   * worker_k8s_labels - List of key/value Attributes to Assign to the worker node configuration.
   * worker_max_size - Maximum number of worker nodes desired in this node group.  Range is 1-128.
-  * workspace_name - Name of the Terraform Cloud Workspace the IKS Cluster should be assigned to.
   EOT
   type = map(object(
     {
@@ -98,7 +96,6 @@ variable "iks_cluster" {
       worker_desired_size             = optional(number)
       worker_k8s_labels               = optional(list(map(string)))
       worker_max_size                 = optional(number)
-      workspace_name                  = string
     }
   ))
 }
