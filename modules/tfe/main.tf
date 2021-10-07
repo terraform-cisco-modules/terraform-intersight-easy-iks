@@ -4,7 +4,7 @@
 #__________________________________________________________
 
 module "app_workspaces" {
-  source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each = {
     for k, v in local.workspaces : k => v
     if local.workspaces[k].create_app_hello == true
@@ -33,7 +33,7 @@ output "app_workspaces" {
 #__________________________________________________________
 
 module "iwo_workspaces" {
-  source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each = {
     for k, v in local.workspaces : k => v
     if local.workspaces[k].create_iwo == true
@@ -56,7 +56,7 @@ output "iwo_workspaces" {
 
 
 module "kubeconfig_workspaces" {
-  source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each = {
     for k, v in local.workspaces : k => v
     if local.workspaces[k].workspace_type == "iks"
@@ -84,8 +84,8 @@ output "kubeconfig_workspaces" {
 #__________________________________________________________
 
 module "workspaces" {
-  source              = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each            = local.workspaces
+  source   = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  for_each = local.workspaces
   # agent_pool          = each.value.workspace_type == "app" ? module.tfc_agent_pool.tfc_agent_pool : null
   auto_apply          = each.value.auto_apply
   description         = each.value.description
@@ -114,7 +114,7 @@ module "intersight_global_variables" {
   depends_on = [
     module.workspaces
   ]
-  for_each = local.workspaces
+  for_each     = local.workspaces
   category     = "terraform"
   workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {

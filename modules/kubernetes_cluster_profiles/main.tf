@@ -8,23 +8,24 @@
 # Create the IKS Cluster Profile
 #______________________________________________
 
-module "iks_cluster" {
-  source                   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster"
+module "kubernetes_cluster_profiles" {
+  source                   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_profiles"
   for_each                 = local.iks_cluster
   action                   = each.value.action_cluster
-  container_runtime_config = each.value.k8s_runtime_moid != "" ? local.k8s_runtime_policies["${each.value.k8s_runtime_moid}"] : ""
+  container_runtime_config = each.value.k8s_runtime_moid != "" ? local.k8s_runtime_policies[each.value.k8s_runtime_moid] : ""
   description              = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
   ip_pool_moid             = local.ip_pools[each.value.ip_pool_moid]
   load_balancer            = each.value.load_balancers
   name                     = each.key
   net_config_moid          = local.k8s_network_cidr[each.value.k8s_network_cidr_moid]
   org_moid                 = local.org_moids[each.value.organization].moid
-  ssh_key                  = <<-EOT
-    each.value.ssh_key == "ssh_key_1" ? var.ssh_key_1 :
-    each.value.ssh_key == "ssh_key_2" ? var.ssh_key_2 :
-    each.value.ssh_key == "ssh_key_3" ? var.ssh_key_3 :
-    each.value.ssh_key == "ssh_key_4" ? var.ssh_key_4 : var.ssh_key_5
-  EOT
+  ssh_key                  = length(
+    regexall("ssh_key_1", each.value.ssh_key)) > 0 ? var.ssh_key_1 : length(
+    regexall("ssh_key_2", each.value.ssh_key)) > 0 ? var.ssh_key_2 : length(
+    regexall("ssh_key_3", each.value.ssh_key)) > 0 ? var.ssh_key_3 : length(
+    regexall("ssh_key_4", each.value.ssh_key)) > 0 ? var.ssh_key_4 : length(
+    regexall("ssh_key_5", each.value.ssh_key)
+  ) > 0 ? var.ssh_key_5 : ""
   ssh_user                 = each.value.ssh_user
   sys_config_moid          = local.k8s_nodeos_config[each.value.k8s_nodeos_config_moid]
   tags                     = each.value.tags != [] ? each.value.tags : local.tags

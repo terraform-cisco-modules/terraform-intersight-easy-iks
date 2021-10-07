@@ -1,26 +1,15 @@
 locals {
   # Intersight Organization Variables
-  organizations = var.organizations
-  org_moids     = {
+  organizations = toset(var.organizations)
+  org_moids = {
     for v in sort(keys(data.intersight_organization_organization.org_moid)) : v => {
       moid = data.intersight_organization_organization.org_moid[v].results[0].moid
     }
   }
-  tags     = var.tags
+  tags = var.tags
   # IKS Cluster Variables
-  ip_pools = {
-    for k, v in var.ip_pools : k => {
-      description    = (v.description != null ? v.description : "")
-      dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
-      from           = (v.from != null ? v.from : 20)
-      gateway        = (v.gateway != null ? v.gateway : "198.18.0.1/24")
-      organization   = (v.organization != null ? v.organization : "default")
-      size           = (v.size != null ? v.size : 30)
-      tags           = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_addon_policies = {
-    for k, v in var.k8s_addon_policies : k => {
+  addons_policies = {
+    for k, v in var.addons_policies : k => {
       description       = (v.description != null ? v.description : "")
       install_strategy  = (v.install_strategy != null ? v.install_strategy : "Always")
       organization      = (v.organization != null ? v.organization : "default")
@@ -30,29 +19,8 @@ locals {
       upgrade_strategy  = (v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly")
     }
   }
-  k8s_network_cidr = {
-    for k, v in var.k8s_network_cidr : k => {
-      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
-      cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
-      cni_type     = (v.cni_type != null ? v.cni_type : "Calico")
-      description  = (v.description != null ? v.description : "")
-      organization = (v.organization != null ? v.organization : "default")
-      tags         = (v.tags != null ? v.tags : [])
-    }
-  }
-  k8s_nodeos_config = {
-    for k, v in var.k8s_nodeos_config : k => {
-      description    = (v.description != null ? v.description : "")
-      dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
-      domain_name    = (v.domain_name != null ? v.domain_name : "example.com")
-      ntp_servers    = (v.ntp_servers != null ? v.ntp_servers : [])
-      organization   = (v.organization != null ? v.organization : "default")
-      tags           = (v.tags != null ? v.tags : [])
-      timezone       = (v.timezone != null ? v.timezone : "Etc/GMT")
-    }
-  }
-  k8s_runtime_policies = {
-    for k, v in var.k8s_runtime_policies : k => {
+  container_runtime_policies = {
+    for k, v in var.container_runtime_policies : k => {
       description        = (v.description != null ? v.description : "")
       docker_bridge_cidr = (v.docker_bridge_cidr != null ? v.docker_bridge_cidr : "")
       docker_no_proxy    = (v.docker_no_proxy != null ? v.docker_no_proxy : [])
@@ -68,8 +36,41 @@ locals {
       tags               = (v.tags != null ? v.tags : [])
     }
   }
-  k8s_trusted_registries = {
-    for k, v in var.k8s_trusted_registries : k => {
+  ip_pools = {
+    for k, v in var.ip_pools : k => {
+      assignment_order = (v.assignment_order != null ? v.assignment_order : "default")
+      description      = (v.description != null ? v.description : "")
+      ipv4_block       = (v.ipv4_block != null ? v.ipv4_block : [])
+      ipv4_config      = (v.ipv4_config != null ? v.ipv4_config : {})
+      ipv6_block       = (v.ipv6_block != null ? v.ipv6_block : [])
+      ipv6_config      = (v.ipv6_config != null ? v.ipv6_config : {})
+      organization     = (v.organization != null ? v.organization : "default")
+      tags             = (v.tags != null ? v.tags : [])
+    }
+  }
+  network_cidr_policies = {
+    for k, v in var.network_cidr_policies : k => {
+      cidr_pod     = (v.cidr_pod != null ? v.cidr_pod : "100.64.0.0/16")
+      cidr_service = (v.cidr_service != null ? v.cidr_service : "100.65.0.0/16")
+      cni_type     = (v.cni_type != null ? v.cni_type : "Calico")
+      description  = (v.description != null ? v.description : "")
+      organization = (v.organization != null ? v.organization : "default")
+      tags         = (v.tags != null ? v.tags : [])
+    }
+  }
+  nodeos_configuration_policies = {
+    for k, v in var.nodeos_configuration_policies : k => {
+      description    = (v.description != null ? v.description : "")
+      dns_servers_v4 = (v.dns_servers_v4 != null ? v.dns_servers_v4 : ["208.67.220.220", "208.67.222.222"])
+      domain_name    = (v.domain_name != null ? v.domain_name : "example.com")
+      ntp_servers    = (v.ntp_servers != null ? v.ntp_servers : [])
+      organization   = (v.organization != null ? v.organization : "default")
+      tags           = (v.tags != null ? v.tags : [])
+      timezone       = (v.timezone != null ? v.timezone : "Etc/GMT")
+    }
+  }
+  trusted_certificate_authorities = {
+    for k, v in var.trusted_certificate_authorities : k => {
       description  = (v.description != null ? v.description : "")
       organization = (v.organization != null ? v.organization : "default")
       root_ca      = (v.root_ca != null ? v.root_ca : [])
@@ -77,16 +78,16 @@ locals {
       unsigned     = (v.unsigned != null ? v.unsigned : [])
     }
   }
-  k8s_version_policies = {
-    for k, v in var.k8s_version_policies : k => {
+  kubernetes_version_policies = {
+    for k, v in var.kubernetes_version_policies : k => {
       description  = (v.description != null ? v.description : "")
       organization = (v.organization != null ? v.organization : "default")
       tags         = (v.tags != null ? v.tags : [])
       version      = (v.version != null ? v.version : "1.19.5")
     }
   }
-  k8s_vm_infra_config = {
-    for k, v in var.k8s_vm_infra_config : k => {
+  virtual_machine_infra_config = {
+    for k, v in var.virtual_machine_infra_config : k => {
       description           = (v.description != null ? v.description : "")
       organization          = (v.organization != null ? v.organization : "default")
       tags                  = (v.tags != null ? v.tags : [])
@@ -97,8 +98,8 @@ locals {
       vsphere_target        = coalesce(v.vsphere_target, "")
     }
   }
-  k8s_vm_instance_type = {
-    for k, v in var.k8s_vm_instance_type : k => {
+  virtual_machine_instance_type = {
+    for k, v in var.virtual_machine_instance_type : k => {
       description  = (v.description != null ? v.description : "")
       cpu          = (v.cpu != null ? v.cpu : 4)
       disk         = (v.disk != null ? v.disk : 40)

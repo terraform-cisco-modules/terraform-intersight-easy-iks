@@ -29,12 +29,12 @@ output "tags" {
 # Kubernetes Cluster Outputs
 #__________________________________________________________
 
-output "iks_cluster" {
-  description = "moid of the IKS Cluster."
+output "kubernetes_cluster_profiles" {
+  description = "moid of the Kubernetes Cluster Profiles."
   value = {
-    for v in sort(keys(module.iks_cluster)) : v => {
-      cluster_moid = module.iks_cluster[v].cluster_moid
-      profile_moid = module.iks_cluster[v].profile_moid
+    for v in sort(keys(module.kubernetes_cluster_profiles)) : v => {
+      cluster_moid = module.kubernetes_cluster_profiles[v].cluster_moid
+      profile_moid = module.kubernetes_cluster_profiles[v].profile_moid
     }
   }
 }
