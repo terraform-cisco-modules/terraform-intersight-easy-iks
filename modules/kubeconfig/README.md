@@ -1,6 +1,6 @@
-# Intersight Kubernetes Service kube_config Workspace
+# Intersight Kubernetes Service kubeconfig Workspace
 
-## Use this module to obtain the kube_config through Intersight
+## Use this module to obtain the kubeconfig through Intersight
 
 Run the plan from the Terraform cloud workspace.
 

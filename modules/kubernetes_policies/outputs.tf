@@ -65,12 +65,12 @@ output "nodeos_configuration_policies" {
 
 output "container_runtime_policies" {
   description = "moid of the Kubernetes Runtime Policies."
-  value = { for v in sort(keys(module.container_runtime_policies)) : v => module.container_runtime_policies[v].moid }
+  value       = { for v in sort(keys(module.container_runtime_policies)) : v => module.container_runtime_policies[v].moid }
 }
 
 output "trusted_certificate_authorities" {
   description = "moid of the Kubernetes Trusted Certificate Authorities Policy."
-  value = { for v in sort(keys(module.trusted_certificate_authorities)) : v => module.trusted_certificate_authorities[v].moid }
+  value       = { for v in sort(keys(module.trusted_certificate_authorities)) : v => module.trusted_certificate_authorities[v].moid }
 }
 
 output "kubernetes_version_policies" {

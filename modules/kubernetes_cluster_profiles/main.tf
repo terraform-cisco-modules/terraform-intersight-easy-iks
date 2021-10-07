@@ -9,28 +9,32 @@
 #______________________________________________
 
 module "kubernetes_cluster_profiles" {
-  source                   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_profiles"
-  for_each                 = local.iks_cluster
-  action                   = each.value.action_cluster
-  container_runtime_config = each.value.k8s_runtime_moid != "" ? local.k8s_runtime_policies[each.value.k8s_runtime_moid] : ""
-  description              = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
-  ip_pool_moid             = local.ip_pools[each.value.ip_pool_moid]
-  load_balancer            = each.value.load_balancers
-  name                     = each.key
-  net_config_moid          = local.k8s_network_cidr[each.value.k8s_network_cidr_moid]
-  org_moid                 = local.org_moids[each.value.organization].moid
-  ssh_key                  = length(
+  source   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_profiles"
+  for_each = local.kubernetes_cluster_profiles
+  action   = each.value.action_cluster
+  container_runtime_config = length(
+    regexall("r[a-zA-Z0-9]+", coalesce(each.value.container_runtime_policies, "####"))
+  ) > 0 ? local.container_runtime_policies[each.value.container_runtime_moid] : ""
+  description     = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
+  ip_pool_moid    = local.ip_pools[each.value.ip_pool_moid]
+  load_balancer   = each.value.load_balancers
+  name            = each.key
+  net_config_moid = local.network_cidr_policies[each.value.network_cidr_moid]
+  org_moid        = local.org_moids[each.value.organization].moid
+  ssh_key = length(
     regexall("ssh_key_1", each.value.ssh_key)) > 0 ? var.ssh_key_1 : length(
     regexall("ssh_key_2", each.value.ssh_key)) > 0 ? var.ssh_key_2 : length(
     regexall("ssh_key_3", each.value.ssh_key)) > 0 ? var.ssh_key_3 : length(
     regexall("ssh_key_4", each.value.ssh_key)) > 0 ? var.ssh_key_4 : length(
     regexall("ssh_key_5", each.value.ssh_key)
   ) > 0 ? var.ssh_key_5 : ""
-  ssh_user                 = each.value.ssh_user
-  sys_config_moid          = local.k8s_nodeos_config[each.value.k8s_nodeos_config_moid]
-  tags                     = each.value.tags != [] ? each.value.tags : local.tags
-  trusted_registries       = each.value.k8s_registry_moid != "" ? local.k8s_trusted_registries[each.value.k8s_registry_moid] : ""
-  wait_for_completion      = each.value.wait_for_complete
+  ssh_user        = each.value.ssh_user
+  sys_config_moid = local.nodeos_config_policies[each.value.nodeos_config_moid]
+  tags            = each.value.tags != [] ? each.value.tags : local.tags
+  trusted_registries = length(
+    regexall("r[a-zA-Z0-9]+", coalesce(each.value.trusted_certificate_authorities, "####"))
+  ) > 0 ? local.trusted_certificate_authorities[each.value.trusted_certificate_authority_moid] : ""
+  wait_for_completion = each.value.wait_for_complete
 }
 
 #_____________________________________________________
@@ -38,12 +42,12 @@ module "kubernetes_cluster_profiles" {
 # Attach the Add-Ons Policy to the Kubernetes Cluster
 #_____________________________________________________
 
-module "iks_addon_profile" {
+module "kubernetes_cluster_addons" {
   depends_on = [
-    module.iks_cluster
+    module.kubernetes_cluster_profiles
   ]
-  source   = "terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons"
-  for_each = local.iks_cluster
+  source   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_addons"
+  for_each = local.kubernetes_cluster_profiles
   addons = [
     for a in each.value.k8s_addon_policy_moid :
     {
@@ -51,10 +55,10 @@ module "iks_addon_profile" {
       name = local.k8s_addon_policies["${a}"].name
     }
   ]
-  iks_cluster_moid = module.iks_cluster[each.key].cluster_moid
-  name             = "${each.key}_addons"
-  org_moid         = local.org_moids[each.value.organization].moid
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
+  kubernetes_cluster_profile_moid = module.kubernetes_cluster_profiles[each.key].cluster_moid
+  name                            = "${each.key}_addons"
+  org_moid                        = local.org_moids[each.value.organization].moid
+  tags                            = each.value.tags != [] ? each.value.tags : local.tags
 }
 
 
@@ -65,32 +69,32 @@ module "iks_addon_profile" {
 
 module "control_plane_node_group" {
   depends_on = [
-    module.iks_cluster,
+    module.kubernetes_cluster_profiles,
   ]
-  source           = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
-  for_each         = local.iks_cluster
-  action           = each.value.action_control_plane
-  description      = each.value.description != "" ? each.value.description : "${each.key} Control Plane Node Profile"
-  desired_size     = each.value.control_plane_desired_size
-  iks_profile_moid = module.iks_cluster[each.key].profile_moid
-  ip_pool_moid     = local.ip_pools[each.value.ip_pool_moid]
-  labels           = each.value.control_plane_k8s_labels
-  max_size         = each.value.control_plane_max_size
-  name             = "${each.key}_control_plane"
-  node_type        = each.value.worker_desired_size == "0" ? "ControlPlaneWorker" : "ControlPlane"
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
-  version_moid     = local.k8s_version_policies[each.value.k8s_version_moid]
+  source                          = "terraform-cisco-modules/imm/intersight//modules/kubernetes_node_group_profiles"
+  for_each                        = local.kubernetes_cluster_profiles
+  action                          = each.value.action_control_plane
+  description                     = each.value.description != "" ? each.value.description : "${each.key} Node Group Profile"
+  desired_size                    = each.value.control_plane_desired_size
+  kubernetes_cluster_profile_moid = module.kubernetes_cluster_profiles[each.key].profile_moid
+  kubernetes_version_moid         = local.kubernetes_version_policies[each.value.kubernetes_version_moid]
+  ip_pool_moid                    = local.ip_pools[each.value.ip_pool_moid]
+  labels                          = each.value.control_plane_k8s_labels
+  max_size                        = each.value.control_plane_max_size
+  name                            = "${each.key}_control_plane"
+  node_type                       = each.value.worker_desired_size == "0" ? "ControlPlaneWorker" : "ControlPlane"
+  tags                            = each.value.tags != [] ? each.value.tags : local.tags
 }
 
-module "control_plane_vm_infra_provider" {
+module "control_plane_node_vm_infra" {
   depends_on = [
     module.control_plane_node_group
   ]
-  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider"
-  for_each                  = local.iks_cluster
-  description               = each.value.description != "" ? each.value.description : "${each.key} Control Plane Virtual machine Infrastructure Provider."
+  source                    = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_node_vm_infra"
+  for_each                  = local.kubernetes_cluster_profiles
+  description               = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Virtual machine Infrastructure Provider"
   k8s_node_group_moid       = module.control_plane_node_group[each.key].moid
-  k8s_vm_infra_config_moid  = local.k8s_vm_infra_config[each.value.k8s_vm_infra_moid]
+  k8s_vm_infra_config_moid  = local.virtual_machine_infra_config[each.value.virtual_machine_infra_config_moid]
   k8s_vm_instance_type_moid = local.k8s_vm_instance_type[each.value.k8s_vm_instance_type_ctrl_plane]
   name                      = "${each.key}_control_plane"
   tags                      = each.value.tags != [] ? each.value.tags : local.tags
@@ -104,33 +108,33 @@ module "control_plane_vm_infra_provider" {
 
 module "worker_node_group" {
   depends_on = [
-    module.iks_cluster
+    module.kubernetes_cluster_profiles
   ]
-  source           = "terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile"
-  for_each         = local.iks_cluster
-  action           = each.value.action_worker
-  description      = each.value.description != "" ? each.value.description : "${each.key} Worker Node Profile"
-  iks_profile_moid = module.iks_cluster[each.key].profile_moid
-  desired_size     = each.value.worker_desired_size
-  ip_pool_moid     = local.ip_pools[each.value.ip_pool_moid]
-  labels           = each.value.worker_k8s_labels
-  max_size         = each.value.worker_max_size
-  name             = "${each.key}_worker"
-  node_type        = "Worker"
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
-  version_moid     = local.k8s_version_policies[each.value.k8s_version_moid]
+  source                          = "terraform-cisco-modules/imm/intersight//modules/kubernetes_node_group_profiles"
+  for_each                        = local.kubernetes_cluster_profiles
+  action                          = each.value.action_worker
+  description                     = each.value.description != "" ? each.value.description : "${each.key} Worker Node Profile"
+  kubernetes_cluster_profile_moid = module.kubernetes_cluster_profiles[each.key].profile_moid
+  kubernetes_version_moid         = local.kubernetes_version_policies[each.value.kubernetes_version_moid]
+  desired_size                    = each.value.worker_desired_size
+  ip_pool_moid                    = local.ip_pools[each.value.ip_pool_moid]
+  labels                          = each.value.worker_k8s_labels
+  max_size                        = each.value.worker_max_size
+  name                            = "${each.key}_worker"
+  node_type                       = "Worker"
+  tags                            = each.value.tags != [] ? each.value.tags : local.tags
 }
 
-module "worker_vm_infra_provider" {
+module "worker_node_vm_infra" {
   depends_on = [
     module.worker_node_group
   ]
-  source                    = "terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider"
-  for_each                  = local.iks_cluster
-  description               = each.value.description != "" ? each.value.description : "${each.key} Worker Virtual machine Infrastructure Provider."
-  k8s_node_group_moid       = module.worker_node_group[each.key].moid
-  k8s_vm_infra_config_moid  = local.k8s_vm_infra_config[each.value.k8s_vm_infra_moid]
-  k8s_vm_instance_type_moid = local.k8s_vm_instance_type[each.value.k8s_vm_instance_type_worker]
-  name                      = "${each.key}_worker"
-  tags                      = each.value.tags != [] ? each.value.tags : local.tags
+  source                     = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_node_vm_infra"
+  for_each                   = local.kubernetes_cluster_profiles
+  description                = each.value.description != "" ? each.value.description : "${each.key} Worker Virtual machine Infrastructure Provider."
+  kubernetes_node_group_moid = module.worker_node_group[each.key].moid
+  name                       = "${each.key}_worker"
+  tags                       = each.value.tags != [] ? each.value.tags : local.tags
+  vm_infra_config_moid       = local.virtual_machine_infra_config[each.value.control_plane_vm_instance_type_moid]
+  vm_instance_type_moid      = local.virtual_machine_instance_type[each.value.worker_vm_instance_type_moid]
 }

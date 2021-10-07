@@ -24,7 +24,7 @@ Run the plan from the Terraform cloud workspace.
 | <a name="module_control_plane_node_group"></a> [control\_plane\_node\_group](#module\_control\_plane\_node\_group) | terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile | n/a |
 | <a name="module_control_plane_vm_infra_provider"></a> [control\_plane\_vm\_infra\_provider](#module\_control\_plane\_vm\_infra\_provider) | terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider | n/a |
 | <a name="module_iks_addon_profile"></a> [iks\_addon\_profile](#module\_iks\_addon\_profile) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster_addons | n/a |
-| <a name="module_iks_cluster"></a> [iks\_cluster](#module\_iks\_cluster) | terraform-cisco-modules/imm/intersight//modules/k8s_cluster | n/a |
+| <a name="module_kubernetes_cluster_profiles"></a> [kubernetes\_cluster\_profiles](#module\_kubernetes\_cluster\_profiles) | terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_profiles | n/a |
 | <a name="module_worker_node_group"></a> [worker\_node\_group](#module\_worker\_node\_group) | terraform-cisco-modules/imm/intersight//modules/k8s_node_group_profile | n/a |
 | <a name="module_worker_vm_infra_provider"></a> [worker\_vm\_infra\_provider](#module\_worker\_vm\_infra\_provider) | terraform-cisco-modules/imm/intersight//modules/k8s_node_vm_infra_provider | n/a |
 
@@ -54,7 +54,7 @@ Run the plan from the Terraform cloud workspace.
 | Name | Description |
 |------|-------------|
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Intersight URL. |
-| <a name="output_iks_cluster"></a> [iks\_cluster](#output\_iks\_cluster) | moid of the IKS Cluster. |
+| <a name="output_kubernetes_cluster_profiles"></a> [kubernetes\_cluster\_profiles](#output\_kubernetes\_cluster\_profiles) | moid of the Kubernetes Cluster Profiles. |
 | <a name="output_org_moids"></a> [org\_moids](#output\_org\_moids) | moid of the Intersight Organization. |
 | <a name="output_tags"></a> [tags](#output\_tags) | Tags to be Associated with Objects Created in Intersight. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

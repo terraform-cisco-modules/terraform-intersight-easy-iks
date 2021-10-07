@@ -5,7 +5,7 @@
 
 trusted_certificate_authorities = {
   Wakanda_registry = {
-    organization = "Wakanda"
-    unsigned     = ["10.101.128.128"]
+    organization        = "Wakanda"
+    unsigned_registries = ["10.101.128.128"]
   }
 }

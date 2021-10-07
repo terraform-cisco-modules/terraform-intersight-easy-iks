@@ -30,7 +30,7 @@ variable "tfc_organization" {
 }
 
 variable "terraform_version" {
-  default     = "1.0.0"
+  default     = "1.0.3"
   description = "Terraform Target Version."
   type        = string
 }
@@ -52,12 +52,6 @@ variable "apikey" {
   type        = string
 }
 
-variable "endpoint" {
-  default     = "https://intersight.com"
-  description = "Intersight URL."
-  type        = string
-}
-
 variable "secretkey" {
   description = "Intersight Secret Key."
   sensitive   = true
@@ -65,63 +59,48 @@ variable "secretkey" {
 }
 
 
-#__________________________________________________________
+#_______________________________________________
 #
-# Global Variables
-#__________________________________________________________
+# Virtual Machine Infra Config Policy Variables
+#_______________________________________________
 
-variable "organizations" {
-  default     = ["default"]
-  description = "Intersight Organization Names to Apply Policy to.  https://intersight.com/an/settings/organizations/."
-  type        = set(string)
+variable "vsphere_password" {
+  description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
+  sensitive   = true
+  type        = string
 }
 
-variable "tags" {
-  default     = []
-  description = "Tags to be Associated with Objects Created in Intersight."
-  type        = list(map(string))
+variable "ssh_key_1" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 1."
+  sensitive   = true
+  type        = string
 }
 
+variable "ssh_key_2" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
+  sensitive   = true
+  type        = string
+}
 
-#__________________________________________________________
-#
-# Workspace Variables
-#__________________________________________________________
+variable "ssh_key_3" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
+  sensitive   = true
+  type        = string
+}
 
-variable "workspaces" {
-  default = {
-    default = {
-      auto_apply        = true
-      cluster_name      = ""
-      create_app_hello  = false
-      create_iwo        = false
-      description       = ""
-      working_directory = "modules/k8s_policies"
-      workspace_type    = "k8s_policies"
-    }
-  }
-  description = <<-EOT
-  Map of Workspaces to create in Terraform Cloud.
-  key - Name of the Workspace to Create.
-  * auto_apply - Terraform Apply occur without a confirmation; after a successful plan.
-  * cluster_name - Use this variable for the IKS Cluster Workspace if the Workspace Name != Cluster Name.
-  * create_app_hello - Use this variable to tell the script to create the app_hello workspace or not.
-  * create_iwo - Use this variable to tell the script to create the iwo workspace or not.
-  * description - A Description for the Workspace.
-  * working_directory - The Directory of the Version Control Repository that contains the Terraform code for UCS Domain Profiles for this Workspace.
-  * workspace_type - What Type of Workspace will this Create.  Options are:
-    - iks
-    - k8s_policies
-  EOT
-  type = map(object(
-    {
-      auto_apply        = optional(bool)
-      cluster_name      = optional(string)
-      create_app_hello  = optional(bool)
-      create_iwo        = optional(bool)
-      description       = optional(string)
-      working_directory = optional(string)
-      workspace_type    = optional(string)
-    }
-  ))
+variable "ssh_key_4" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
+  sensitive   = true
+  type        = string
+}
+
+variable "ssh_key_5" {
+  default     = ""
+  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
+  sensitive   = true
+  type        = string
 }

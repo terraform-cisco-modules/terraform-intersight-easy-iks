@@ -8,7 +8,7 @@ data "terraform_remote_state" "kubeconfig" {
   config = {
     organization = var.tfc_organization
     workspaces = {
-      name = var.ws_kubeconfig
+      name = var.tfc_workspace
     }
   }
 }

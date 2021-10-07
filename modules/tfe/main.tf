@@ -1,101 +1,93 @@
 #__________________________________________________________
 #
-# App Hello Workspaces
+# Obtain Agent Pool ID from Terraform Cloud
 #__________________________________________________________
 
-module "app_workspaces" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].create_app_hello == true
-  }
-  agent_pool          = module.tfc_agent_pool.tfc_agent_pool
-  auto_apply          = each.value.auto_apply
-  description         = "${each.key} App Hello Workspace"
-  global_remote_state = true
-  name                = "${each.key}_app_hello"
-  terraform_version   = var.terraform_version
-  tfc_oauth_token     = var.tfc_oauth_token
-  tfc_org_name        = var.tfc_organization
-  vcs_repo            = var.vcs_repo
-  working_directory   = "modules/app_hello"
+module "tfc_agent_pool" {
+  source       = "terraform-cisco-modules/modules/tfe//modules/tfc_agent_pool"
+  agent_pool   = var.agent_pool
+  tfc_org_name = var.tfc_organization
 }
 
-output "app_workspaces" {
-  description = "Terraform Cloud App Hello Workspace IDs and Names."
-  value       = { for v in sort(keys(module.app_workspaces)) : v => module.app_workspaces[v] }
+#__________________________________________________________
+#
+# Terraform Cloud Workspaces Module
+#__________________________________________________________
+
+variable "workspaces" {
+  default = {
+    default = {
+      allow_destroy_plan        = true
+      auto_apply                = false
+      branch                    = "master"
+      description               = ""
+      global_remote_state       = false
+      queue_all_runs            = false
+      remote_state_consumer_ids = []
+      speculative_enabled       = true
+      working_directory         = ""
+      workspace_type            = ""
+    }
+  }
+  description = <<-EOT
+  Map of Workspaces to create in Terraform Cloud.
+  key - Name of the Workspace to Create.
+  * allow_destroy_plan - Default is true.
+  * auto_apply - Defualt is false.  Automatically apply changes when a Terraform plan is successful. Plans that have no changes will not be applied. If this workspace is linked to version control, a push to the default branch of the linked repository will trigger a plan and apply.
+  * branch - Default is "master".  The repository branch that Terraform will execute from. Default to master.
+  * description - A Description for the Workspace.
+  * global_remote_state - Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only specifically approved workspaces can access its state (remote_state_consumer_ids)..
+  * queue_all_runs - needs description.
+  * remote_state_consumer_ids - The set of workspace IDs set as explicit remote state consumers for the given workspace.
+  * working_directory - The Directory of the Version Control Repository that contains the Terraform code for UCS Domain Profiles for this Workspace.
+  * workspace_type - What Type of Workspace will this Create.  Options are:
+    - app
+    - cluster
+    - policies
+    - kubeconfig
+  EOT
+  type = map(object(
+    {
+      agent_pool_id             = optional(string)
+      allow_destroy_plan        = optional(bool)
+      auto_apply                = optional(bool)
+      branch                    = optional(string)
+      description               = optional(string)
+      execution_mode            = optional(string)
+      global_remote_state       = optional(bool)
+      queue_all_runs            = optional(bool)
+      remote_state_consumer_ids = optional(list(string))
+      speculative_enabled       = optional(bool)
+      working_directory         = string
+      workspace_type            = string
+    }
+  ))
 }
 
 
 #__________________________________________________________
 #
-# Intersight Workload Optimizer Workspaces
-#__________________________________________________________
-
-module "iwo_workspaces" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].create_iwo == true
-  }
-  auto_apply          = each.value.auto_apply
-  description         = "${each.key} IWO Workspace"
-  global_remote_state = true
-  name                = "${each.key}_iwo"
-  terraform_version   = var.terraform_version
-  tfc_oauth_token     = var.tfc_oauth_token
-  tfc_org_name        = var.tfc_organization
-  vcs_repo            = var.vcs_repo
-  working_directory   = "modules/iwo"
-}
-
-output "iwo_workspaces" {
-  description = "Terraform Cloud IWO Workspace IDs and Names."
-  value       = { for v in sort(keys(module.iwo_workspaces)) : v => module.iwo_workspaces[v] }
-}
-
-
-module "kubeconfig_workspaces" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "iks"
-  }
-  auto_apply          = each.value.auto_apply
-  description         = "${each.key} kubeconfig Workspace"
-  global_remote_state = true
-  name                = "${each.key}_kubeconfig"
-  terraform_version   = var.terraform_version
-  tfc_oauth_token     = var.tfc_oauth_token
-  tfc_org_name        = var.tfc_organization
-  vcs_repo            = var.vcs_repo
-  working_directory   = "modules/kubeconfig"
-}
-
-output "kubeconfig_workspaces" {
-  description = "Terraform Cloud kubeconfig Workspace IDs and Names."
-  value       = { for v in sort(keys(module.kubeconfig_workspaces)) : v => module.kubeconfig_workspaces[v] }
-}
-
-
-#__________________________________________________________
-#
-# IKS and Kubernetes Policies Workspaces
+# Terraform Cloud Workspaces Module
 #__________________________________________________________
 
 module "workspaces" {
-  source   = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
-  for_each = local.workspaces
-  # agent_pool          = each.value.workspace_type == "app" ? module.tfc_agent_pool.tfc_agent_pool : null
-  auto_apply          = each.value.auto_apply
-  description         = each.value.description
-  global_remote_state = each.value.remote_state
-  name                = each.key
-  terraform_version   = var.terraform_version
-  tfc_oauth_token     = var.tfc_oauth_token
-  tfc_org_name        = var.tfc_organization
-  vcs_repo            = var.vcs_repo
-  working_directory   = each.value.working_directory
+  source                    = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  for_each                  = local.workspaces
+  allow_destroy_plan        = each.value.allow_destroy_plan
+  auto_apply                = each.value.auto_apply
+  branch                    = each.value.branch
+  description               = each.value.description
+  execution_mode            = each.value.execution_mode
+  global_remote_state       = each.value.global_remote_state
+  name                      = each.key
+  queue_all_runs            = each.value.queue_all_runs
+  remote_state_consumer_ids = each.value.remote_state_consumer_ids
+  speculative_enabled       = each.value.speculative_enabled
+  terraform_version         = var.terraform_version
+  tfc_oauth_token           = var.tfc_oauth_token
+  tfc_org_name              = var.tfc_organization
+  vcs_repo                  = var.vcs_repo
+  working_directory         = each.value.working_directory
 }
 
 output "workspaces" {
@@ -103,18 +95,20 @@ output "workspaces" {
   value       = { for v in sort(keys(module.workspaces)) : v => module.workspaces[v] }
 }
 
-
 #__________________________________________________________
 #
 # Intersight Variables
 #__________________________________________________________
 
-module "intersight_global_variables" {
+module "intersight_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
     module.workspaces
   ]
-  for_each     = local.workspaces
+  for_each = {
+    for k, v in local.workspaces : k => v
+    if length(regexall("(cluster|policies|kubeconfig)", local.workspaces[k].workspace_type)) > 0
+  }
   category     = "terraform"
   workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {
@@ -124,157 +118,61 @@ module "intersight_global_variables" {
       sensitive   = true
       value       = var.apikey
     },
-    endpoint = {
-      description = "Intersight Endpoint."
-      key         = "endpoint"
-      value       = var.endpoint
-    },
-    organizations = {
-      description = "Intersight Organizations."
-      key         = "organizations"
-      value       = "${jsonencode(var.organizations)}"
-    },
     secretkey = {
       description = "Intersight Secret Key."
       key         = "secretkey"
       sensitive   = true
       value       = var.secretkey
-    },
+    }
   }
 }
-
 
 #__________________________________________________________
 #
 # Kubernetes Policies Variables
 #__________________________________________________________
 
-module "k8s_policies_variables" {
+module "kubernetes_policies_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
     module.workspaces
   ]
   for_each = {
     for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "k8s_policies"
+    if length(regexall("policies", local.workspaces[k].workspace_type)) > 0
   }
   category     = "terraform"
   workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {
-    tags = {
-      description = "Intersight Tags for Poliices and Profiles."
-      hcl         = false
-      key         = "tags"
-      value       = "${jsonencode(var.tags)}"
-    },
-    ip_pools = {
-      description = "IP Pools."
-      hcl         = false
-      key         = "ip_pools"
-      value       = "${jsonencode(var.ip_pools)}"
-    },
-    k8s_addon_policies = {
-      description = "Addons Policies."
-      hcl         = false
-      key         = "k8s_addon_policies"
-      value       = "${jsonencode(var.k8s_addon_policies)}"
-    },
-    k8s_network_cidr = {
-      description = "Kubernetes Network CIDR Policy Variables."
-      hcl         = false
-      key         = "k8s_network_cidr"
-      value       = "${jsonencode(var.k8s_network_cidr)}"
-    },
-    k8s_nodeos_config = {
-      description = "Kubernetes Node OS Configuration Policy Variables."
-      hcl         = false
-      key         = "k8s_nodeos_config"
-      value       = "${jsonencode(var.k8s_nodeos_config)}"
-    },
-    k8s_runtime_create = {
-      description = "Kubernetes Runtime Policy Create Option."
-      key         = "k8s_runtime_create"
-      value       = var.k8s_runtime_create
-    },
-    k8s_runtime_policies = {
-      description = "Kubernetes Runtime Policy Variables."
-      hcl         = false
-      key         = "k8s_runtime_policies"
-      value       = "${jsonencode(var.k8s_runtime_policies)}"
-    },
-    k8s_trusted_create = {
-      description = "Kubernetes Trusted Registry Policy Create Option."
-      key         = "k8s_trusted_create"
-      value       = var.k8s_trusted_create
-    },
-    k8s_trusted_registries = {
-      description = "Kubernetes Trusted Registry Policy Variables."
-      hcl         = false
-      key         = "k8s_trusted_registries"
-      value       = "${jsonencode(var.k8s_trusted_registries)}"
-    },
-    k8s_version_policies = {
-      description = "Kubernetes Version Policy Variables."
-      hcl         = false
-      key         = "k8s_version_policies"
-      value       = "${jsonencode(var.k8s_version_policies)}"
-    },
-    k8s_vm_infra_config = {
-      description = "Kubernetes VIrtual Machine Infra Config Policy Variables."
-      hcl         = false
-      key         = "k8s_vm_infra_config"
-      value       = "${jsonencode(var.k8s_vm_infra_config)}"
-    },
-    k8s_vm_infra_password = {
-      description = "VIrtual Center Password."
-      key         = "k8s_vm_infra_password"
+    "vsphere_password" = {
+      description = "Virtual Center Password."
+      key         = "vsphere_password"
       sensitive   = true
-      value       = var.k8s_vm_infra_password
-    }
-    k8s_vm_instance_type = {
-      description = "Kubernetes Virtual Machine Instance Policy Variables."
-      hcl         = false
-      key         = "k8s_vm_instance_type"
-      value       = "${jsonencode(var.k8s_vm_instance_type)}"
+      value       = var.vsphere_password
     }
   }
 }
 
-
 #__________________________________________________________
 #
-# Intersight Kubernetes Service Variables
+# Kubernetes Cluster Profiles Variables
 #__________________________________________________________
 
-module "iks_variables" {
+module "kubernetes_cluster_profiles_variables" {
   source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
   depends_on = [
     module.workspaces
   ]
   for_each = {
     for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "iks"
+    if length(regexall("cluster", local.workspaces[k].workspace_type)) > 0
   }
   category     = "terraform"
   workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {
     #---------------------------
-    # Terraform Cloud Variables
-    #---------------------------
-    tfc_organization = {
-      description = "Terraform Cloud Organization."
-      key         = "tfc_organization"
-      value       = var.tfc_organization
-    },
-    #---------------------------
     # IKS Cluster Variables
     #---------------------------
-    iks_cluster = {
-      description = each.value.cluster_name != "" ? "${each.value.cluster_name} IKS Cluster." : "${each.key} IKS Cluster."
-      hcl         = false
-      key         = "iks_cluster"
-      value       = each.value.cluster_name != "" ? "{ \"${each.value.cluster_name}\": ${jsonencode(local.iks_cluster[each.value.cluster_name])} }" : "{ \"${each.key}\": ${jsonencode(local.iks_cluster[each.key])} }"
-    },
     ssh_key_1 = {
       description = "SSH Key Variable 1."
       key         = "ssh_key_1"
@@ -304,97 +202,6 @@ module "iks_variables" {
       key         = "ssh_key_5"
       sensitive   = true
       value       = var.ssh_key_5
-    },
-  }
-}
-
-
-#__________________________________________________________
-#
-# Intersight Kubernetes Service - app_hello Variables
-#__________________________________________________________
-
-module "app_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
-  depends_on = [
-    module.app_workspaces
-  ]
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "iks"
-  }
-  category     = "terraform"
-  workspace_id = module.app_workspaces[each.key].workspace.id
-  variable_list = {
-    tfc_organization = {
-      description = "Terraform Cloud Organization."
-      key         = "tfc_organization"
-      value       = var.tfc_organization
-    },
-    tfc_workspace = {
-      description = "${each.key}_kubeconfig Workspace."
-      key         = "ws_kubeconfig"
-      value       = "${each.key}_kubeconfig"
-    }
-  }
-}
-
-
-#__________________________________________________________
-#
-# Intersight Kubernetes Service - iwo Variables
-#__________________________________________________________
-
-module "iwo_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
-  depends_on = [
-    module.iwo_workspaces
-  ]
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "iks"
-  }
-  category     = "terraform"
-  workspace_id = module.iwo_workspaces[each.key].workspace.id
-  variable_list = {
-    tfc_organization = {
-      description = "Terraform Cloud Organization."
-      key         = "tfc_organization"
-      value       = var.tfc_organization
-    },
-    tfc_workspace = {
-      description = "${each.key}_kubeconfig Workspace."
-      key         = "ws_kubeconfig"
-      value       = "${each.key}_kubeconfig"
-    }
-  }
-}
-
-
-#__________________________________________________________
-#
-# Intersight Kubernetes Service - kubeconfig Variables
-#__________________________________________________________
-
-module "kubeconfig_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
-  depends_on = [
-    module.kubeconfig_workspaces
-  ]
-  for_each = {
-    for k, v in local.workspaces : k => v
-    if local.workspaces[k].workspace_type == "iks"
-  }
-  category     = "terraform"
-  workspace_id = module.kubeconfig_workspaces[each.key].workspace.id
-  variable_list = {
-    #---------------------------
-    # Cluster Variables
-    #---------------------------
-    cluster_name = {
-      description = each.value.cluster_name != "" ? "${each.value.cluster_name} IKS Cluster." : "${each.key} IKS Cluster."
-      key         = "cluster_name"
-      value       = each.value.cluster_name != "" ? each.value.cluster_name : each.key
     },
   }
 }
