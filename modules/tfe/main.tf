@@ -173,35 +173,35 @@ module "kubernetes_cluster_profiles_variables" {
     #---------------------------
     # IKS Cluster Variables
     #---------------------------
-    ssh_key_1 = {
-      description = "SSH Key Variable 1."
-      key         = "ssh_key_1"
+    ssh_public_key_1 = {
+      description = "SSH Public Key Variable 1."
+      key         = "ssh_public_key_1"
       sensitive   = true
-      value       = var.ssh_key_1
+      value       = var.ssh_public_key_1
     },
-    ssh_key_2 = {
-      description = "SSH Key Variable 2."
-      key         = "ssh_key_2"
+    ssh_public_key_2 = {
+      description = "SSH Public Key Variable 2."
+      key         = "ssh_public_key_2"
       sensitive   = true
-      value       = var.ssh_key_2
+      value       = var.ssh_public_key_2
     },
-    ssh_key_3 = {
-      description = "SSH Key Variable 3."
-      key         = "ssh_key_3"
+    ssh_public_key_3 = {
+      description = "SSH Public Key Variable 3."
+      key         = "ssh_public_key_3"
       sensitive   = true
-      value       = var.ssh_key_3
+      value       = var.ssh_public_key_3
     },
-    ssh_key_4 = {
-      description = "SSH Key Variable 4."
-      key         = "ssh_key_4"
+    ssh_public_key_4 = {
+      description = "SSH Public Key Variable 4."
+      key         = "ssh_public_key_4"
       sensitive   = true
-      value       = var.ssh_key_4
+      value       = var.ssh_public_key_4
     },
-    ssh_key_5 = {
-      description = "SSH Key Variable 5."
-      key         = "ssh_key_5"
+    ssh_public_key_5 = {
+      description = "SSH Public Key Variable 5."
+      key         = "ssh_public_key_5"
       sensitive   = true
-      value       = var.ssh_key_5
+      value       = var.ssh_public_key_5
     },
   }
 }

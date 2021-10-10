@@ -21,19 +21,19 @@ locals {
   }
   container_runtime_policies = {
     for k, v in var.container_runtime_policies : k => {
-      description        = v.description != null ? v.description : ""
-      docker_bridge_cidr = v.docker_bridge_cidr != null ? v.docker_bridge_cidr : ""
-      docker_no_proxy    = v.docker_no_proxy != null ? v.docker_no_proxy : []
-      http_hostname      = v.http_hostname != null ? v.http_hostname : ""
-      http_port          = v.http_port != null ? v.http_port : 8080
-      http_protocol      = v.http_protocol != null ? v.http_protocol : "http"
-      http_username      = v.http_username != null ? v.http_username : ""
-      https_hostname     = v.https_hostname != null ? v.https_hostname : ""
-      https_port         = v.https_port != null ? v.https_port : 8443
-      https_protocol     = v.https_protocol != null ? v.https_protocol : "https"
-      https_username     = v.https_username != null ? v.https_username : ""
-      organization       = v.organization != null ? v.organization : "default"
-      tags               = v.tags != null ? v.tags : []
+      description             = v.description != null ? v.description : ""
+      docker_daemon_bridge_ip = v.docker_daemon_bridge_ip != null ? v.docker_daemon_bridge_ip : ""
+      docker_no_proxy         = v.docker_no_proxy != null ? v.docker_no_proxy : []
+      http_hostname           = v.http_hostname != null ? v.http_hostname : ""
+      http_port               = v.http_port != null ? v.http_port : 8080
+      http_protocol           = v.http_protocol != null ? v.http_protocol : "http"
+      http_username           = v.http_username != null ? v.http_username : ""
+      https_hostname          = v.https_hostname != null ? v.https_hostname : ""
+      https_port              = v.https_port != null ? v.https_port : 8443
+      https_protocol          = v.https_protocol != null ? v.https_protocol : "https"
+      https_username          = v.https_username != null ? v.https_username : ""
+      organization            = v.organization != null ? v.organization : "default"
+      tags                    = v.tags != null ? v.tags : []
     }
   }
   ip_pools = {
@@ -48,13 +48,21 @@ locals {
       tags             = v.tags != null ? v.tags : []
     }
   }
+  kubernetes_version_policies = {
+    for k, v in var.kubernetes_version_policies : k => {
+      description        = v.description != null ? v.description : ""
+      organization       = v.organization != null ? v.organization : "default"
+      tags               = v.tags != null ? v.tags : []
+      version = v.version != null ? v.version : "v1.19.5"
+    }
+  }
   network_cidr_policies = {
     for k, v in var.network_cidr_policies : k => {
-      pod_network_cidr = v.pod_network_cidr != null ? v.pod_network_cidr : "100.64.0.0/16"
-      service_cidr     = v.service_cidr != null ? v.service_cidr : "100.65.0.0/16"
       cni_type         = v.cni_type != null ? v.cni_type : "Calico"
       description      = v.description != null ? v.description : ""
       organization     = v.organization != null ? v.organization : "default"
+      pod_network_cidr = v.pod_network_cidr != null ? v.pod_network_cidr : "100.64.0.0/16"
+      service_cidr     = v.service_cidr != null ? v.service_cidr : "100.65.0.0/16"
       tags             = v.tags != null ? v.tags : []
     }
   }
@@ -62,7 +70,7 @@ locals {
     for k, v in var.nodeos_configuration_policies : k => {
       description  = v.description != null ? v.description : ""
       dns_servers  = v.dns_servers != null ? v.dns_servers : ["208.67.220.220", "208.67.222.222"]
-      domain_name  = v.domain_name != null ? v.domain_name : "example.com"
+      dns_suffix   = v.dns_suffix != null ? v.dns_suffix : "example.com"
       ntp_servers  = v.ntp_servers != null ? v.ntp_servers : []
       organization = v.organization != null ? v.organization : "default"
       tags         = v.tags != null ? v.tags : []
@@ -71,19 +79,11 @@ locals {
   }
   trusted_certificate_authorities = {
     for k, v in var.trusted_certificate_authorities : k => {
-      description  = v.description != null ? v.description : ""
-      organization = v.organization != null ? v.organization : "default"
-      root_ca      = v.root_ca != null ? v.root_ca : []
-      tags         = v.tags != null ? v.tags : []
-      unsigned     = v.unsigned != null ? v.unsigned : []
-    }
-  }
-  kubernetes_version_policies = {
-    for k, v in var.kubernetes_version_policies : k => {
-      description  = v.description != null ? v.description : ""
-      organization = v.organization != null ? v.organization : "default"
-      tags         = v.tags != null ? v.tags : []
-      version      = v.version != null ? v.version : "1.19.5"
+      description         = v.description != null ? v.description : ""
+      organization        = v.organization != null ? v.organization : "default"
+      root_ca_registries  = v.root_ca_registries != null ? v.root_ca_registries : []
+      tags                = v.tags != null ? v.tags : []
+      unsigned_registries = v.unsigned_registries != null ? v.unsigned_registries : []
     }
   }
   virtual_machine_infra_config = {
@@ -100,12 +100,12 @@ locals {
   }
   virtual_machine_instance_type = {
     for k, v in var.virtual_machine_instance_type : k => {
-      description  = v.description != null ? v.description : ""
-      cpu          = v.cpu != null ? v.cpu : 4
-      disk         = v.disk != null ? v.disk : 40
-      memory       = v.memory != null ? v.memory : 16384
-      organization = v.organization != null ? v.organization : "default"
-      tags         = v.tags != null ? v.tags : []
+      description      = v.description != null ? v.description : ""
+      cpu              = v.cpu != null ? v.cpu : 4
+      memory           = v.memory != null ? v.memory : 16384
+      organization     = v.organization != null ? v.organization : "default"
+      system_disk_size = v.system_disk_size != null ? v.system_disk_size : 40
+      tags             = v.tags != null ? v.tags : []
     }
   }
 }

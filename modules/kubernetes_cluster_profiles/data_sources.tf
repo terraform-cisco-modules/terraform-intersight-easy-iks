@@ -4,12 +4,19 @@
 #__________________________________________________________
 
 data "terraform_remote_state" "kubernetes_policies" {
-  backend = "remote"
+  backend = "local"
   config = {
-    organization = var.tfc_organization
-    workspaces = {
-      name = var.tfc_workspace
-    }
+    path = "../kubernetes_policies/terraform.tfstate"
   }
 }
+
+# data "terraform_remote_state" "kubernetes_policies" {
+#   backend = "remote"
+#   config = {
+#     organization = var.tfc_organization
+#     workspaces = {
+#       name = var.tfc_workspace
+#     }
+#   }
+# }
 

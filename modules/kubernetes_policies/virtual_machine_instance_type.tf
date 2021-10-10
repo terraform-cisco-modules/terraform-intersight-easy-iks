@@ -6,12 +6,12 @@
 variable "virtual_machine_instance_type" {
   default = {
     default = {
-      cpu          = 4
-      description  = ""
-      memory       = 16384
-      organization = "default"
-      system_disk_size         = 40
-      tags         = []
+      cpu              = 4
+      description      = ""
+      memory           = 16384
+      organization     = "default"
+      system_disk_size = 40
+      tags             = []
     }
   }
   description = <<-EOT
@@ -27,12 +27,12 @@ variable "virtual_machine_instance_type" {
   EOT
   type = map(object(
     {
-      cpu          = optional(number)
-      description  = optional(string)
-      memory       = optional(number)
-      organization = optional(string)
-      system_disk_size         = optional(number)
-      tags         = optional(list(map(string)))
+      cpu              = optional(number)
+      description      = optional(string)
+      memory           = optional(number)
+      organization     = optional(string)
+      system_disk_size = optional(number)
+      tags             = optional(list(map(string)))
     }
   ))
 }
@@ -43,13 +43,13 @@ variable "virtual_machine_instance_type" {
 #______________________________________________
 
 module "virtual_machine_instance_type" {
-  source      = "terraform-cisco-modules/imm/intersight//modules/virtual_machine_instance_type"
-  for_each    = local.virtual_machine_instance_type
-  cpu         = each.value.cpu
-  description = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."
-  system_disk_size   = each.value.system_disk_size
-  memory      = each.value.memory
-  name        = each.key
-  org_moid    = local.org_moids[each.value.organization].moid
-  tags        = each.value.tags != [] ? each.value.tags : local.tags
+  source           = "../../../terraform-intersight-imm/modules/virtual_machine_instance_type"
+  for_each         = local.virtual_machine_instance_type
+  cpu              = each.value.cpu
+  description      = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."
+  system_disk_size = each.value.system_disk_size
+  memory           = each.value.memory
+  name             = each.key
+  org_moid         = local.org_moids[each.value.organization].moid
+  tags             = each.value.tags != [] ? each.value.tags : local.tags
 }

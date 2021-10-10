@@ -83,7 +83,7 @@ variable "container_runtime_https_password" {
 #______________________________________________
 
 module "container_runtime_policies" {
-  source                  = "../../../terraform-intersight-/modules/container_runtime_policies"
+  source                  = "../../../terraform-intersight-imm/modules/container_runtime_policies"
   for_each                = local.container_runtime_policies
   description             = each.value.description != "" ? each.value.description : "${each.key} Runtime Policy."
   docker_daemon_bridge_ip = each.value.docker_daemon_bridge_ip

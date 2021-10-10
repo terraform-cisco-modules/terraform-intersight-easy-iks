@@ -46,7 +46,7 @@ variable "network_cidr_policies" {
 #______________________________________________
 
 module "network_cidr_policies" {
-  source           = "terraform-cisco-modules/imm/intersight//modules/network_cidr_policies"
+  source           = "../../../terraform-intersight-imm/modules/network_cidr_policies"
   for_each         = local.network_cidr_policies
   cni_type         = each.value.cni_type
   description      = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Network CIDR Policy."

@@ -57,13 +57,13 @@ export TF_VAR_tfc_oauth_token="your_oath_token"
 
 ```bash
 export TF_VAR_apikey="your_api_key"
-export TF_VAR_secretkey=`../../../../intersight_secretkey.txt`
+export TF_VAR_secretkey=`{source_dir}/intersight_secretkey.txt`
 ```
 
 * vSphere Password
 
 ```bash
-export TF_VAR_k8s_vm_infra_password="your_vshpere_password"
+export TF_VAR_vsphere_password="your_vshpere_password"
 ```
 
 * Kubernetes Cluster ssh_key

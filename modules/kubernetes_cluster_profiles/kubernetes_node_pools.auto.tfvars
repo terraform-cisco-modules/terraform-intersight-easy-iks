@@ -42,30 +42,48 @@ tfc_organization = "Cisco-Richfield-Lab"
 
 #__________________________________________________________
 #
-# Cluster Variables
+# Kubernetes Node Pools Variables
 #__________________________________________________________
-iks_cluster = {
-  cluster02 = {
-    action_cluster                  = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    control_plane_desired_size      = 1
-    control_plane_max_size          = 3
-    ip_pool_moid                    = "Wakanda_pool_1"
-    k8s_addon_policy_moid           = ["ccp-monitor", "kubernetes-dashboard"]
-    k8s_network_cidr_moid           = "Wakanda_network_cidr"
-    k8s_nodeos_config_moid          = "Wakanda_nodeos_config"
-    k8s_registry_moid               = "Wakanda_registry"
-    k8s_runtime_moid                = ""
-    k8s_version_moid                = "Wakanda_v1_19_5"
-    k8s_vm_infra_moid               = "Wakanda_vm_infra"
-    k8s_vm_instance_type_ctrl_plane = "Wakanda_small"
-    k8s_vm_instance_type_worker     = "Wakanda_small"
-    load_balancers                  = 3
-    organization                    = "Wakanda"
-    ssh_key                         = "ssh_key_1"
-    ssh_user                        = "iksadmin"
-    tags                            = []
-    wait_for_complete               = false
-    worker_desired_size             = 1
-    worker_max_size                 = 4
+
+kubernetes_node_pools = {
+  "wakanda_k8s_cl01_ctrl_plane" = {
+    action = "No-op"
+    description = "Wakanda Kubernetes Cluster01 Control Plane"
+    desired_size = 1
+    ip_pool_moid = "Wakanda_pool_v4"
+    kubernetes_cluster_moid = "wakanda_k8s_cl01"
+    kubernetes_labels = [
+      {
+        key = "Node Pool"
+        value = "Control Plane"
+      }
+    ]
+    kubernetes_version_moid = "Wakanda_v1_19_5"
+    max_size = 3
+    min_size = 1
+    node_type = "ControlPlane"
+    organization = "Wakanda"
+    vm_infra_config_moid = "Wakanda_vm_infra"
+    vm_instance_type_moid = "Wakanda_small"
+  }
+  "wakanda_k8s_cl01_worker01" = {
+    action = "No-op"
+    description = "Wakanda Kubernetes Cluster01 Worker Pool 1"
+    desired_size = 1
+    ip_pool_moid = "Wakanda_pool_v4"
+    kubernetes_cluster_moid = "wakanda_k8s_cl01"
+    kubernetes_labels = [
+      {
+        key = "Node Pool"
+        value = "Worker Pool 1"
+      }
+    ]
+    kubernetes_version_moid = "Wakanda_v1_19_5"
+    max_size = 3
+    min_size = 1
+    node_type = "Worker"
+    organization = "Wakanda"
+    vm_infra_config_moid = "Wakanda_vm_infra"
+    vm_instance_type_moid = "Wakanda_small"
   }
 }
