@@ -183,16 +183,16 @@ virtual_machine_infra_config = {
 
 virtual_machine_instance_type = {
   "#Tenant#_large" = {
-    cpu          = 12
-    disk         = 80
-    memory       = 32768
-    organization = "default"
+    cpu              = 12
+    system_disk_size = 80
+    memory           = 32768
+    organization     = "default"
   }
   "#Tenant#_medium" = {
-    cpu          = 8
-    disk         = 60
-    memory       = 24576
-    organization = "default"
+    cpu              = 8
+    system_disk_size = 60
+    memory           = 24576
+    organization     = "default"
   }
   "#Tenant#_small" = {
     organization = "default"
