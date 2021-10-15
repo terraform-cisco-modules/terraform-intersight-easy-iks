@@ -111,7 +111,7 @@ ip_pools = {
 #__________________________________________________
 
 kubernetes_version_policies = {
-  #Cluster#_v1_19_5 = {
+  "#Cluster#_v1_19_5" = {
     organization = "default"
     # This is empty because I am accepting all the default values
   }
@@ -136,7 +136,7 @@ network_cidr_policies = {
 #______________________________________________
 
 nodeos_configuration_policies = {
-  #Cluster#_nodeos_config = {
+  "#Cluster#_nodeos_config" = {
     dns_servers = ["10.101.128.15", "10.101.128.16"]
     dns_suffix  = "rich.ciscolabs.com"
     #  If ntp_servers is not set, dns_servers will be used as NTP servers

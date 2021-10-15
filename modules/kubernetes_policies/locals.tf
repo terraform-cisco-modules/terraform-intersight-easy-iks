@@ -50,10 +50,10 @@ locals {
   }
   kubernetes_version_policies = {
     for k, v in var.kubernetes_version_policies : k => {
-      description        = v.description != null ? v.description : ""
-      organization       = v.organization != null ? v.organization : "default"
-      tags               = v.tags != null ? v.tags : []
-      version = v.version != null ? v.version : "v1.19.5"
+      description  = v.description != null ? v.description : ""
+      organization = v.organization != null ? v.organization : "default"
+      tags         = v.tags != null ? v.tags : []
+      version      = v.version != null ? v.version : "v1.19.5"
     }
   }
   network_cidr_policies = {

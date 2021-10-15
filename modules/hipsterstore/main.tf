@@ -26,7 +26,7 @@ locals {
 #_____________________________________________________________________
 
 resource "kubectl_manifest" "hipster" {
-  yaml_body  = <<YAML
+  yaml_body = <<YAML
     # Copyright 2018 Google LLC
     #
     # Licensed under the Apache License, Version 2.0 (the "License");

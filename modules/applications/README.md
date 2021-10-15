@@ -1,21 +1,19 @@
-# Kubernetes Applications - Hello Kubernetes
+# applications - Kubernetes Applications
 
-## Use this module to deploy the Hello Kubernetes Application through the Intersight Assist Appliance
+## Use this module to deploy Helm Charts and Kubectl YAML Manifests
 
 Run the plan from the Terraform cloud workspace.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 1.11.3 |
+No requirements.
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 1.11.3 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
@@ -26,7 +24,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [kubectl_manifest.hipster](https://registry.terraform.io/providers/gavinbunney/kubectl/1.11.3/docs/resources/manifest) | resource |
+| [helm_release.iwo_k8s_collector](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [terraform_remote_state.kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs

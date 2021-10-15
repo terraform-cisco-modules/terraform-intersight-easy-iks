@@ -37,6 +37,7 @@ locals {
       description                        = v.description != null ? v.description : ""
       ip_pool_moid                       = v.ip_pool_moid
       network_cidr_moid                  = v.network_cidr_moid
+      node_pools                         = v.node_pools
       nodeos_configuration_moid          = v.nodeos_configuration_moid
       load_balancer_count                = v.load_balancer_count != null ? v.load_balancer_count : 3
       organization                       = v.organization != null ? v.organization : "default"
@@ -47,21 +48,29 @@ locals {
       wait_for_complete                  = v.wait_for_complete != null ? v.wait_for_complete : false
     }
   }
+
+  node_pools_loop = flatten([
+    for key, value in var.kubernetes_cluster_profiles : [
+      for k, v in value.node_pools : {
+        action                  = v.action != null ? v.action : "No-op"
+        desired_size            = v.desired_size != null ? v.desired_size : 1
+        description             = v.description != null ? v.description : ""
+        min_size                = v.min_size != null ? v.min_size : 1
+        max_size                = v.max_size != null ? v.max_size : 3
+        name                    = "${key}_${k}"
+        node_pool               = k
+        node_type               = v.node_type != null ? v.node_type : "ControlPlaneWorker"
+        ip_pool_moid            = v.ip_pool_moid != null ? v.ip_pool_moid : value.ip_pool_moid
+        kubernetes_cluster_moid = key
+        kubernetes_labels       = v.kubernetes_labels != null ? v.kubernetes_labels : []
+        kubernetes_version_moid = v.kubernetes_version_moid
+        vm_infra_config_moid    = v.vm_infra_config_moid
+        vm_instance_type_moid   = v.vm_instance_type_moid
+      }
+    ]
+  ])
+
   kubernetes_node_pools = {
-    for k, v in var.kubernetes_node_pools : k => {
-      action                  = v.action != null ? v.action : "No-op"
-      desired_size            = v.desired_size != null ? v.desired_size : 1
-      description             = v.description != null ? v.description : ""
-      node_type               = v.node_type
-      ip_pool_moid            = v.ip_pool_moid
-      kubernetes_cluster_moid = v.kubernetes_cluster_moid
-      kubernetes_labels       = v.kubernetes_labels != null ? v.kubernetes_labels : []
-      kubernetes_version_moid = v.kubernetes_version_moid
-      max_size                = v.max_size != null ? v.max_size : 3
-      min_size                = v.min_size != null ? v.min_size : 1
-      organization            = v.organization != null ? v.organization : "default"
-      vm_infra_config_moid    = v.vm_infra_config_moid
-      vm_instance_type_moid   = v.vm_instance_type_moid
-    }
+    for k, v in local.node_pools_loop : "${v.cluster_profile_moid}_${v.node_pool}" => v
   }
 }
