@@ -68,7 +68,7 @@ workspaces = {
     workspace_type      = "kubeconfig"
   }
   "#Cluster#_iks_cl01_app_hello" = {
-    agent_pool_id     = "Richfield_Agents"
+    agent_pool        = "Richfield_Agents"
     auto_apply        = true
     description       = "#Cluster# Intersight Kubernetes Service Cluster01 App Hello."
     execution_mode    = "agent"
@@ -76,7 +76,7 @@ workspaces = {
     workspace_type    = "app"
   }
   "#Cluster#_iks_cl01_iwo" = {
-    agent_pool_id     = "Richfield_Agents"
+    agent_pool        = "Richfield_Agents"
     auto_apply        = true
     description       = "#Cluster# Intersight Kubernetes Service Cluster01 IWO."
     execution_mode    = "agent"
