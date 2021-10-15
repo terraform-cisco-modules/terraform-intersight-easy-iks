@@ -4,7 +4,7 @@
 #______________________________________________
 
 ip_pools = {
-  Wakanda_pool_v4 = {
+  "#Cluster#_pool_v4" = {
     assignment_order = "sequential"
     ipv4_block = [
       {
@@ -22,10 +22,10 @@ ip_pools = {
     }
     ipv6_block   = []
     ipv6_config  = {}
-    organization = "Wakanda"
+    organization = "default"
     tags         = []
   }
-  Wakanda_pool_v6 = {
+  "#Cluster#_pool_v6" = {
     assignment_order = "sequential"
     ipv4_block       = []
     ipv4_config      = {}
@@ -43,7 +43,7 @@ ip_pools = {
         secondary_dns = "2620:119:53::53"
       }
     }
-    organization = "Wakanda"
+    organization = "default"
     tags         = []
   }
 }

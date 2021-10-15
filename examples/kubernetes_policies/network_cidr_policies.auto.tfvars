@@ -4,8 +4,8 @@
 #______________________________________________
 
 network_cidr_policies = {
-  Wakanda_network_cidr = {
-    organization = "Wakanda"
+  "#Cluster#_network_cidr" = {
+    organization = "default"
     # This is empty because I am accepting all the default values
   }
 }

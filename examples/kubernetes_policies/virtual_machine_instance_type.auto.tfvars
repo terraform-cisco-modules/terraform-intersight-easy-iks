@@ -4,20 +4,20 @@
 #________________________________________________
 
 virtual_machine_instance_type = {
-  Wakanda_large = {
+  "#Cluster#_large" = {
     cpu          = 12
     disk         = 80
     memory       = 32768
-    organization = "Wakanda"
+    organization = "default"
   }
-  Wakanda_medium = {
+  "#Cluster#_medium" = {
     cpu          = 8
     disk         = 60
     memory       = 24576
-    organization = "Wakanda"
+    organization = "default"
   }
-  Wakanda_small = {
-    organization = "Wakanda"
+  "#Cluster#_small" = {
+    organization = "default"
     # This is empty because I am accepting all the default values
   }
 }

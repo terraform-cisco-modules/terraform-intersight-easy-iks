@@ -5,12 +5,12 @@
 
 addons_policies = {
   ccp-monitor = {
-    organization = "Wakanda"
+    organization = "default"
     # This is empty because I am accepting all the default values
   }
   kubernetes-dashboard = {
     install_strategy = "InstallOnly"
-    organization     = "Wakanda"
+    organization     = "default"
     upgrade_strategy = "AlwaysReinstall"
   }
 }

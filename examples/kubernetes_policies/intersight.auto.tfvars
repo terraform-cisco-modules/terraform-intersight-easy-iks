@@ -9,7 +9,7 @@
 #__________________________________________________________
 
 # endpoint     = "https://intersight.com"
-organizations = ["Wakanda"]
+organizations = ["default"]
 # secretkey    = "../../../../intersight.secret"
 /*
   To export the Secret Key via an Environment Variable the format is as follows (Note: they are not quotation marks, but escape characters):

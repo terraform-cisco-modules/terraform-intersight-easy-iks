@@ -4,8 +4,8 @@
 #__________________________________________________
 
 trusted_certificate_authorities = {
-  Wakanda_registry = {
-    organization        = "Wakanda"
+  "#Cluster#_registry" = {
+    organization        = "default"
     unsigned_registries = ["10.101.128.128"]
   }
 }
