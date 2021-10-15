@@ -1,7 +1,7 @@
 locals {
   workspaces = {
     for k, v in var.workspaces : k => {
-      agent_pool_id             = v.agent_pool_id != null ? v.agent_pool_id : ""
+      agent_pool                = v.agent_pool != null ? v.agent_pool : ""
       allow_destroy_plan        = v.allow_destroy_plan != null ? v.allow_destroy_plan : true
       auto_apply                = v.auto_apply != null ? v.auto_apply : false
       branch                    = v.branch != null ? v.branch : "master"

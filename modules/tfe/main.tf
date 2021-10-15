@@ -17,7 +17,7 @@ module "tfc_agent_pool" {
 variable "workspaces" {
   default = {
     default = {
-      agent_pool_id             = ""
+      agent_pool                = ""
       allow_destroy_plan        = true
       auto_apply                = false
       branch                    = "master"
@@ -33,6 +33,7 @@ variable "workspaces" {
   description = <<-EOT
   Map of Workspaces to create in Terraform Cloud.
   key - Name of the Workspace to Create.
+  * agent_pool - Name of the Agent Pool to Assign to the Workspace
   * allow_destroy_plan - Default is true.
   * auto_apply - Defualt is false.  Automatically apply changes when a Terraform plan is successful. Plans that have no changes will not be applied. If this workspace is linked to version control, a push to the default branch of the linked repository will trigger a plan and apply.
   * branch - Default is "master".  The repository branch that Terraform will execute from. Default to master.
@@ -49,7 +50,7 @@ variable "workspaces" {
   EOT
   type = map(object(
     {
-      agent_pool_id             = optional(string)
+      agent_pool                = optional(string)
       allow_destroy_plan        = optional(bool)
       auto_apply                = optional(bool)
       branch                    = optional(string)
@@ -74,7 +75,7 @@ variable "workspaces" {
 module "workspaces" {
   source                    = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each                  = local.workspaces
-  agent_pool_id             = each.value.agent_pool_id
+  agent_pool                = each.value.agent_pool
   allow_destroy_plan        = each.value.allow_destroy_plan
   auto_apply                = each.value.auto_apply
   branch                    = each.value.branch
