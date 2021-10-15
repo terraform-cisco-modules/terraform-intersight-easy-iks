@@ -43,43 +43,43 @@ tfc_workspace    = "Your_Workspace"
 #__________________________________________________________
 
 kubernetes_cluster_profiles = {
-  "#Cluster#_k8s_cl02" = {
+  "#Tenant#_k8s_cl02" = {
     action                             = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     addons_policy_moid                 = ["ccp-monitor", "kubernetes-dashboard"]
     container_runtime_moid             = ""
-    ip_pool_moid                       = "#Cluster#_pool_v4"
-    network_cidr_moid                  = "#Cluster#_network_cidr"
-    nodeos_configuration_moid          = "#Cluster#_nodeos_config"
+    ip_pool_moid                       = "#Tenant#_pool_v4"
+    network_cidr_moid                  = "#Tenant#_network_cidr"
+    nodeos_configuration_moid          = "#Tenant#_nodeos_config"
     load_balancer_count                = 3
     organization                       = "default"
     ssh_public_key                     = "ssh_public_key_1"
     ssh_user                           = "iksadmin"
     tags                               = []
-    trusted_certificate_authority_moid = "#Cluster#_registry"
+    trusted_certificate_authority_moid = "#Tenant#_registry"
     wait_for_complete                  = false
     node_pools = {
       "control_plane" = {
         action       = "No-op"
         description  = "Control Plane"
         desired_size = 1
-        # ip_pool_moid            = "#Cluster#_pool_v4" # can Define if wanting different than the cluster
+        # ip_pool_moid            = "#Tenant#_pool_v4" # can Define if wanting different than the cluster
         kubernetes_labels = [
           {
             key   = "Node Pool"
             value = "Control Plane"
           }
         ]
-        kubernetes_version_moid = "#Cluster#_v1_19_5"
+        kubernetes_version_moid = "#Tenant#_v1_19_5"
         max_size                = 3
         min_size                = 1
         node_type               = "ControlPlane"
         organization            = "default"
-        vm_infra_config_moid    = "#Cluster#_vm_infra"
-        vm_instance_type_moid   = "#Cluster#_small"
+        vm_infra_config_moid    = "#Tenant#_vm_infra"
+        vm_instance_type_moid   = "#Tenant#_small"
       }
       "worker01" = {
         action       = "No-op"
-        description  = "#Cluster# Kubernetes Cluster01 Worker Pool 1"
+        description  = "#Tenant# Kubernetes Cluster01 Worker Pool 1"
         desired_size = 1
         kubernetes_labels = [
           {
@@ -87,12 +87,12 @@ kubernetes_cluster_profiles = {
             value = "Worker Pool 1"
           }
         ]
-        kubernetes_version_moid = "#Cluster#_v1_19_5"
+        kubernetes_version_moid = "#Tenant#_v1_19_5"
         max_size                = 3
         min_size                = 1
         node_type               = "Worker"
-        vm_infra_config_moid    = "#Cluster#_vm_infra"
-        vm_instance_type_moid   = "#Cluster#_small"
+        vm_infra_config_moid    = "#Tenant#_vm_infra"
+        vm_instance_type_moid   = "#Tenant#_small"
       }
 
     }

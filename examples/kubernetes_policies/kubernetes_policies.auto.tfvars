@@ -37,11 +37,11 @@ tags = [{ key = "Terraform", value = "Module" }, { key = "Owner", value = "tysco
 #______________________________________________
 
 addons_policies = {
-  ccp-monitor = {
+  "ccp-monitor" = {
     organization = "default"
     # This is empty because I am accepting all the default values
   }
-  kubernetes-dashboard = {
+  "kubernetes-dashboard" = {
     install_strategy = "InstallOnly"
     organization     = "default"
     upgrade_strategy = "AlwaysReinstall"
@@ -61,7 +61,7 @@ container_runtime_policies = {}
 #______________________________________________
 
 ip_pools = {
-  "#Cluster#_pool_v4" = {
+  "#Tenant#_pool_v4" = {
     assignment_order = "sequential"
     ipv4_block = [
       {
@@ -82,7 +82,7 @@ ip_pools = {
     organization = "default"
     tags         = []
   }
-  "#Cluster#_pool_v6" = {
+  "#Tenant#_pool_v6" = {
     assignment_order = "sequential"
     ipv4_block       = []
     ipv4_config      = {}
@@ -111,7 +111,7 @@ ip_pools = {
 #__________________________________________________
 
 kubernetes_version_policies = {
-  "#Cluster#_v1_19_5" = {
+  "#Tenant#_v1_19_5" = {
     organization = "default"
     # This is empty because I am accepting all the default values
   }
@@ -123,7 +123,7 @@ kubernetes_version_policies = {
 #______________________________________________
 
 network_cidr_policies = {
-  "#Cluster#_network_cidr" = {
+  "#Tenant#_network_cidr" = {
     organization = "default"
     # This is empty because I am accepting all the default values
   }
@@ -136,7 +136,7 @@ network_cidr_policies = {
 #______________________________________________
 
 nodeos_configuration_policies = {
-  "#Cluster#_nodeos_config" = {
+  "#Tenant#_nodeos_config" = {
     dns_servers = ["10.101.128.15", "10.101.128.16"]
     dns_suffix  = "rich.ciscolabs.com"
     #  If ntp_servers is not set, dns_servers will be used as NTP servers
@@ -154,7 +154,7 @@ nodeos_configuration_policies = {
 #__________________________________________________
 
 trusted_certificate_authorities = {
-  "#Cluster#_registry" = {
+  "#Tenant#_registry" = {
     organization        = "default"
     unsigned_registries = ["10.101.128.128"]
   }
@@ -166,13 +166,13 @@ trusted_certificate_authorities = {
 #_______________________________________________
 
 virtual_machine_infra_config = {
-  "#Cluster#_vm_infra" = {
+  "#Tenant#_vm_infra" = {
     organization          = "default"
     vsphere_cluster       = "Panther"
     vsphere_datastore     = "NVMe_DS1"
     vsphere_portgroup     = ["prod|nets|Panther_VM1"]
     vsphere_resource_pool = "IKS"
-    vsphere_target        = "#Cluster#-vcenter.rich.ciscolabs.com"
+    vsphere_target        = "#Tenant#-vcenter.rich.ciscolabs.com"
   }
 }
 
@@ -182,19 +182,19 @@ virtual_machine_infra_config = {
 #________________________________________________
 
 virtual_machine_instance_type = {
-  "#Cluster#_large" = {
+  "#Tenant#_large" = {
     cpu          = 12
     disk         = 80
     memory       = 32768
     organization = "default"
   }
-  "#Cluster#_medium" = {
+  "#Tenant#_medium" = {
     cpu          = 8
     disk         = 60
     memory       = 24576
     organization = "default"
   }
-  "#Cluster#_small" = {
+  "#Tenant#_small" = {
     organization = "default"
     # This is empty because I am accepting all the default values
   }
