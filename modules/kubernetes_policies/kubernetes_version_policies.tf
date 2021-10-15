@@ -39,7 +39,7 @@ variable "kubernetes_version_policies" {
 #______________________________________________
 
 module "kubernetes_version_policies" {
-  source             = "../../../terraform-intersight-imm/modules/kubernetes_version_policies"
+  source             = "terraform-cisco-modules/imm/intersight//modules/kubernetes_version_policies"
   for_each           = local.kubernetes_version_policies
   description        = each.value.description != "" ? each.value.description : "${each.key} Version Policy."
   name               = each.key

@@ -71,6 +71,6 @@ locals {
   ])
 
   kubernetes_node_pools = {
-    for k, v in local.node_pools_loop : "${v.cluster_profile_moid}_${v.node_pool}" => v
+    for k, v in local.node_pools_loop : "${v.kubernetes_cluster_moid}_${v.node_pool}" => v
   }
 }

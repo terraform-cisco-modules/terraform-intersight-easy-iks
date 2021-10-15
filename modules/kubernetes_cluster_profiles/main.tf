@@ -185,7 +185,7 @@ module "kubernetes_cluster_addons" {
   depends_on = [
     module.kubernetes_cluster_profiles
   ]
-  source   = "../../../terraform-intersight-imm/modules/kubernetes_cluster_addons"
+  source   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_addons"
   for_each = local.kubernetes_cluster_profiles
   addons = [
     for a in each.value.addons_policy_moid :
