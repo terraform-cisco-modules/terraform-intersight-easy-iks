@@ -68,7 +68,7 @@ module "kubernetes_node_pools" {
   depends_on = [
     module.kubernetes_cluster_profiles,
   ]
-  source                  = "../../../terraform-intersight-imm/modules/kubernetes_node_group_profiles"
+  source                  = "terraform-cisco-modules/imm/intersight//modules/kubernetes_node_group_profiles"
   for_each                = local.kubernetes_node_pools
   action                  = each.value.action
   description             = each.value.description != "" ? each.value.description : "${each.key} Node Group Profile"
@@ -87,7 +87,7 @@ module "control_plane_node_vm_infra" {
   depends_on = [
     module.kubernetes_node_pools
   ]
-  source                    = "../../../terraform-intersight-imm/modules/kubernetes_cluster_node_vm_infra"
+  source                    = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_node_vm_infra"
   for_each                  = local.kubernetes_node_pools
   description               = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Virtual machine Infrastructure Provider"
   kubernetes_node_pool_moid = module.kubernetes_node_pools[each.key].moid

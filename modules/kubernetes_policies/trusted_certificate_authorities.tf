@@ -41,7 +41,7 @@ variable "trusted_certificate_authorities" {
 #______________________________________________
 
 module "trusted_certificate_authorities" {
-  source              = "../../../terraform-intersight-imm/modules/trusted_certificate_authorities"
+  source              = "terraform-cisco-modules/imm/intersight//modules/trusted_certificate_authorities"
   for_each            = local.trusted_certificate_authorities
   description         = each.value.description != "" ? each.value.description : "${each.key} Trusted Registry Policy."
   name                = each.key

@@ -35,7 +35,7 @@ locals {
       addons_policy_moid                 = v.addons_policy_moid != null ? v.addons_policy_moid : []
       container_runtime_moid             = v.container_runtime_moid != null ? v.container_runtime_moid : ""
       description                        = v.description != null ? v.description : ""
-      ip_pool_moid            = v.ip_pool_moid
+      ip_pool_moid                       = v.ip_pool_moid
       network_cidr_moid                  = v.network_cidr_moid
       nodeos_configuration_moid          = v.nodeos_configuration_moid
       load_balancer_count                = v.load_balancer_count != null ? v.load_balancer_count : 3

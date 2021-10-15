@@ -43,7 +43,7 @@ variable "virtual_machine_instance_type" {
 #______________________________________________
 
 module "virtual_machine_instance_type" {
-  source           = "../../../terraform-intersight-imm/modules/virtual_machine_instance_type"
+  source           = "terraform-cisco-modules/imm/intersight//modules/virtual_machine_instance_type"
   for_each         = local.virtual_machine_instance_type
   cpu              = each.value.cpu
   description      = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."

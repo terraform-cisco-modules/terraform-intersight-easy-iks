@@ -10,7 +10,7 @@ variable "kubernetes_cluster_profiles" {
       addons_policy_moid                 = []
       container_runtime_moid             = ""
       description                        = ""
-      ip_pool_moid            = "**REQUIRED**"
+      ip_pool_moid                       = "**REQUIRED**"
       network_cidr_moid                  = "**REQUIRED**"
       nodeos_configuration_moid          = "**REQUIRED**"
       load_balancer_count                = 3
@@ -45,7 +45,7 @@ variable "kubernetes_cluster_profiles" {
       addons_policy_moid                 = optional(set(string))
       container_runtime_moid             = optional(string)
       description                        = optional(string)
-      ip_pool_moid            = string
+      ip_pool_moid                       = string
       network_cidr_moid                  = string
       nodeos_configuration_moid          = string
       trusted_certificate_authority_moid = optional(string)
@@ -101,7 +101,7 @@ variable "ssh_public_key_5" {
 #__________________________________________________________
 
 module "kubernetes_cluster_profiles" {
-  source   = "../../../terraform-intersight-imm/modules/kubernetes_cluster_profiles"
+  source   = "terraform-cisco-modules/imm/intersight//modules/kubernetes_cluster_profiles"
   for_each = local.kubernetes_cluster_profiles
   action   = each.value.action
   container_runtime_moid = length(

@@ -48,7 +48,7 @@ variable "nodeos_configuration_policies" {
 #______________________________________________
 
 module "nodeos_configuration_policies" {
-  source      = "../../../terraform-intersight-imm/modules/nodeos_configuration_policies"
+  source      = "terraform-cisco-modules/imm/intersight//modules/nodeos_configuration_policies"
   for_each    = local.nodeos_configuration_policies
   description = each.value.description != "" ? each.value.description : "${each.key} Kubernetes Network CIDR Policy."
   dns_servers = each.value.dns_servers
