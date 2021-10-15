@@ -62,7 +62,6 @@ workspaces = {
   }
   "#Cluster#_iks_cl01_kubeconfig" = {
     auto_apply          = true
-    cluster_name        = "#Cluster#_iks_cl01"
     description         = "#Cluster# Intersight Kubernetes Service Cluster01 kubeconfig."
     global_remote_state = true
     working_directory   = "modules/kubeconfig"
@@ -73,7 +72,6 @@ workspaces = {
     auto_apply        = true
     description       = "#Cluster# Intersight Kubernetes Service Cluster01 App Hello."
     execution_mode    = "agent"
-    remote_workspace  = "#Cluster#_iks_cl01_kubeconfig"
     working_directory = "modules/app_hello"
     workspace_type    = "app"
   }
@@ -82,7 +80,6 @@ workspaces = {
     auto_apply        = true
     description       = "#Cluster# Intersight Kubernetes Service Cluster01 IWO."
     execution_mode    = "agent"
-    remote_workspace  = "#Cluster#_iks_cl01_kubeconfig"
     working_directory = "modules/iwo"
     workspace_type    = "app"
   }
