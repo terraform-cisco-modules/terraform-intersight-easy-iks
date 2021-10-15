@@ -78,7 +78,7 @@ module "workspaces" {
   ]
   source                    = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
   for_each                  = local.workspaces
-  agent_pool                = module.tfc_agent_pool.tfc_agent_pool
+  agent_pool                = each.value.execution_mode == "agent" ? module.tfc_agent_pool.tfc_agent_pool : ""
   allow_destroy_plan        = each.value.allow_destroy_plan
   auto_apply                = each.value.auto_apply
   branch                    = each.value.branch
