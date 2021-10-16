@@ -4,7 +4,7 @@
 #__________________________________________________________
 
 tfc_organization = "Your_Organization"
-tfc_workspace    = "Your_k8s_kubeconfig_Workspace"
+tfc_workspace    = "Your_Workspace"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"
@@ -17,4 +17,3 @@ tfc_workspace    = "Your_k8s_kubeconfig_Workspace"
   If you still want to move forward with it in this file, uncomment the line below, and input your value.
 */
 # tfc_oath_token = "value"
-

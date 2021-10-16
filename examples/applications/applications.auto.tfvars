@@ -3,8 +3,8 @@
 # Terraform Cloud Variables
 #__________________________________________________________
 
-tfc_organization = "Cisco-Richfield-Lab"
-tfc_workspace    = "Your_Workspace"
+tfc_organization = "Your_Organization"
+tfc_workspace    = "Your_k8s_kubeconfig_Workspace"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"

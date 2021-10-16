@@ -69,7 +69,7 @@ export TF_VAR_vsphere_password="your_vshpere_password"
 * Kubernetes Cluster ssh_key
 
 ```bash
-export TF_VAR_ssh_key_1="your_ssh_key"
+export TF_VAR_ssh_public_key_1="your_ssh_key"
 ```
 
 Once all Variables have been imported into your environment, run the plan in the tfe folder:
