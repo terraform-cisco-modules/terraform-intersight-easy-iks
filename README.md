@@ -1,6 +1,8 @@
-# Intersight Easy IKS
+# Intersight Easy IKS - Infrastructure as Code
 
-## Configuring IKS cluster with Cisco Intersight Service for HashiCorp Terraform on vSphere Infrastructure
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/terraform-cisco-modules/terraform-intersight-easy-iks)
+
+## Configuring IKS clusters with Cisco Intersight Service for HashiCorp Terraform on vSphere Infrastructure
 
 ## Contents
 

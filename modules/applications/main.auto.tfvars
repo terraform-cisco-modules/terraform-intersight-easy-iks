@@ -3,7 +3,7 @@
 # Terraform Cloud Variables
 #__________________________________________________________
 
-tfc_organization = "Your_Organization"
+tfc_organization = "Cisco-Richfield-Lab"
 tfc_workspace    = "Your_Workspace"
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
