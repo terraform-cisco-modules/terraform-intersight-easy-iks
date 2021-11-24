@@ -40,9 +40,9 @@ locals {
     for k, v in var.ip_pools : k => {
       assignment_order = v.assignment_order != null ? v.assignment_order : "default"
       description      = v.description != null ? v.description : ""
-      ipv4_block       = v.ipv4_block != null ? v.ipv4_block : []
+      ipv4_blocks      = v.ipv4_blocks != null ? v.ipv4_blocks : {}
       ipv4_config      = v.ipv4_config != null ? v.ipv4_config : {}
-      ipv6_block       = v.ipv6_block != null ? v.ipv6_block : []
+      ipv6_blocks      = v.ipv6_blocks != null ? v.ipv6_blocks : {}
       ipv6_config      = v.ipv6_config != null ? v.ipv6_config : {}
       organization     = v.organization != null ? v.organization : "default"
       tags             = v.tags != null ? v.tags : []
