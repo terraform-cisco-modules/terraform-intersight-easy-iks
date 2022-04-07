@@ -25,14 +25,14 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.hello_iks_app](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [terraform_remote_state.kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.local_kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.remote_kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization. | `string` | `"CiscoDevNet"` | no |
-| <a name="input_tfc_workspace"></a> [tfc\_workspace](#input\_tfc\_workspace) | Terraform Cloud Workspace Name. | `string` | `""` | no |
+| <a name="input_tfc_workspaces"></a> [tfc\_workspaces](#input\_tfc\_workspaces) | * backend: Options are:<br>  - local - The backend is on the Local Machine<br>  - Remote - The backend is in TFCB.<br>* kubeconfig\_dir: Name of the Policies directory when the backend is local.<br>* organization: Name of the Terraform Cloud Organization when backend is remote.<br>* workspace: Name of the workspace in Terraform Cloud. | <pre>list(object(<br>    {<br>      backend      = string<br>      organization = optional(string)<br>      policies_dir = optional(string)<br>      workspace    = optional(string)<br>    }<br>  ))</pre> | <pre>[<br>  {<br>    "backend": "remote",<br>    "organization": "default",<br>    "policies_dir": "../kubeconfig/",<br>    "workspace": "kubeconfig"<br>  }<br>]</pre> | no |
 
 ## Outputs
 

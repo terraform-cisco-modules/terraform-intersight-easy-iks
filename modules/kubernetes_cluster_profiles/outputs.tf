@@ -8,9 +8,9 @@ output "endpoint" {
   value       = local.endpoint
 }
 
-output "org_moids" {
+output "org_moid" {
   description = "moid of the Intersight Organization."
-  value       = local.org_moids
+  value       = local.org_moid
 }
 
 #__________________________________________________________
@@ -32,9 +32,9 @@ output "tags" {
 output "kubernetes_cluster_profiles" {
   description = "moid of the Kubernetes Cluster Profiles."
   value = {
-    for v in sort(keys(module.kubernetes_cluster_profiles)) : v => {
-      cluster_moid = module.kubernetes_cluster_profiles[v].cluster_moid
-      profile_moid = module.kubernetes_cluster_profiles[v].profile_moid
+    for v in sort(keys(intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles)) : v => {
+      cluster_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[v].associated_cluster[0].moid
+      profile_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[v].moid
     }
   }
 }

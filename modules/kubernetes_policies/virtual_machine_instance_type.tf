@@ -9,7 +9,6 @@ variable "virtual_machine_instance_type" {
       cpu              = 4
       description      = ""
       memory           = 16384
-      organization     = "default"
       system_disk_size = 40
       tags             = []
     }
@@ -20,8 +19,6 @@ variable "virtual_machine_instance_type" {
   * cpu - Number of CPUs allocated to virtual machine.  Range is 1-40.
   * description - A description for the policy.
   * memory - Virtual machine memory defined in mebibytes (MiB).  Range is 1-4177920.
-  * organization - Name of the Intersight Organization to assign this pool to.
-    - https://intersight.com/an/settings/organizations/
   * system_disk_size - Ephemeral disk capacity to be provided with units example - 10 for 10 Gigabytes.
   * tags - List of key/value Attributes to Assign to the Policy.
   EOT
@@ -30,26 +27,34 @@ variable "virtual_machine_instance_type" {
       cpu              = optional(number)
       description      = optional(string)
       memory           = optional(number)
-      organization     = optional(string)
       system_disk_size = optional(number)
       tags             = optional(list(map(string)))
     }
   ))
 }
 
-#______________________________________________
+#________________________________________________________________________
 #
-# Create the Kubernetes VM Instance Types
-#______________________________________________
+# Intersight Kubernetes Virtual Machine Instance Type Policy
+# GUI Location: Policies > Create Policy > Virtual Machine Instance Type
+#________________________________________________________________________
 
-module "virtual_machine_instance_type" {
-  source           = "terraform-cisco-modules/imm/intersight//modules/virtual_machine_instance_type"
-  for_each         = local.virtual_machine_instance_type
-  cpu              = each.value.cpu
-  description      = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."
-  system_disk_size = each.value.system_disk_size
-  memory           = each.value.memory
-  name             = each.key
-  org_moid         = local.org_moids[each.value.organization].moid
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
+resource "intersight_kubernetes_virtual_machine_instance_type" "virtual_machine_instance_type" {
+  for_each    = local.virtual_machine_instance_type
+  cpu         = each.value.cpu
+  description = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Instance Policy."
+  disk_size   = each.value.system_disk_size
+  memory      = each.value.memory
+  name        = each.key
+  organization {
+    moid        = local.org_moid
+    object_type = "organization.Organization"
+  }
+  dynamic "tags" {
+    for_each = length(each.value.tags) > 0 ? each.value.tags : local.tags
+    content {
+      key   = tags.value.key
+      value = tags.value.value
+    }
+  }
 }

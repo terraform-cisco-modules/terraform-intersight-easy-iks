@@ -5,6 +5,7 @@
 
 module "tfc_agent_pool" {
   source       = "terraform-cisco-modules/modules/tfe//modules/tfc_agent_pool"
+  version      = "0.6.2"
   agent_pool   = var.agent_pool
   tfc_org_name = var.tfc_organization
 }
@@ -77,6 +78,7 @@ module "workspaces" {
     module.tfc_agent_pool
   ]
   source                    = "terraform-cisco-modules/modules/tfe//modules/tfc_workspace"
+  version                   = "0.6.2"
   for_each                  = local.workspaces
   agent_pool                = each.value.execution_mode == "agent" ? module.tfc_agent_pool.tfc_agent_pool : ""
   allow_destroy_plan        = each.value.allow_destroy_plan
@@ -107,7 +109,8 @@ output "workspaces" {
 #__________________________________________________________
 
 module "intersight_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  source  = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  version = "0.6.2"
   depends_on = [
     module.workspaces
   ]
@@ -139,7 +142,8 @@ module "intersight_variables" {
 #__________________________________________________________
 
 module "kubernetes_policies_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  source  = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  version = "0.6.2"
   depends_on = [
     module.workspaces
   ]
@@ -150,6 +154,18 @@ module "kubernetes_policies_variables" {
   category     = "terraform"
   workspace_id = module.workspaces[each.key].workspace.id
   variable_list = {
+    "docker_http_proxy_password" = {
+      description = "Container Runtime HTTP Proxy Password."
+      key         = "docker_http_proxy_password"
+      sensitive   = true
+      value       = var.docker_http_proxy_password
+    }
+    "docker_https_proxy_password" = {
+      description = "Container Runtime HTTPS Proxy Password."
+      key         = "docker_https_proxy_password"
+      sensitive   = true
+      value       = var.docker_https_proxy_password
+    }
     "vsphere_password" = {
       description = "Virtual Center Password."
       key         = "vsphere_password"
@@ -165,7 +181,8 @@ module "kubernetes_policies_variables" {
 #__________________________________________________________
 
 module "kubernetes_cluster_profiles_variables" {
-  source = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  source  = "terraform-cisco-modules/modules/tfe//modules/tfc_variables"
+  version = "0.6.2"
   depends_on = [
     module.workspaces
   ]

@@ -3,19 +3,21 @@
 # Get outputs from the Organization Policies Workspace
 #__________________________________________________________
 
-# data "terraform_remote_state" "kubernetes_policies" {
-#   backend = "local"
-#   config = {
-#     path = "../kubernetes_policies/terraform.tfstate"
-#   }
-# }
-
-data "terraform_remote_state" "kubernetes_policies" {
-  backend = "remote"
+data "terraform_remote_state" "local_policies" {
+  for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "local" }
+  backend  = each.value.backend
   config = {
-    organization = var.tfc_organization
+    path = "${each.value.policies_dir}terraform.tfstate"
+  }
+}
+
+data "terraform_remote_state" "remote_policies" {
+  for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "remote" }
+  backend  = each.value.backend
+  config = {
+    organization = each.value.organization
     workspaces = {
-      name = var.tfc_workspace
+      name = each.value.workspace
     }
   }
 }

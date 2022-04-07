@@ -6,28 +6,25 @@
 variable "kubernetes_version_policies" {
   default = {
     default = {
-      description  = ""
-      organization = "default"
-      tags         = []
-      version      = "v1.19.5"
+      description = ""
+      tags        = []
+      version     = "v1.21.10"
     }
   }
   description = <<-EOT
   Intersight Kubernetes Version Policy Variable Map.
   Key - Name of the Kubernetes Version Policy
   * description - A description for the policy.
-  * organization - Name of the Intersight Organization to assign this pool to.
-    - https://intersight.com/an/settings/organizations/
   * tags - List of key/value Attributes to Assign to the Policy.
   * version - Desired Kubernetes version.  Options are:
-    - v1.19.5
+    - v1.21.10
+    - v1.20.14
   EOT
   type = map(object(
     {
-      description  = optional(string)
-      organization = optional(string)
-      tags         = optional(list(map(string)))
-      version      = optional(string)
+      description = optional(string)
+      tags        = optional(list(map(string)))
+      version     = optional(string)
     }
   ))
 }
@@ -38,14 +35,32 @@ variable "kubernetes_version_policies" {
 # Kubernetes Version Policy Module
 #______________________________________________
 
-module "kubernetes_version_policies" {
-  source             = "terraform-cisco-modules/imm/intersight//modules/kubernetes_version_policies"
+#Importing the Kubernetes Version available
+data "intersight_kubernetes_version" "version" {
   for_each           = local.kubernetes_version_policies
-  description        = each.value.description != "" ? each.value.description : "${each.key} Version Policy."
-  name               = each.key
-  org_moid           = local.org_moids[each.value.organization].moid
   kubernetes_version = each.value.version
-  tags               = each.value.tags != [] ? each.value.tags : local.tags
 }
 
-
+resource "intersight_kubernetes_version_policy" "kubernetes_version" {
+  depends_on = [
+    data.intersight_kubernetes_version.version
+  ]
+  for_each    = local.kubernetes_version_policies
+  description = each.value.description != "" ? each.value.description : "${each.key} Version Policy."
+  name        = each.key
+  nr_version {
+    moid        = data.intersight_kubernetes_version.version[each.key].results.0.moid
+    object_type = "kubernetes.Version"
+  }
+  organization {
+    moid        = local.org_moid
+    object_type = "organization.Organization"
+  }
+  dynamic "tags" {
+    for_each = length(each.value.tags) > 0 ? each.value.tags : local.tags
+    content {
+      key   = tags.value.key
+      value = tags.value.value
+    }
+  }
+}

@@ -31,13 +31,14 @@ variable "secretkey" {
 # Global Variables
 #__________________________________________________________
 
-variable "organizations" {
+variable "organization" {
+  default     = "default"
   description = "Intersight Organization Names to Apply Policy to.  https://intersight.com/an/settings/organizations/."
-  type        = set(string)
+  type        = string
 }
 
 variable "tags" {
-  # default     = []
+  default     = []
   description = "Please Refer to the tags variable information in the tfe module.  In the k8s_policies module the variable is accepted as a string from terraform cloud in the terraform.auto.tfvars and extracted using locals."
   type        = list(map(string))
 }

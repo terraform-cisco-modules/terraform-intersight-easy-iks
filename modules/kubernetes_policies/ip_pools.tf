@@ -6,13 +6,12 @@
 variable "ip_pools" {
   default = {
     default = {
-      assignment_order = "default"
+      assignment_order = "sequential"
       description      = ""
       ipv4_blocks      = {}
-      ipv4_config      = {}
+      ipv4_config      = []
       ipv6_blocks      = {}
-      ipv6_config      = {}
-      organization     = "default"
+      ipv6_config      = []
       tags             = []
     }
   }
@@ -37,11 +36,9 @@ variable "ip_pools" {
     - to - Ending IPv6 Address.
   * ipv6_config - IPv6 Configuration to assign to the ipv6_blocks.
     - gateway - Gateway to assign to the pool.
-    - netmask - Netmask to assign to the pool.
+    - prefix - Prefix to assign to the pool.
     - primary_dns = Primary DNS Server to Assign to the Pool
     - secondary_dns = Secondary DNS Server to Assign to the Pool
-  * organization - Name of the Intersight Organization to assign this pool to.  Default is default.
-    - https://intersight.com/an/settings/organizations/
   * tags - List of Key/Value Pairs to Assign as Attributes to the Pool.
   EOT
   type = map(object(
@@ -55,7 +52,7 @@ variable "ip_pools" {
           to   = optional(string)
         }
       )))
-      ipv4_config = optional(map(object(
+      ipv4_config = optional(list(object(
         {
           gateway       = string
           netmask       = string
@@ -70,7 +67,7 @@ variable "ip_pools" {
           to   = optional(string)
         }
       )))
-      ipv6_config = optional(map(object(
+      ipv6_config = optional(list(object(
         {
           gateway       = string
           prefix        = number
@@ -78,33 +75,74 @@ variable "ip_pools" {
           secondary_dns = optional(string)
         }
       )))
-      organization = optional(string)
-      tags         = optional(list(map(string)))
+      tags = optional(list(map(string)))
     }
   ))
 }
 
 
+#____________________________________________________________
+#
+# Intersight Pools Module
+# GUI Location: Pools > Create Pool
+#____________________________________________________________
+
 #______________________________________________
 #
-# IP Pools Module
+# IP Pools
 #______________________________________________
 
-module "ip_pools" {
+resource "intersight_ippool_pool" "ip_pools" {
   depends_on = [
-    local.org_moids
+    local.org_moid
   ]
-  source           = "terraform-cisco-modules/imm/intersight//modules/ip_pools"
   for_each         = local.ip_pools
   assignment_order = each.value.assignment_order
-  description      = each.value.description != "" ? each.value.description : "${each.value.organization} ${each.key} IP Pool."
-  ipv4_block       = each.value.ipv4_blocks
-  ipv4_config      = each.value.ipv4_config
-  ipv6_block       = each.value.ipv6_blocks
-  ipv6_config      = each.value.ipv6_config
+  description      = each.value.description != "" ? each.value.description : "${each.key} IP Pool"
   name             = each.key
-  org_moid         = local.org_moids[each.value.organization].moid
-  tags             = each.value.tags != [] ? each.value.tags : local.tags
+  dynamic "ip_v4_blocks" {
+    for_each = each.value.ipv4_blocks
+    content {
+      from = ip_v4_blocks.value.from
+      size = ip_v4_blocks.value.size != null ? ip_v4_blocks.value.size : null
+      to   = ip_v4_blocks.value.to != null ? ip_v4_blocks.value.to : null
+    }
+  }
+  dynamic "ip_v4_config" {
+    for_each = each.value.ipv4_config
+    content {
+      gateway       = ip_v4_config.value.gateway
+      netmask       = ip_v4_config.value.netmask
+      primary_dns   = ip_v4_config.value.primary_dns != null ? ip_v4_config.value.primary_dns : null
+      secondary_dns = ip_v4_config.value.secondary_dns != null ? ip_v4_config.value.secondary_dns : null
+    }
+  }
+  dynamic "ip_v6_blocks" {
+    for_each = each.value.ipv6_blocks
+    content {
+      from = ip_v6_blocks.value.from
+      size = ip_v6_blocks.value.size != null ? tonumber(ip_v6_blocks.value.size) : null
+      to   = ip_v6_blocks.value.to != null ? ip_v6_blocks.value.to : null
+    }
+  }
+  dynamic "ip_v6_config" {
+    for_each = each.value.ipv6_config
+    content {
+      gateway       = ip_v6_config.value.gateway
+      prefix        = ip_v6_config.value.prefix
+      primary_dns   = ip_v6_config.value.primary_dns != null ? ip_v6_config.value.primary_dns : "::"
+      secondary_dns = ip_v6_config.value.secondary_dns != null ? ip_v6_config.value.secondary_dns : "::"
+    }
+  }
+  organization {
+    moid        = local.org_moid
+    object_type = "organization.Organization"
+  }
+  dynamic "tags" {
+    for_each = length(each.value.tags) > 0 ? each.value.tags : local.tags
+    content {
+      key   = tags.value.key
+      value = tags.value.value
+    }
+  }
 }
-
-

@@ -3,21 +3,43 @@
 # Get Outputs from the kubeconfig Workspace
 #__________________________________________________________
 
-data "terraform_remote_state" "kubeconfig" {
-  backend = "remote"
+data "terraform_remote_state" "local_kubeconfig" {
+  for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "local" }
+  backend  = each.value.backend
   config = {
-    organization = var.tfc_organization
+    path = "${each.value.kubeconfig_dir}terraform.tfstate"
+  }
+}
+
+data "terraform_remote_state" "remote_kubeconfig" {
+  for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "remote" }
+  backend  = each.value.backend
+  config = {
+    organization = var.organization
     workspaces = {
-      name = var.tfc_workspace
+      name = var.workspace
     }
   }
 }
 
 locals {
+  # Output Sources for Policies and Pools
+  tfc_workspaces = {
+    for k, v in var.tfc_workspaces : k => {
+      backend      = v.backend
+      organization = v.organization != null ? v.organization : "default"
+      policies_dir = v.policies_dir != null ? v.policies_dir : "../kubeconfig/"
+      workspace    = v.workspace != null ? v.workspace : "kubeconfig"
+    }
+  }
   # IKS Cluster Name
-  cluster_name = data.terraform_remote_state.kubeconfig.outputs.cluster_name
+  cluster_name = var.tfc_workspaces[0]["backend"] == "local" ? lookup(
+    data.terraform_remote_state.local_kubeconfig[0].outputs.cluster_name
+  ) : lookup(data.terraform_remote_state.remote_kubeconfig[0].outputs, "cluster_name", {})
   # Kubernetes Configuration File
-  kubeconfig = yamldecode(data.terraform_remote_state.kubeconfig.outputs.kubeconfig)
+  kubeconfig = var.tfc_workspaces[0]["backend"] == "local" ? lookup(
+    yamldecode(data.terraform_remote_state.local_kubeconfig[0].outputs.cluster_name)
+  ) : yamldecode(lookup(data.terraform_remote_state.remote_kubeconfig[0].outputs, "cluster_name", {}))
 }
 
 #______________________________________________________________________

@@ -6,11 +6,10 @@
 variable "trusted_certificate_authorities" {
   default = {
     default = {
-      description  = ""
-      organization = "default"
-      root_ca      = []
-      tags         = []
-      unsigned     = []
+      description         = ""
+      root_ca_registries  = []
+      tags                = []
+      unsigned_registries = []
     }
   }
   description = <<-EOT
@@ -35,18 +34,27 @@ variable "trusted_certificate_authorities" {
 }
 
 
-#______________________________________________
+#__________________________________________________________________________
 #
-# Trusted Certificate Authorities Policy Module
-#______________________________________________
+# Intersight Kubernetes Trusted Certificate Authorities Policy
+# GUI Location: Policies > Create Policy > Trusted Certificate Authorities
+#__________________________________________________________________________
 
-module "trusted_certificate_authorities" {
-  source              = "terraform-cisco-modules/imm/intersight//modules/trusted_certificate_authorities"
+resource "intersight_kubernetes_trusted_registries_policy" "trusted_certificate_authorities" {
   for_each            = local.trusted_certificate_authorities
   description         = each.value.description != "" ? each.value.description : "${each.key} Trusted Registry Policy."
   name                = each.key
-  org_moid            = local.org_moids[each.value.organization].moid
   root_ca_registries  = each.value.root_ca_registries != [] ? each.value.root_ca_registries : []
   unsigned_registries = each.value.unsigned_registries != [] ? each.value.unsigned_registries : []
-  tags                = each.value.tags != [] ? each.value.tags : local.tags
+  organization {
+    moid        = local.org_moid
+    object_type = "organization.Organization"
+  }
+  dynamic "tags" {
+    for_each = length(each.value.tags) > 0 ? each.value.tags : local.tags
+    content {
+      key   = tags.value.key
+      value = tags.value.value
+    }
+  }
 }

@@ -64,6 +64,20 @@ variable "secretkey" {
 # Virtual Machine Infra Config Policy Variables
 #_______________________________________________
 
+variable "docker_http_proxy_password" {
+  default     = ""
+  description = "Password for the Docker HTTP Proxy Server, If required."
+  sensitive   = true
+  type        = string
+}
+
+variable "docker_https_proxy_password" {
+  default     = ""
+  description = "Password for the Docker HTTPS Proxy Server, If required."
+  sensitive   = true
+  type        = string
+}
+
 variable "vsphere_password" {
   description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
   sensitive   = true
