@@ -15,7 +15,7 @@ variable "addons_policies" {
     }
   }
   description = <<-EOT
-  Intersight Kubernetes Service Add-ons Variable Map.  Add-ons Options are {ccp-monitor|kubernetes-dashboard} currently.
+  Intersight Kubernetes Service Add-ons Variable Map.  Add-ons Options are {ccp-monitor|kubernetes-dashboard|ssm} currently.
   Key - Name of the Add-ons Policy
   * description - A description for the policy.
   * install_strategy - Add-ons install strategy to determine whether an addon is installed if not present.

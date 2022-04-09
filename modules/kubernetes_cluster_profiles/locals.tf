@@ -86,7 +86,7 @@ locals {
       node_pools                    = v.node_pools
       nodeos_configuration_policy   = v.nodeos_configuration_policy
       tags                          = v.tags != null ? v.tags : []
-      trusted_certificate_authority = v.trusted_certificate_authority != null ? v.trusted_certificate_authority : []
+      trusted_certificate_authority = v.trusted_certificate_authority != null ? v.trusted_certificate_authority : ""
       wait_for_completion           = v.wait_for_completion != null ? v.wait_for_completion : false
     }
   }

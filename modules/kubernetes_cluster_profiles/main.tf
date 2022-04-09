@@ -6,7 +6,7 @@
 variable "kubernetes_cluster_profiles" {
   default = {
     default = {
-      action                    = "No-op" # Deploy
+      action                    = "No-op" # Deploy|No-op
       addons_policies           = ["default"]
       certificate_configuration = false
       cluster_configuration = [
@@ -19,7 +19,7 @@ variable "kubernetes_cluster_profiles" {
       ]
       container_runtime_policy = "default"
       description              = ""
-      ip_pool                  = "k8s"
+      ip_pool                  = "default"
       network_cidr_policy      = "default"
       node_pools = {
         "0" = {
@@ -32,13 +32,13 @@ variable "kubernetes_cluster_profiles" {
           ip_pool                   = ""
           kubernetes_labels         = []
           kubernetes_version_policy = "default"
-          vm_infra_config_policy    = "Panther"
+          vm_infra_config_policy    = "default"
           vm_instance_type_policy   = "default"
         }
       }
       nodeos_configuration_policy   = "default"
       tags                          = []
-      trusted_certificate_authority = []
+      trusted_certificate_authority = ""
       wait_for_completion           = false
     }
   }
@@ -110,7 +110,7 @@ variable "kubernetes_cluster_profiles" {
         }
       ))
       nodeos_configuration_policy   = string
-      trusted_certificate_authority = optional(list(string))
+      trusted_certificate_authority = optional(string)
       tags                          = optional(list(map(string)))
       wait_for_completion           = optional(bool)
     }
@@ -208,7 +208,9 @@ resource "intersight_kubernetes_cluster_profile" "kubernetes_cluster_profiles" {
     }
   }
   dynamic "container_runtime_config" {
-    for_each = toset([each.value.container_runtime_policy])
+    for_each = length(compact([each.value.container_runtime_policy])) > 0 ? toset(
+      [each.value.container_runtime_policy]
+    ) : []
     content {
       moid = local.container_runtime_policies[container_runtime_config.value]
     }
@@ -221,7 +223,9 @@ resource "intersight_kubernetes_cluster_profile" "kubernetes_cluster_profiles" {
     }
   }
   dynamic "trusted_registries" {
-    for_each = length(each.value.trusted_certificate_authority) > 0 ? tolist([each.value.trusted_certificate_authority]) : []
+    for_each = length(compact([each.value.trusted_certificate_authority])) > 0 ? toset(
+      [each.value.trusted_certificate_authority]
+    ) : []
     content {
       moid = trusted_registries.value
     }

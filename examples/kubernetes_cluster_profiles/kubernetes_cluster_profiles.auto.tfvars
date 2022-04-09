@@ -3,8 +3,11 @@
 # Terraform Cloud Variables
 #__________________________________________________________
 
-tfc_organization = "Your_Organization"
-tfc_workspace    = "Your_K8s_Policies_Workspace"
+tfc_workspaces = [{
+  backend      = "remote"
+  organization = "Your_Organization"
+  workspace    = "Your_k8s_cluster_Workspace"
+}]
 /*
   We highly recommend that for the terraform_cloud_token you use an environment variable for input:
   - export TF_VAR_terraform_cloud_token="abcdefghijklmnopqrstuvwxyz.0123456789"
@@ -25,7 +28,7 @@ tfc_workspace    = "Your_K8s_Policies_Workspace"
 #__________________________________________________________
 
 # endpoint     = "https://intersight.com"
-# secretkey    = "~/intersight.secret"
+# secretkey    = "~/Downloads/SecretKey.txt"
 /*
   To export the Secret Key via an Environment Variable the format is as follows (Note: they are not quotation marks, but escape characters):
   - export TF_VAR_secretkey=`cat ~/intersight.secret`
@@ -43,58 +46,51 @@ tfc_workspace    = "Your_K8s_Policies_Workspace"
 #__________________________________________________________
 
 kubernetes_cluster_profiles = {
-  "#Tenant#_k8s_cl02" = {
-    action                             = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
-    addons_policy_moid                 = ["ccp-monitor", "kubernetes-dashboard"]
-    container_runtime_moid             = ""
-    ip_pool_moid                       = "#Tenant#_pool_v4"
-    network_cidr_moid                  = "#Tenant#_network_cidr"
-    nodeos_configuration_moid          = "#Tenant#_nodeos_config"
-    load_balancer_count                = 3
-    organization                       = "default"
-    ssh_public_key                     = "ssh_public_key_1"
-    ssh_user                           = "iksadmin"
-    tags                               = []
-    trusted_certificate_authority_moid = "#Tenant#_registry"
-    wait_for_complete                  = false
+  "panther-cl1" = {
+    action                    = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    addons_policies           = ["ccp-monitor", "kubernetes-dashboard"]
+    certificate_configuration = false
+    cluster_configuration = [{
+      load_balancer_count = 3
+      ssh_public_key      = 1
+    }]
+    container_runtime_policy = ""
+    ip_pool                  = "iks"
+    network_cidr_policy      = "Wakanda_CIDR"
     node_pools = {
-      "control_plane" = {
+      "Control_Plane" = {
         action       = "No-op"
-        description  = "Control Plane"
-        desired_size = 1
-        # ip_pool_moid            = "#Tenant#_pool_v4" # can Define if wanting different than the cluster
-        kubernetes_labels = [
-          {
-            key   = "Node Pool"
-            value = "Control Plane"
-          }
-        ]
-        kubernetes_version_moid = "#Tenant#_v1_19_5"
-        max_size                = 3
-        min_size                = 1
-        node_type               = "ControlPlane"
-        organization            = "default"
-        vm_infra_config_moid    = "#Tenant#_vm_infra"
-        vm_instance_type_moid   = "#Tenant#_small"
+        desired_size = 3
+        ip_pool      = "iks"
+        kubernetes_labels = [{
+          "key"   = "panther-cl1"
+          "value" = "C1 Control Plane Nodes"
+        }]
+        kubernetes_version_policy = "v1.21.10"
+        max_size                  = 3
+        min_size                  = 2
+        node_type                 = "ControlPlane"
+        vm_infra_config_policy    = "Panther"
+        vm_instance_type_policy   = "Small"
       }
-      "worker01" = {
+      "Worker_g1" = {
         action       = "No-op"
-        description  = "#Tenant# Kubernetes Cluster01 Worker Pool 1"
-        desired_size = 1
-        kubernetes_labels = [
-          {
-            key   = "Node Pool"
-            value = "Worker Pool 1"
-          }
-        ]
-        kubernetes_version_moid = "#Tenant#_v1_19_5"
-        max_size                = 3
-        min_size                = 1
-        node_type               = "Worker"
-        vm_infra_config_moid    = "#Tenant#_vm_infra"
-        vm_instance_type_moid   = "#Tenant#_small"
+        desired_size = 3
+        ip_pool      = "iks"
+        kubernetes_labels = [{
+          "key"   = "panther-cl1"
+          "value" = "C1 Worker Group1"
+        }]
+        kubernetes_version_policy = "v1.21.10"
+        max_size                  = 5
+        min_size                  = 3
+        node_type                 = "Worker"
+        vm_infra_config_policy    = "Panther"
+        vm_instance_type_policy   = "Medium"
       }
-
     }
+    nodeos_configuration_policy   = "Wakanda"
+    trusted_certificate_authority = ""
+    wait_for_completion           = false
   }
 }
