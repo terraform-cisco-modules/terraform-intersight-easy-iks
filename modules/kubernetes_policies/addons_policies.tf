@@ -6,13 +6,17 @@
 variable "addons_policies" {
   default = {
     default = {
-      description      = ""
-      install_strategy = "Always"
-      # release_name      = ""
+      chart_name        = ""
+      chart_version     = ""
+      version           = ""
+      description       = ""
+      install_strategy  = "Always"
+      override_sets     = []
+      overrides         = ""
+      release_name      = ""
       release_namespace = ""
       tags              = []
       upgrade_strategy  = "UpgradeOnly"
-      version           = ""
     }
   }
   description = <<-EOT
@@ -25,7 +29,7 @@ variable "addons_policies" {
     - InstallOnly - Only install in green field. No action in case of failure or removal.
     - Always - Attempt install if chart is not already installed.
   * overrides - 
-  # * release_name - Name for the helm release.
+  * release_name - Name for the helm release.
   * release_namespace - Namespace for the helm release.
   * tags - List of key/value Attributes to Assign to the Policy.
   * upgrade_strategy - Addon upgrade strategy to determine whether an addon configuration is overwritten on upgrade.
@@ -38,10 +42,13 @@ variable "addons_policies" {
   EOT
   type = map(object(
     {
-      description      = optional(string)
-      install_strategy = optional(string)
-      overrides        = optional(string)
-      # release_name      = optional(string)
+      chart_name        = optional(string)
+      chart_version     = optional(string)
+      description       = optional(string)
+      install_strategy  = optional(string)
+      override_sets     = optional(list(map(string)))
+      overrides         = optional(string)
+      release_name      = optional(string)
       release_namespace = optional(string)
       tags              = optional(list(map(string)))
       upgrade_strategy  = optional(string)
@@ -58,9 +65,9 @@ variable "addons_policies" {
 #__________________________________________________________________
 
 data "intersight_kubernetes_addon_definition" "addons" {
-  for_each = local.addons_policies
-  name     = each.key != "default" ? each.key : "ccp-monitor"
-  version  = each.version != null ? each.version : null
+  for_each              = local.addons_policies
+  name                  = each.value.chart_name != "" ? each.value.chart_name : each.key
+  additional_properties = each.value.chart_version != "" ? jsonencode({ "Version" = "${each.value.chart_version}" }) : ""
 }
 
 resource "intersight_kubernetes_addon_policy" "addons" {
@@ -69,12 +76,13 @@ resource "intersight_kubernetes_addon_policy" "addons" {
   ]
   for_each    = local.addons_policies
   description = each.value.description != "" ? each.value.description : "Kubernetes Add-ons Policy for ${each.key}."
-  name        = each.key != "default" ? each.key : "ccp-monitor"
-  overrides   = each.value.overrides
+  name        = each.key
+  # overrides   = each.value.overrides
   addon_configuration {
-    install_strategy = each.value.install_strategy
-    release_name     = each.key != "default" ? each.key : "ccp-monitor"
-    # release_name      = each.value.release_name
+    install_strategy  = each.value.install_strategy
+    release_name      = each.value.release_name != "" ? each.value.release_name : each.key
+    override_sets     = each.value.override_sets
+    overrides         = each.value.overrides
     release_namespace = each.value.release_namespace
     upgrade_strategy  = each.value.upgrade_strategy
   }

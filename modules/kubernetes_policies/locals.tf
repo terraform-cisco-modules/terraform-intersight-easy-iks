@@ -8,9 +8,19 @@ locals {
   # Kubernetes Cluster Profiles Variables
   addons_policies = {
     for k, v in var.addons_policies : k => {
-      description       = v.description != null ? v.description : ""
-      install_strategy  = v.install_strategy != null ? v.install_strategy : "Always"
-      overrides = v.overrides != null ? yamlencode(v.overrides) : ""
+      chart_name       = v.chart_name != null ? v.chart_name : ""
+      chart_version    = v.chart_version != null ? v.chart_version : ""
+      description      = v.description != null ? v.description : ""
+      install_strategy = v.install_strategy != null ? v.install_strategy : "Always"
+      override_sets    = v.override_sets != null ? v.override_sets : []
+      overrides = v.overrides != null ? yamlencode(
+        {
+          "${element(split(",", v.overrides), 0)}" : {
+            "${element(split(",", v.overrides), 1)}" : "${element(split(",", v.overrides), 2)}"
+          }
+        }
+      ) : ""
+      release_name      = v.release_name != null ? v.release_name : ""
       release_namespace = v.release_namespace != null ? v.release_namespace : ""
       tags              = v.tags != null ? v.tags : []
       upgrade_strategy  = v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly"
