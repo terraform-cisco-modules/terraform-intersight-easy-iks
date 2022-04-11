@@ -10,6 +10,7 @@ locals {
     for k, v in var.addons_policies : k => {
       description       = v.description != null ? v.description : ""
       install_strategy  = v.install_strategy != null ? v.install_strategy : "Always"
+      overrides = v.overrides != null ? yamlencode(v.overrides) : ""
       release_namespace = v.release_namespace != null ? v.release_namespace : ""
       tags              = v.tags != null ? v.tags : []
       upgrade_strategy  = v.upgrade_strategy != null ? v.upgrade_strategy : "UpgradeOnly"

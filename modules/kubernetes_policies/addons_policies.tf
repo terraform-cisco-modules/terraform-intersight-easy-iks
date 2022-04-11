@@ -12,6 +12,7 @@ variable "addons_policies" {
       release_namespace = ""
       tags              = []
       upgrade_strategy  = "UpgradeOnly"
+      version           = ""
     }
   }
   description = <<-EOT
@@ -23,6 +24,7 @@ variable "addons_policies" {
     - NoAction - No install action performed.
     - InstallOnly - Only install in green field. No action in case of failure or removal.
     - Always - Attempt install if chart is not already installed.
+  * overrides - 
   # * release_name - Name for the helm release.
   * release_namespace - Namespace for the helm release.
   * tags - List of key/value Attributes to Assign to the Policy.
@@ -32,15 +34,18 @@ variable "addons_policies" {
     - UpgradeOnly - Attempt upgrade if chart or overrides options change, no action on upgrade failure.
     - ReinstallOnFailure - Attempt upgrade first. Remove and install on upgrade failure.
     - AlwaysReinstall - Always remove older release and reinstall.
+  * version - Release version of the Helm Chart
   EOT
   type = map(object(
     {
       description      = optional(string)
       install_strategy = optional(string)
+      overrides        = optional(string)
       # release_name      = optional(string)
       release_namespace = optional(string)
       tags              = optional(list(map(string)))
       upgrade_strategy  = optional(string)
+      version           = optional(string)
     }
   ))
 }
@@ -55,6 +60,7 @@ variable "addons_policies" {
 data "intersight_kubernetes_addon_definition" "addons" {
   for_each = local.addons_policies
   name     = each.key != "default" ? each.key : "ccp-monitor"
+  version  = each.version != null ? each.version : null
 }
 
 resource "intersight_kubernetes_addon_policy" "addons" {
@@ -64,6 +70,7 @@ resource "intersight_kubernetes_addon_policy" "addons" {
   for_each    = local.addons_policies
   description = each.value.description != "" ? each.value.description : "Kubernetes Add-ons Policy for ${each.key}."
   name        = each.key != "default" ? each.key : "ccp-monitor"
+  overrides   = each.value.overrides
   addon_configuration {
     install_strategy = each.value.install_strategy
     release_name     = each.key != "default" ? each.key : "ccp-monitor"
