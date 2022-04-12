@@ -13,11 +13,15 @@ variable "virtual_machine_infra_config" {
         {
           cluster       = "default"
           datastore     = "datastore1"
+          disk_mode     = "Block"
           interfaces    = ["VM Network"]
-          mtu = 0
+          ip_pool       = ""
+          mtu           = 0
+          name          = ""
           provider_name = ""
           resource_pool = ""
           type          = "vmware"
+          vrf           = ""
         }
       ]
     }
@@ -45,19 +49,23 @@ variable "virtual_machine_infra_config" {
         {
           cluster       = optional(string)
           datastore     = optional(string)
+          disk_mode     = optional(string)
           interfaces    = list(string)
-          mtu = optional(number)
+          ip_pool       = optional(string)
+          mtu           = optional(number)
+          name          = optional(string)
           provider_name = optional(string)
           resource_pool = optional(string)
           type          = string
+          vrf           = optional(string)
         }
       ))
     }
   ))
 }
 
-variable "vsphere_password" {
-  description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
+variable "target_password" {
+  description = "Target Password.  Note: this is the password of the Credentials used to register the Virtualization Target."
   sensitive   = true
   type        = string
 }
@@ -76,7 +84,8 @@ data "intersight_asset_target" "target" {
 
 resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_machine_infra_config" {
   depends_on = [
-    data.intersight_asset_target.target
+    data.intersight_asset_target.target,
+    intersight_ippool_pool.ip_pools
   ]
   for_each    = local.virtual_machine_infra_config
   description = each.value.description != "" ? each.value.description : "${each.key} Virtual Machine Infra Config Policy."
@@ -107,21 +116,21 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
     for_each = { for k, v in each.value.virtual_infrastructure : k => v if v.type == "iwe" }
     content {
       additional_properties = jsonencode({
-        Mtu    = vm_config.value.datastore
-        DiskMode      = vm_config.value.disk_mode
+        Mtu          = vm_config.value.datastore
+        DiskMode     = vm_config.value.disk_mode
         Passphrase   = var.vsphere_password
         ResourcePool = vm_config.value.resource_pool
       })
       interfaces = vm_config.value.interfaces
       network_interfaces {
-        mtu = vm_config.value.mtu
+        mtu  = vm_config.value.mtu
         name = vm_config.value.name
         pools {
-          moid = vm_config.value.pool != "" ? ip_pools.pools[vm_config.value.pool].id : ""
+          moid = vm_config.value.ip_pool != "" ? intersight_ippool_pool.ip_pools[vm_config.value.ip_pool].id : ""
         }
         provider_name = vm_config.value.provider_name
         vrf {
-          moid = each.value.vrf != "" ? each.value.vrf : ""
+          moid        = vm_config.value.vrf != "" ? vm_config.value.vrf : ""
           object_type = "vrf.Vrf"
         }
       }
