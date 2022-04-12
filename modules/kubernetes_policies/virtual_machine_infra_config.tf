@@ -13,7 +13,9 @@ variable "virtual_machine_infra_config" {
         {
           cluster       = "default"
           datastore     = "datastore1"
-          portgroup     = ["VM Network"]
+          interfaces    = ["VM Network"]
+          mtu = 0
+          provider_name = ""
           resource_pool = ""
           type          = "vmware"
         }
@@ -26,10 +28,13 @@ variable "virtual_machine_infra_config" {
   * description - A description for the policy.
   * tags - List of key/value Attributes to Assign to the Policy.
   * target - Name of the IWE or vSphere Target discovered in Intersight, to provision the cluster to.
-  * vsphere_cluster - vSphere Cluster to assign the K8S Cluster Deployment.
-  * vsphere_datastore - vSphere Datastore to assign the K8S Cluster Deployment.r\n
-  * vsphere_portgroup - vSphere Port Group to assign the K8S Cluster Deployment.r\n
-  * vsphere_resource_pool - vSphere Resource Pool to assign the K8S Cluster Deployment.r\n
+  * virtual_infrastructure - List of Virtual Infrastructure Configuration Parameters
+    - cluster: (VMware) - vSphere Cluster to assign the K8S Cluster Deployment.
+    - datastore: (VMware) - vSphere Datastore to assign the K8S Cluster Deployment.
+    - interfaces: (Both) - vSphere Port Group to assign the K8S Cluster Deployment.
+    - mtu: (IWE) - MTU to assign to the Interface
+    - provider_name: (IWE) - In other words, to which named network from the Instructure Provider will the port be connected.
+    - resource_pool: (VMware) - vSphere Resource Pool to assign the K8S Cluster Deployment.
   EOT
   type = map(object(
     {
@@ -38,11 +43,13 @@ variable "virtual_machine_infra_config" {
       target      = string
       virtual_infrastructure = list(object(
         {
-          cluster       = string
-          datastore     = string
-          portgroup     = list(string)
+          cluster       = optional(string)
+          datastore     = optional(string)
+          interfaces    = list(string)
+          mtu = optional(number)
+          provider_name = optional(string)
           resource_pool = optional(string)
-          type          = optional(string)
+          type          = string
         }
       ))
     }
@@ -91,7 +98,7 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
         Passphrase   = var.vsphere_password
         ResourcePool = vm_config.value.resource_pool
       })
-      interfaces  = vm_config.value.portgroup
+      interfaces  = vm_config.value.interfaces
       object_type = "kubernetes.EsxiVirtualMachineInfraConfig"
 
     }
@@ -100,12 +107,25 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
     for_each = { for k, v in each.value.virtual_infrastructure : k => v if v.type == "iwe" }
     content {
       additional_properties = jsonencode({
-        Datastore    = vm_config.value.datastore
-        Cluster      = vm_config.value.cluster
+        Mtu    = vm_config.value.datastore
+        DiskMode      = vm_config.value.disk_mode
         Passphrase   = var.vsphere_password
         ResourcePool = vm_config.value.resource_pool
       })
-      network_interfaces = vm_config.value.network_interfaces
+      interfaces = vm_config.value.interfaces
+      network_interfaces {
+        mtu = vm_config.value.mtu
+        name = vm_config.value.name
+        pools {
+          moid = vm_config.value.pool != "" ? ip_pools.pools[vm_config.value.pool].id : ""
+        }
+        provider_name = vm_config.value.provider_name
+        vrf {
+          moid = each.value.vrf != "" ? each.value.vrf : ""
+          object_type = "vrf.Vrf"
+        }
+      }
+      object_type = "kubernetes.HyperFlexApVirtualMachineInfraConfig"
 
     }
   }

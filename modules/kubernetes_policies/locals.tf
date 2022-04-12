@@ -90,7 +90,9 @@ locals {
         for key, value in v.virtual_infrastructure : {
           cluster       = value.cluster != null ? value.cluster : "default"
           datastore     = value.datastore != null ? value.datastore : "datastore1"
-          portgroup     = value.portgroup != null ? value.portgroup : ["VM Network"]
+          interfaces     = value.interfaces != null ? value.interfaces : ["VM Network"]
+          mtu = value.mtu != null ? value.mtu : 0
+          provider_name = value.provider_name != null ? value.provider_name : ""
           resource_pool = value.resource_pool != null ? value.resource_pool : ""
           type          = value.type != null ? value.type : "vmware"
         }
