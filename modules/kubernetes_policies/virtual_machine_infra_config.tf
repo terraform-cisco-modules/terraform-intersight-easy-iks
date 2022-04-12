@@ -104,7 +104,6 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
       additional_properties = jsonencode({
         Datastore    = vm_config.value.datastore
         Cluster      = vm_config.value.cluster
-        Passphrase   = var.target_password
         ResourcePool = vm_config.value.resource_pool
       })
       interfaces  = vm_config.value.interfaces
