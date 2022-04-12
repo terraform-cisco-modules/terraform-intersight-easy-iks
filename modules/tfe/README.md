@@ -27,7 +27,7 @@ Follow the base repository instructions to obtain values for the following varia
 
   instructions: <https://community.cisco.com/t5/data-center-documents/intersight-api-overview/ta-p/3651994>
 
-### When assigning the vSphere Password - It Must match the password used to register the Target in Intersight
+### When assigning the Target Password - It Must match the password used to register the Target in Intersight
 
 * k8s_vm_infra_password
 
