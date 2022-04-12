@@ -47,28 +47,62 @@ The Following examples are for a Linux based Operating System.  Note that the TF
 
 * Terraform Cloud Variables
 
+- Linux Example
+
 ```bash
 export TF_VAR_terraform_cloud_token="your_cloud_token"
 export TF_VAR_tfc_oauth_token="your_oath_token"
 ```
 
+- Windows Example
+
+```bash
+$env:TF_VAR_terraform_cloud_token="your_cloud_token"
+$env:TF_VAR_tfc_oauth_token="your_oath_token"
+```
+
 * Intersight apikey and secretkey
+
+- Linux Example
 
 ```bash
 export TF_VAR_apikey="your_api_key"
-export TF_VAR_secretkey=`{source_dir}/intersight_secretkey.txt`
+export TF_VAR_secretkey=`cat ~/Downloads/SecretKey.txt`
+```
+
+- Windows Example
+
+```powershell
+$env:TF_VAR_apikey="your_api_key"
+$env:TF_VAR_secretkey="$HOME\Downloads\SecretKey.txt`"
 ```
 
 * Target Password
 
+- Linux Example
+
 ```bash
-export TF_VAR_target_password="your_vshpere_password"
+export TF_VAR_target_password="your_target_password"
+```
+
+- Windows Example
+
+```powershell
+$env:TF_VAR_target_password="your_target_password"
 ```
 
 * Kubernetes Cluster ssh_key
 
+- Linux Example
+
 ```bash
 export TF_VAR_ssh_public_key_1="your_ssh_key"
+```
+
+- Windows Example
+
+```powershell
+$env:TF_VAR_ssh_public_key_1="your_ssh_key"
 ```
 
 Once all Variables have been imported into your environment, run the plan in the tfe folder:
