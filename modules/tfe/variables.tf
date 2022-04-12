@@ -78,8 +78,8 @@ variable "docker_https_proxy_password" {
   type        = string
 }
 
-variable "vsphere_password" {
-  description = "vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target."
+variable "target_password" {
+  description = "Target Password.  Note: this is the password of the Credentials used to register the Virtualization Target."
   sensitive   = true
   type        = string
 }

@@ -17,7 +17,6 @@ Follow the base repository instructions to obtain values for the following varia
   instructions: <https://www.terraform.io/docs/cloud/vcs/index.html>
 
 * tfc_organization (TFCB Organization Name)
-* tfc_email (Must be an Email Assigned to the TFCB Account)
 * agent_pool (The Name of the Agent Pool in the TFCB Account)
 * vcs_repo (The Name of your Version Control Repository. i.e. CiscoDevNet/intersight-tfb-iks)
 
@@ -60,10 +59,10 @@ export TF_VAR_apikey="your_api_key"
 export TF_VAR_secretkey=`{source_dir}/intersight_secretkey.txt`
 ```
 
-* vSphere Password
+* Target Password
 
 ```bash
-export TF_VAR_vsphere_password="your_vshpere_password"
+export TF_VAR_target_password="your_vshpere_password"
 ```
 
 * Kubernetes Cluster ssh_key
@@ -120,12 +119,12 @@ No resources.
 | <a name="input_ssh_public_key_3"></a> [ssh\_public\_key\_3](#input\_ssh\_public\_key\_3) | Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
 | <a name="input_ssh_public_key_4"></a> [ssh\_public\_key\_4](#input\_ssh\_public\_key\_4) | Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
 | <a name="input_ssh_public_key_5"></a> [ssh\_public\_key\_5](#input\_ssh\_public\_key\_5) | Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters. | `string` | `""` | no |
+| <a name="input_target_password"></a> [target\_password](#input\_target\_password) | Target Password.  Note: this is the password of the Credentials used to register the Virtualization Target. | `string` | n/a | yes |
 | <a name="input_terraform_cloud_token"></a> [terraform\_cloud\_token](#input\_terraform\_cloud\_token) | Token to Authenticate to the Terraform Cloud. | `string` | n/a | yes |
 | <a name="input_terraform_version"></a> [terraform\_version](#input\_terraform\_version) | Terraform Target Version. | `string` | `"1.0.3"` | no |
 | <a name="input_tfc_oauth_token"></a> [tfc\_oauth\_token](#input\_tfc\_oauth\_token) | Terraform Cloud OAuth Token for VCS\_Repo Integration. | `string` | n/a | yes |
 | <a name="input_tfc_organization"></a> [tfc\_organization](#input\_tfc\_organization) | Terraform Cloud Organization Name. | `string` | n/a | yes |
 | <a name="input_vcs_repo"></a> [vcs\_repo](#input\_vcs\_repo) | Version Control System Repository. | `string` | n/a | yes |
-| <a name="input_vsphere_password"></a> [vsphere\_password](#input\_vsphere\_password) | vSphere Password.  Note: this is the password of the Credentials used to register the vSphere Target. | `string` | n/a | yes |
 | <a name="input_workspaces"></a> [workspaces](#input\_workspaces) | Map of Workspaces to create in Terraform Cloud.<br>key - Name of the Workspace to Create.<br>* agent\_pool - Name of the Agent Pool to Assign to the Workspace<br>* allow\_destroy\_plan - Default is true.<br>* auto\_apply - Defualt is false.  Automatically apply changes when a Terraform plan is successful. Plans that have no changes will not be applied. If this workspace is linked to version control, a push to the default branch of the linked repository will trigger a plan and apply.<br>* branch - Default is "master".  The repository branch that Terraform will execute from. Default to master.<br>* description - A Description for the Workspace.<br>* global\_remote\_state - Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only specifically approved workspaces can access its state (remote\_state\_consumer\_ids)..<br>* queue\_all\_runs - needs description.<br>* remote\_state\_consumer\_ids - The set of workspace IDs set as explicit remote state consumers for the given workspace.<br>* working\_directory - The Directory of the Version Control Repository that contains the Terraform code for UCS Domain Profiles for this Workspace.<br>* workspace\_type - What Type of Workspace will this Create.  Options are:<br>  - app<br>  - cluster<br>  - policies<br>  - kubeconfig | <pre>map(object(<br>    {<br>      agent_pool                = optional(string)<br>      allow_destroy_plan        = optional(bool)<br>      auto_apply                = optional(bool)<br>      branch                    = optional(string)<br>      description               = optional(string)<br>      execution_mode            = optional(string)<br>      global_remote_state       = optional(bool)<br>      queue_all_runs            = optional(bool)<br>      remote_state_consumer_ids = optional(list(string))<br>      speculative_enabled       = optional(bool)<br>      working_directory         = string<br>      workspace_type            = string<br>    }<br>  ))</pre> | <pre>{<br>  "default": {<br>    "agent_pool": "",<br>    "allow_destroy_plan": true,<br>    "auto_apply": false,<br>    "branch": "master",<br>    "description": "",<br>    "global_remote_state": false,<br>    "queue_all_runs": false,<br>    "remote_state_consumer_ids": [],<br>    "speculative_enabled": true,<br>    "working_directory": "",<br>    "workspace_type": ""<br>  }<br>}</pre> | no |
 
 ## Outputs

@@ -63,15 +63,15 @@
 
 2. You will execute the Runs in the workspaces in this order:
 
-    * {cluster_name}_profiles - See section below on "Provision IKS Cluster and IP Pools with TFCB"
+    * kubernetes_policies - See section below on "Provision IKS Cluster and IP Pools with TFCB"
 
-    * {cluster_name} - See section below on "Provision IKS Cluster and IP Pools with TFCB"
+    * kubernetes_cluster_profiles - See section below on "Provision IKS Cluster and IP Pools with TFCB"
 
-    * {cluster_name}_kubeconfig - See section below on "Provision a IKS Cluster with TFCB"
+    * kubeconfig - See section below on "Provision a IKS Cluster with TFCB"
 
-    * {cluster_name}_iwo - See section below on "Deploy IWO collector using Helm"
+    * iwo - See section below on "Deploy IWO collector using Helm"
 
-    * {cluster_name}_app_hello - See section below on "Deploy a sample "Hello IKS" App using Helm"
+    * app_hello - See section below on "Deploy a sample "Hello IKS" App using Helm"
 
 ### Provision Intersight Kubernetes Service Cluster with TFCB
 

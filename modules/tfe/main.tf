@@ -166,11 +166,11 @@ module "kubernetes_policies_variables" {
       sensitive   = true
       value       = var.docker_https_proxy_password
     }
-    "vsphere_password" = {
-      description = "Virtual Center Password."
-      key         = "vsphere_password"
+    "target_password" = {
+      description = "Virtualization Password."
+      key         = "target_password"
       sensitive   = true
-      value       = var.vsphere_password
+      value       = var.target_password
     }
   }
 }
