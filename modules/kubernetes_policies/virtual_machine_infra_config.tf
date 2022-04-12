@@ -104,7 +104,7 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
       additional_properties = jsonencode({
         Datastore    = vm_config.value.datastore
         Cluster      = vm_config.value.cluster
-        Passphrase   = var.vsphere_password
+        Passphrase   = var.target_password
         ResourcePool = vm_config.value.resource_pool
       })
       interfaces  = vm_config.value.interfaces
@@ -116,10 +116,8 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
     for_each = { for k, v in each.value.virtual_infrastructure : k => v if v.type == "iwe" }
     content {
       additional_properties = jsonencode({
-        Mtu          = vm_config.value.datastore
-        DiskMode     = vm_config.value.disk_mode
-        Passphrase   = var.vsphere_password
-        ResourcePool = vm_config.value.resource_pool
+        DiskMode   = vm_config.value.disk_mode
+        Passphrase = var.target_password
       })
       interfaces = vm_config.value.interfaces
       network_interfaces {
