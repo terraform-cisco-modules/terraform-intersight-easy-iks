@@ -1,21 +1,5 @@
-#__________________________________________________________
-#
-# Intersight Variables
-#__________________________________________________________
-
-# endpoint     = "https://intersight.com"
+# Intersight Organization
 organization = "Wakanda"
-# secretkey    = "~/Downloads/SecretKey.txt"
-/*
-  To export the Secret Key via an Environment Variable the format is as follows (Note: they are not quotation marks, but escape characters):
-  - export TF_VAR_secretkey=`cat ../../intersight.secret`
-  Either way will work in this case as we are not posting the contents of the file here.
-*/
-/*
-  We highly recommend that for the apikey you use an environment variable for input:
-  - export TF_VAR_apikey="abcdefghijklmnopqrstuvwxyz.0123456789"
-*/
-# apikey = "value"
 
 # Global Tag Values - Consumed by Policies if no specific Tags are defined.
 tags = [
@@ -29,38 +13,7 @@ tags = [
   }
 ]
 
-#______________________________________________
-#
-# Add-ons Policies Variables
-#______________________________________________
-
-addons_policies = {
-  "ccp-monitor" = {
-    install_strategy  = "Always"
-    release_namespace = "ccp-monitor"
-    upgrade_strategy  = "ReinstallOnFailure"
-  }
-  "kubernetes-dashboard" = {
-    install_strategy  = "Always"
-    release_namespace = "kubernetes-dashboard"
-    upgrade_strategy  = "ReinstallOnFailure"
-  }
-}
-
-
-#__________________________________________________
-#
-# Container Runtime Policy Variables
-#__________________________________________________
-
-container_runtime_policies = {}
-
-
-#______________________________________________
-#
-# IP Pool Variables
-#______________________________________________
-
+# IP Pools
 ip_pools = {
   "iks" = {
     assignment_order = "sequential"
@@ -69,7 +22,7 @@ ip_pools = {
       "0" = {
         from = "10.96.112.1"
         size = 128
-        # to   = "10.96.112.128"
+        to   = "10.96.112.128"
       }
     }
     ipv4_config = [{
@@ -84,13 +37,42 @@ ip_pools = {
   }
 }
 
-
-
-#__________________________________________________
+#______________________________
 #
-# Kubernetes Version Policy Variables
-#__________________________________________________
+# Kubernetes Policies
+#______________________________
 
+# Addons
+addons_policies = {
+  "ccp-monitor" = {
+    install_strategy = "Always"
+    upgrade_strategy = "ReinstallOnFailure"
+  }
+  "kubernetes-dashboard" = {
+    install_strategy = "Always"
+    upgrade_strategy = "ReinstallOnFailure"
+  }
+  "smm1_7" = {
+    chart_name       = "smm"
+    chart_version    = "1.7.4-cisco4-helm3"
+    install_strategy = "Always"
+    release_name     = "smm1.7"
+    upgrade_strategy = "ReinstallOnFailure"
+  }
+  "smm1_8" = {
+    chart_name       = "smm"
+    chart_version    = "1.8.2-cisco2-helm3"
+    install_strategy = "Always"
+    overrides        = "demoApplication,enabled,true"
+    release_name     = "smm1.8"
+    upgrade_strategy = "ReinstallOnFailure"
+  }
+}
+
+# Container Runtime
+container_runtime_policies = {}
+
+# Kubernetes Version
 kubernetes_version_policies = {
   "v1.20.14" = {
     version = "v1.20.14"
@@ -100,12 +82,7 @@ kubernetes_version_policies = {
   }
 }
 
-
-#______________________________________________
-#
-# Network CIDR Policy Variables
-#______________________________________________
-
+# Network CIDR Policies
 network_cidr_policies = {
   "Wakanda_CIDR" = {
     cni_type         = "Calico"
@@ -114,12 +91,7 @@ network_cidr_policies = {
   }
 }
 
-
-#______________________________________________
-#
-# Node OS Configuration Policy Variables
-#______________________________________________
-
+# NodeOS Configuration
 nodeos_configuration_policies = {
   "Wakanda" = {
     dns_servers = ["10.101.128.15", "10.101.128.16"]
@@ -129,11 +101,10 @@ nodeos_configuration_policies = {
   }
 }
 
-#_______________________________________________
-#
-# Virtual Machine Infra Config Policy Variables
-#_______________________________________________
+# Trusted Certificate Authorities
+trusted_certificate_authorities = {}
 
+# VM Infra Config
 virtual_machine_infra_config = {
   "Panther" = {
     description = ""
@@ -142,19 +113,24 @@ virtual_machine_infra_config = {
     virtual_infrastructure = [{
       cluster       = "Panther"
       datastore     = "NVMe_DS1"
-      portgroup     = ["prod|nets|Wakanda_IKS"]
+      interfaces    = ["prod|nets|Wakanda_IKS"]
       resource_pool = ""
       type          = "vmware"
     }]
   }
+  "Terminus" = {
+    description = ""
+    tags        = []
+    target      = "terminus"
+    virtual_infrastructure = [{
+      interfaces    = ["iwe-guests"]
+      provider_name = "iwe-guests"
+      type          = "iwe"
+    }]
+  }
 }
 
-
-#________________________________________________
-#
-# Virtual Machine Instance Type Policy Variables
-#________________________________________________
-
+# VM Instance Type
 virtual_machine_instance_type = {
   "Small" = {}
   "Medium" = {
