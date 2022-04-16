@@ -7,9 +7,10 @@ terraform {
 # Terraform Cloud Variables
 #__________________________________________________________
 
-variable "agent_pool" {
-  description = "Terraform Cloud Agent Pool."
-  type        = string
+variable "agent_pools" {
+  default     = []
+  description = "Terraform Cloud Agent Pool List."
+  type        = list(string)
 }
 
 variable "terraform_cloud_token" {
@@ -18,7 +19,7 @@ variable "terraform_cloud_token" {
   type        = string
 }
 
-variable "tfc_oauth_token" {
+variable "oauth_token_id" {
   description = "Terraform Cloud OAuth Token for VCS_Repo Integration."
   sensitive   = true
   type        = string
@@ -87,34 +88,6 @@ variable "target_password" {
 variable "ssh_public_key_1" {
   default     = ""
   description = "Intersight Kubernetes Service Cluster SSH Public Key 1."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_2" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_3" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_4" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_5" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
   sensitive   = true
   type        = string
 }

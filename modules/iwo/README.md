@@ -25,8 +25,8 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.iwo_k8s_collector](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [terraform_remote_state.local_kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
-| [terraform_remote_state.remote_kubeconfig](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.local_kubeconfigs](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| [terraform_remote_state.remote_kubeconfigs](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
