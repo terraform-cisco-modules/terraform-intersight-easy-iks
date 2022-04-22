@@ -21,4 +21,3 @@ data "terraform_remote_state" "remote_policies" {
     }
   }
 }
-

@@ -47,7 +47,7 @@ tfc_workspaces = [{
 
 kubernetes_cluster_profiles = {
   "panther-cl1" = {
-    action                    = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    action                    = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     addons_policies           = ["ccp-monitor", "kubernetes-dashboard"]
     certificate_configuration = false
     cluster_configuration = [{
@@ -59,12 +59,11 @@ kubernetes_cluster_profiles = {
     network_cidr_policy      = "Wakanda_CIDR"
     node_pools = {
       "Control_Plane" = {
-        action       = "No-op"
         desired_size = 3
         ip_pool      = "iks"
         kubernetes_labels = [{
-          "key"   = "panther-cl1"
-          "value" = "C1 Control Plane Nodes"
+          "key"   = "environment"
+          "value" = "production"
         }]
         kubernetes_version_policy = "v1.21.10"
         max_size                  = 3
@@ -74,12 +73,11 @@ kubernetes_cluster_profiles = {
         vm_instance_type_policy   = "Small"
       }
       "Worker_g1" = {
-        action       = "No-op"
         desired_size = 3
         ip_pool      = "iks"
         kubernetes_labels = [{
-          "key"   = "panther-cl1"
-          "value" = "C1 Worker Group1"
+          "key"   = "environment"
+          "value" = "production"
         }]
         kubernetes_version_policy = "v1.21.10"
         max_size                  = 5
@@ -94,7 +92,7 @@ kubernetes_cluster_profiles = {
     wait_for_completion           = false
   }
   "terminus-cl1" = {
-    action                    = "Deploy" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
+    action                    = "No-op" # Options are {Delete|Deploy|Ready|No-op|Unassign}.
     addons_policies           = ["ccp-monitor", "kubernetes-dashboard"]
     certificate_configuration = false
     cluster_configuration = [{
@@ -106,12 +104,11 @@ kubernetes_cluster_profiles = {
     network_cidr_policy      = "Wakanda_CIDR"
     node_pools = {
       "Control_Plane" = {
-        action       = "No-op"
         desired_size = 3
         ip_pool      = "iks"
         kubernetes_labels = [{
-          "key"   = "terminus-cl1"
-          "value" = "C1 Control Plane Nodes"
+          "key"   = "environment"
+          "value" = "pre-prod"
         }]
         kubernetes_version_policy = "v1.21.10"
         max_size                  = 3
@@ -121,12 +118,11 @@ kubernetes_cluster_profiles = {
         vm_instance_type_policy   = "Small"
       }
       "Worker_g1" = {
-        action       = "No-op"
         desired_size = 3
         ip_pool      = "iks"
         kubernetes_labels = [{
-          "key"   = "panther-cl1"
-          "value" = "C1 Worker Group1"
+          "key"   = "environment"
+          "value" = "pre-prod"
         }]
         kubernetes_version_policy = "v1.21.10"
         max_size                  = 5

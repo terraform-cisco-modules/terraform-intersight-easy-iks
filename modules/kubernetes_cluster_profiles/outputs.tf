@@ -29,12 +29,14 @@ output "tags" {
 # Kubernetes Cluster Outputs
 #__________________________________________________________
 
-output "kubernetes_cluster_profiles" {
+output "cluster_profiles" {
   description = "moid of the Kubernetes Cluster Profiles."
   value = {
-    for v in sort(keys(intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles)) : v => {
-      cluster_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[v].associated_cluster[0].moid
-      profile_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[v].moid
+    for k in sort(keys(intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles)) : k => {
+      cluster_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[k].associated_cluster[0].moid
+      name         = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[k].name
+      profile_moid = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[k].moid
+      kube_config  = intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles[k].kube_config[0].kube_config
     }
   }
 }

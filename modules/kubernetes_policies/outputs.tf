@@ -35,8 +35,14 @@ output "tags" {
 
 output "ip_pools" {
   description = "moid of the IP Pools."
-  value       = { for v in sort(keys(intersight_ippool_pool.ip_pools)) : v => intersight_ippool_pool.ip_pools[v].moid }
+  value = merge(
+    { for v in sort(keys(intersight_ippool_pool.ip_pools)) : v => intersight_ippool_pool.ip_pools[v].moid },
+    { for v in sort(
+      keys(data.intersight_ippool_pool.ip_pools)
+    ) : v => data.intersight_ippool_pool.ip_pools[v].results[0].moid }
+  )
 }
+
 
 
 #__________________________________________________________

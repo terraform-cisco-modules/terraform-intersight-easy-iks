@@ -39,6 +39,7 @@ locals {
   ip_pools = {
     for k, v in var.ip_pools : k => {
       assignment_order = v.assignment_order != null ? v.assignment_order : "sequential"
+      create_pool      = v.create_pool != null ? v.create_pool : true
       description      = v.description != null ? v.description : ""
       ipv4_blocks      = v.ipv4_blocks != null ? v.ipv4_blocks : {}
       ipv4_config      = v.ipv4_config != null ? v.ipv4_config : []
@@ -88,17 +89,18 @@ locals {
       target      = v.target != null ? v.target : "vsphere.example.com"
       virtual_infrastructure = [
         for key, value in v.virtual_infrastructure : {
-          cluster       = value.cluster != null ? value.cluster : "default"
-          datastore     = value.datastore != null ? value.datastore : "datastore1"
-          disk_mode     = value.disk_mode != null ? value.disk_mode : "Block"
-          interfaces    = value.interfaces != null ? value.interfaces : ["VM Network"]
-          ip_pool       = value.ip_pool != null ? value.ip_pool : ""
-          mtu           = value.mtu != null ? value.mtu : 0
-          name          = value.name != null ? value.name : ""
-          provider_name = value.provider_name != null ? value.provider_name : ""
-          resource_pool = value.resource_pool != null ? value.resource_pool : ""
-          type          = value.type != null ? value.type : "vmware"
-          vrf           = value.vrf != null ? value.vrf : ""
+          cluster         = value.cluster != null ? value.cluster : "default"
+          datastore       = value.datastore != null ? value.datastore : "datastore1"
+          disk_mode       = value.disk_mode != null ? value.disk_mode : "Block"
+          interfaces      = value.interfaces != null ? value.interfaces : ["VM Network"]
+          ip_pool         = value.ip_pool != null ? value.ip_pool : ""
+          ip_pool_created = value.ip_pool_created != null ? value.ip_pool_created : true
+          mtu             = value.mtu != null ? value.mtu : 0
+          name            = value.name != null ? value.name : ""
+          provider_name   = value.provider_name != null ? value.provider_name : ""
+          resource_pool   = value.resource_pool != null ? value.resource_pool : ""
+          type            = value.type != null ? value.type : "vmware"
+          vrf             = value.vrf != null ? value.vrf : ""
         }
       ]
     }

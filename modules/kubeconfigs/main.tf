@@ -5,5 +5,5 @@
 
 data "intersight_kubernetes_cluster" "kubeconfigs" {
   for_each = toset(var.cluster_names)
-  name = each.value
+  name     = each.value
 }

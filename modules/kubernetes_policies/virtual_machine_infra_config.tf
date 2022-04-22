@@ -11,17 +11,18 @@ variable "virtual_machine_infra_config" {
       target      = ""
       virtual_infrastructure = [
         {
-          cluster       = "default"
-          datastore     = "datastore1"
-          disk_mode     = "Block"
-          interfaces    = ["VM Network"]
-          ip_pool       = ""
-          mtu           = 0
-          name          = ""
-          provider_name = ""
-          resource_pool = ""
-          type          = "vmware"
-          vrf           = ""
+          cluster         = "default"
+          datastore       = "datastore1"
+          disk_mode       = "Block"
+          interfaces      = ["VM Network"]
+          ip_pool         = ""
+          ip_pool_created = true
+          mtu             = 0
+          name            = ""
+          provider_name   = ""
+          resource_pool   = ""
+          type            = "vmware"
+          vrf             = ""
         }
       ]
     }
@@ -35,8 +36,11 @@ variable "virtual_machine_infra_config" {
   * virtual_infrastructure - List of Virtual Infrastructure Configuration Parameters
     - cluster: (VMware) - vSphere Cluster to assign the K8S Cluster Deployment.
     - datastore: (VMware) - vSphere Datastore to assign the K8S Cluster Deployment.
-    - interfaces: (Both) - vSphere Port Group to assign the K8S Cluster Deployment.
-    - mtu: (IWE) - MTU to assign to the Interface
+    - interfaces: (Both) - IWE Interface or vSphere Port Group to assign the K8S Cluster Deployment.
+    - ip_pool: (IWE) - IP Pool to assign to the IKS Cluster Deployment
+    - ip_pool_created: (IWE) - Flag to determine if pool was created by the workspace or is a data source.  true for created and false for data source type.
+    - mtu: (IWE) - The MTU for this Network Interface. If left blank a default value will apply by the Operating System.
+    - name: (IWE) - NetworkInterfaceSpec is the specification for network interfaces - including configuration of IP Pools and VRF to determine IP configuration, the operating system device settings, and virtual adapter network settings. It can be left empty when used with VirtualMachineInfraConfigPolicy - it will be filled out based on the hypervisor platform type and will match the naming and order of interfaces provided by the hypervisor.
     - provider_name: (IWE) - In other words, to which named network from the Instructure Provider will the port be connected.
     - resource_pool: (VMware) - vSphere Resource Pool to assign the K8S Cluster Deployment.
   EOT
@@ -47,17 +51,18 @@ variable "virtual_machine_infra_config" {
       target      = string
       virtual_infrastructure = list(object(
         {
-          cluster       = optional(string)
-          datastore     = optional(string)
-          disk_mode     = optional(string)
-          interfaces    = list(string)
-          ip_pool       = optional(string)
-          mtu           = optional(number)
-          name          = optional(string)
-          provider_name = optional(string)
-          resource_pool = optional(string)
-          type          = string
-          vrf           = optional(string)
+          cluster         = optional(string)
+          datastore       = optional(string)
+          disk_mode       = optional(string)
+          interfaces      = list(string)
+          ip_pool         = optional(string)
+          ip_pool_created = optional(bool)
+          mtu             = optional(number)
+          name            = optional(string)
+          provider_name   = optional(string)
+          resource_pool   = optional(string)
+          type            = string
+          vrf             = optional(string)
         }
       ))
     }
@@ -123,7 +128,12 @@ resource "intersight_kubernetes_virtual_machine_infra_config_policy" "virtual_ma
         mtu  = vm_config.value.mtu
         name = vm_config.value.name
         pools {
-          moid = vm_config.value.ip_pool != "" ? intersight_ippool_pool.ip_pools[vm_config.value.ip_pool].id : ""
+          moid = vm_config.value.ip_pool != "" && length(
+            regexall(true, vm_config.ip_pool_created)
+            ) > 0 ? intersight_ippool_pool.ip_pools[vm_config.value.ip_pool].id : length(
+            compact([vm_config.value.ip_pool])) > 0 && length(
+            regexall(true, vm_config.ip_pool_created)
+          ) > 0 ? data.intersight_ippool_pool.ip_pools[vm_config.value.ip_pool].id : ""
         }
         provider_name = vm_config.value.provider_name
         vrf {

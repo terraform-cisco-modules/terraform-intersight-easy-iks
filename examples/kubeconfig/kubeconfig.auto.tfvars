@@ -21,4 +21,4 @@
 # Kubernetes Cluster
 #__________________________________________________________
 
-cluster_name = "panther-cl1"
+cluster_name = "Your_Cluster_Name"

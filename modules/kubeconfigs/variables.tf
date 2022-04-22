@@ -26,8 +26,8 @@ variable "secretkey" {
 # Intersight Kubernetes Service Cluster Name
 #__________________________________________________________
 
-variable "cluster_name" {
+variable "cluster_names" {
   description = "Intersight Kubernetes Service Cluster Name"
-  type        = string
+  type        = list(string)
 }
 

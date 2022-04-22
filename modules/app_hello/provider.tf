@@ -12,4 +12,3 @@ provider "helm" {
     cluster_ca_certificate = base64decode(local.kubeconfig.clusters[0].cluster.certificate-authority-data)
   }
 }
-

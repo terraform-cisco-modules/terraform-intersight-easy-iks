@@ -39,3 +39,10 @@ tfc_workspaces = [{
   - export TF_VAR_apikey="abcdefghijklmnopqrstuvwxyz.0123456789"
 */
 # apikey = "value"
+
+#__________________________________________________________
+#
+# Kubernetes Cluster
+#__________________________________________________________
+
+cluster_name = "Your_Cluster_Name"

@@ -68,7 +68,7 @@ locals {
 
   kubernetes_cluster_profiles = {
     for k, v in var.kubernetes_cluster_profiles : k => {
-      action                    = v.action != null ? v.action : "Deploy"
+      action                    = v.action != null ? v.action : "No-op"
       addons_policies           = v.addons_policies != null ? v.addons_policies : ["default"]
       certificate_configuration = v.certificate_configuration != null ? v.certificate_configuration : false
       cluster_configuration = [
@@ -76,7 +76,6 @@ locals {
           kubernetes_api_vip  = value.kubernetes_api_vip != null ? value.kubernetes_api_vip : ""
           load_balancer_count = value.load_balancer_count != null ? value.load_balancer_count : 3
           ssh_public_key      = value.ssh_public_key != null ? value.ssh_public_key : 1
-          # ssh_user            = value.ssh_user != null ? value.ssh_user : "iksadmin"
         }
       ]
       container_runtime_policy      = v.container_runtime_policy != null ? v.container_runtime_policy : ""
@@ -94,7 +93,7 @@ locals {
   node_pools_loop = flatten([
     for key, value in local.kubernetes_cluster_profiles : [
       for k, v in value.node_pools : {
-        action                     = v.action != null ? v.action : "No-op"
+        action                     = value.action
         desired_size               = v.desired_size != null ? v.desired_size : 1
         description                = v.description != null ? v.description : ""
         min_size                   = v.min_size != null ? v.min_size : 1

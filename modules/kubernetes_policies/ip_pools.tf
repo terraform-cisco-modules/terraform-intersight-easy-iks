@@ -7,6 +7,7 @@ variable "ip_pools" {
   default = {
     default = {
       assignment_order = "sequential"
+      create_pool      = true
       description      = ""
       ipv4_blocks      = {}
       ipv4_config      = []
@@ -20,6 +21,7 @@ variable "ip_pools" {
   * Assignment order decides the order in which the next identifier is allocated.
     - default - (Default) Assignment order is decided by the system.
     - sequential - Identifiers are assigned in a sequential order.
+  * create_pool - Flag to determine if the pool should be created or 
   * description - Description to Assign to the Pool.
   * ipv4_blocks - Map of Addresses to Assign to the Pool.
     - from - Starting IPv4 Address.
@@ -44,6 +46,7 @@ variable "ip_pools" {
   type = map(object(
     {
       assignment_order = optional(string)
+      create_pool      = optional(bool)
       description      = optional(string)
       ipv4_blocks = optional(map(object(
         {
@@ -96,7 +99,7 @@ resource "intersight_ippool_pool" "ip_pools" {
   depends_on = [
     local.org_moid
   ]
-  for_each         = local.ip_pools
+  for_each         = { for k, v in local.ip_pools : k => v if v.create_pool == true }
   assignment_order = each.value.assignment_order
   description      = each.value.description != "" ? each.value.description : "${each.key} IP Pool"
   name             = each.key

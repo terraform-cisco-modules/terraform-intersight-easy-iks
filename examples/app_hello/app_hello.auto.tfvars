@@ -18,3 +18,9 @@ tfc_workspace    = "Your_k8s_kubeconfig_Workspace"
 */
 # tfc_oath_token = "value"
 
+#__________________________________________________________
+#
+# Kubernetes Cluster
+#__________________________________________________________
+
+cluster_name = "Your_Cluster_Name"

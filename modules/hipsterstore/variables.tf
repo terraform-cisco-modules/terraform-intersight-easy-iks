@@ -10,10 +10,10 @@ terraform {
 variable "tfc_workspaces" {
   default = [
     {
-      backend      = "remote"
-      organization = "default"
-      policies_dir = "../kubeconfig/"
-      workspace    = "kubeconfig"
+      backend        = "remote"
+      kubeconfig_dir = "../kubeconfigs/"
+      organization   = "default"
+      workspace      = "kubeconfigs"
     }
   ]
   description = <<-EOT
@@ -26,10 +26,15 @@ variable "tfc_workspaces" {
   EOT
   type = list(object(
     {
-      backend      = string
-      organization = optional(string)
-      policies_dir = optional(string)
-      workspace    = optional(string)
+      backend        = string
+      kubeconfig_dir = optional(string)
+      organization   = optional(string)
+      workspace      = optional(string)
     }
   ))
+}
+
+variable "cluster_name" {
+  description = "Name of the Cluster to push Policy to"
+  type        = string
 }

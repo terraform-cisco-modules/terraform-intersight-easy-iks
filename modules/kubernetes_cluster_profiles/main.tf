@@ -6,7 +6,7 @@
 variable "kubernetes_cluster_profiles" {
   default = {
     default = {
-      action                    = "No-op" # Deploy|No-op
+      action                    = "No-op" # {Delete|Deploy|Ready|No-op|Unassign}
       addons_policies           = ["default"]
       certificate_configuration = false
       cluster_configuration = [
@@ -14,7 +14,6 @@ variable "kubernetes_cluster_profiles" {
           kubernetes_api_vip  = ""
           load_balancer_count = 3
           ssh_public_key      = 1
-          # ssh_user            = "iksadmin"
         }
       ]
       container_runtime_policy = "default"
@@ -23,7 +22,7 @@ variable "kubernetes_cluster_profiles" {
       network_cidr_policy      = "default"
       node_pools = {
         "0" = {
-          action                    = "No-op"
+          # action                    = "No-op"
           desired_size              = 1
           description               = ""
           min_size                  = 1
@@ -49,8 +48,7 @@ variable "kubernetes_cluster_profiles" {
   * cluster_configuration - IKS Cluster Settings:
     - kubernetes_api_vip - VIP for the cluster Kubernetes API server. If this is empty and a cluster IP pool is specified, it will be allocated from the IP pool.
     - load_balancer_count - Number of load balancer addresses to deploy. Range is 1-999.
-    - ssh_public_key - The SSH Public Key should be ssh_public_key_{1|2|3|4|5}.  This will point to the ssh_public_key variable that will be used.
-    - ssh_user - SSH Username for node login. (This is now a read-only attribute.)
+    - ssh_public_key - The SSH Public Key should be 1.  This will point to the ssh_public_key variable that will be used.
   * container_runtime_policy - Name of the Kubernetes Runtime Policy to assign to Cluster and Node Profiles.
   * description - A description for the policy.
   * ip_pool - Name of the IP Pool to assign to Cluster and Node Profiles.
@@ -62,6 +60,11 @@ variable "kubernetes_cluster_profiles" {
     - ip_pool - Name of the IP Pool to assign to Cluster and Node Profiles.  If not Assigned it will assign the ip_pool assigned to the cluster.
     - kubernetes_cluster_policy - Name of the Kubernetes Cluster Profile.
     - kubernetes_labels - List of key/value Attributes to Assign to the control plane node configuration.
+      NOTE: The Key and Value should adhere to the following naming standards:
+      * must be 63 characters or less (can be empty),
+      * unless empty, must begin and end with an alphanumeric character ([a-z0-9A-Z]),
+      * could contain dashes (-), underscores (_), dots (.), and alphanumerics between.
+      * (([A-Za-z0-9][-_A-Za-z0-9.]*)?[A-Za-z0-9])?').
     - kubernetes_version_policy - Name of the Kubernetes Version Policy to assign to the Node Profiles.
     - max_size - Maximum number of nodes desired in this node pool.  Range is 1-128.
     - min_size - Minimum number of nodes desired in this node pool.  Range is 1-128.
@@ -96,7 +99,7 @@ variable "kubernetes_cluster_profiles" {
       network_cidr_policy      = string
       node_pools = map(object(
         {
-          action                    = optional(string)
+          # action                    = optional(string)
           description               = optional(string)
           desired_size              = optional(number)
           ip_pool                   = optional(string)
@@ -117,41 +120,12 @@ variable "kubernetes_cluster_profiles" {
   ))
 }
 
-variable "ssh_public_key_1" {
+variable "ssh_public_key" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 1."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key."
   sensitive   = true
   type        = string
 }
-
-variable "ssh_public_key_2" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 2.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_3" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 3.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_4" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 4.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_public_key_5" {
-  default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 5.  These are place holders for Clusters that use different keys for different clusters."
-  sensitive   = true
-  type        = string
-}
-
 
 #__________________________________________________________________________________________
 #
@@ -160,11 +134,11 @@ variable "ssh_public_key_5" {
 #__________________________________________________________________________________________
 
 resource "intersight_kubernetes_cluster_profile" "kubernetes_cluster_profiles" {
-  for_each            = local.kubernetes_cluster_profiles
-  action              = each.value.action
+  for_each = local.kubernetes_cluster_profiles
+  # action              = each.value.action
   description         = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
   name                = each.key
-  wait_for_completion = each.value.wait_for_completion
+  wait_for_completion = each.value.action == "Deploy" && each.value.wait_for_completion == true ? true : false
   cluster_ip_pools {
     moid = local.ip_pools[each.value.ip_pool]
   }
@@ -174,14 +148,15 @@ resource "intersight_kubernetes_cluster_profile" "kubernetes_cluster_profiles" {
       load_balancer_count = management_config.value.load_balancer_count
       master_vip          = management_config.value.kubernetes_api_vip
       ssh_keys = length(
-        regexall("1", management_config.value.ssh_public_key)) > 0 ? [var.ssh_public_key_1] : length(
-        regexall("2", management_config.value.ssh_public_key)) > 0 ? [var.ssh_public_key_2] : length(
-        regexall("3", management_config.value.ssh_public_key)) > 0 ? [var.ssh_public_key_3] : length(
-        regexall("4", management_config.value.ssh_public_key)) > 0 ? [var.ssh_public_key_4] : length(
-        regexall("5", management_config.value.ssh_public_key)
-      ) > 0 ? [var.ssh_public_key_5] : ""
+      regexall("1", management_config.value.ssh_public_key)) > 0 ? [var.ssh_public_key] : []
       # ssh_user = management_config.value.ssh_user
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      shared_scope,
+      status
+    ]
   }
   net_config {
     moid = local.network_cidr_policies[each.value.network_cidr_policy]
