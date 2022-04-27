@@ -26,7 +26,7 @@ variable_list = [
   },
   {
     description = "iksadmin SSH Public Key."
-    key         = "ssh_public_key_1"
+    key         = "ssh_public_key"
     var_type    = "cluster"
   }
 ]

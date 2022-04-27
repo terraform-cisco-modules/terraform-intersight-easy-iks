@@ -85,9 +85,9 @@ variable "target_password" {
   type        = string
 }
 
-variable "ssh_public_key_1" {
+variable "ssh_public_key" {
   default     = ""
-  description = "Intersight Kubernetes Service Cluster SSH Public Key 1."
+  description = "Intersight Kubernetes Service Cluster SSH Public Key."
   sensitive   = true
   type        = string
 }
