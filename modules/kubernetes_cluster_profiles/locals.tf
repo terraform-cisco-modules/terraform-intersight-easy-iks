@@ -68,7 +68,8 @@ locals {
 
   kubernetes_cluster_profiles = {
     for k, v in var.kubernetes_cluster_profiles : k => {
-      action                    = v.action != null ? v.action : "No-op"
+      action                    = v.action != null ? v.action : "Deploy"
+      action_ignore             = v.action_ignore != null ? v.action_ignore : true
       addons_policies           = v.addons_policies != null ? v.addons_policies : ["default"]
       certificate_configuration = v.certificate_configuration != null ? v.certificate_configuration : false
       cluster_configuration = [
@@ -94,6 +95,7 @@ locals {
     for key, value in local.kubernetes_cluster_profiles : [
       for k, v in value.node_pools : {
         action                     = value.action
+        action_ignore              = value.action_ignore
         desired_size               = v.desired_size != null ? v.desired_size : 1
         description                = v.description != null ? v.description : ""
         min_size                   = v.min_size != null ? v.min_size : 1

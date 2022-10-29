@@ -6,7 +6,8 @@
 variable "kubernetes_cluster_profiles" {
   default = {
     default = {
-      action                    = "No-op" # {Delete|Deploy|Ready|No-op|Unassign}
+      action                    = "Deploy" # {Delete|Deploy|Ready|No-op|Unassign}
+      action_ignore             = true
       addons_policies           = ["default"]
       certificate_configuration = false
       cluster_configuration = [
@@ -44,6 +45,7 @@ variable "kubernetes_cluster_profiles" {
   description = <<-EOT
   Intersight Kubernetes Service Cluster Profile Variable Map.
   * action - Action to perform on the Kubernetes Cluster.  Options are {Delete|Deploy|Ready|No-op|Unassign}.
+  * action_ignore - Ignore the Action attribute if this is set to true.
   * addons_policies - Names of the Kubernetes Add-ons to add to the cluster.  Options are {ccp-monitor|kubernetes-dashboard} or [].
   * cluster_configuration - IKS Cluster Settings:
     - kubernetes_api_vip - VIP for the cluster Kubernetes API server. If this is empty and a cluster IP pool is specified, it will be allocated from the IP pool.
@@ -83,6 +85,7 @@ variable "kubernetes_cluster_profiles" {
   type = map(object(
     {
       action                    = optional(string)
+      action_ignore             = optional(bool)
       addons_policies           = optional(set(string))
       certificate_configuration = bool
       cluster_configuration = list(object(
@@ -134,8 +137,8 @@ variable "ssh_public_key" {
 #__________________________________________________________________________________________
 
 resource "intersight_kubernetes_cluster_profile" "kubernetes_cluster_profiles" {
-  for_each = local.kubernetes_cluster_profiles
-  # action              = each.value.action
+  for_each            = local.kubernetes_cluster_profiles
+  action              = each.value.action_ignore == false ? each.value.action : null
   description         = each.value.description != "" ? each.value.description : "${each.key} IKS Cluster."
   name                = each.key
   wait_for_completion = each.value.action == "Deploy" && each.value.wait_for_completion == true ? true : false
@@ -266,7 +269,7 @@ resource "intersight_kubernetes_node_group_profile" "kubernetes_node_pools" {
     intersight_kubernetes_cluster_profile.kubernetes_cluster_profiles
   ]
   for_each    = local.kubernetes_node_pools
-  action      = each.value.action
+  action      = each.value.action_ignore == false ? each.value.action : null
   description = each.value.description
   name        = each.key
   node_type   = each.value.node_type

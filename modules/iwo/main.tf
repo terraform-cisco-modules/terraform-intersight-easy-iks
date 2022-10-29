@@ -1,17 +1,17 @@
-#__________________________________________________________
+#____________________________________________________________
 #
-# Get Outputs from the kubeconfigs Workspace
-#__________________________________________________________
+# Get Outputs from the Kubernetes Cluster Profiles Workspace
+#____________________________________________________________
 
-data "terraform_remote_state" "local_kubeconfigs" {
+data "terraform_remote_state" "local_k8s_cluster" {
   for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "local" }
   backend  = each.value.backend
   config = {
-    path = "${each.value.kubeconfig_dir}terraform.tfstate"
+    path = "${each.value.k8s_cluster_dir}terraform.tfstate"
   }
 }
 
-data "terraform_remote_state" "remote_kubeconfigs" {
+data "terraform_remote_state" "remote_k8s_cluster" {
   for_each = { for k, v in local.tfc_workspaces : k => v if v.backend == "remote" }
   backend  = each.value.backend
   config = {
